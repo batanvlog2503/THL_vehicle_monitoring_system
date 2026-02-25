@@ -1,0 +1,90 @@
+.login {
+  background-color: rgb(47, 100, 201);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.launch {
+  flex: 1; /* chiếm không gian còn lại */
+  display: flex;
+  justify-content: center; /* canh ngang */
+  align-items: center; /* canh dọc */
+  font-size: 2rem; /* tùy chỉnh cỡ chữ */
+}
+
+.form-control:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+/* Vùng bọc form */
+.wrapper .form-login {
+  background-color: white;
+  border-radius: 30px;
+
+  backdrop-filter: blur(20px);
+  height: 600px;
+
+  max-width: 500px;
+  width: 50%;
+
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* thêm đổ bóng cho nổi bật */
+}
+
+.title-login .traffic-light {
+  width: 25%;
+}
+
+.title-login p {
+  font-size: 15px;
+}
+/* Khi màn hình nhỏ, giữ input full width */
+
+.input-group-text {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+/* Bỏ viền input */
+.form-control {
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Khi focus cũng không có viền */
+
+/* Thêm 1 đường line dưới cho đẹp */
+
+/* Mặc định không có viền */
+.input-enter {
+  border-bottom: 1px solid #ccc;
+  transition: all 0.1s ease;
+}
+
+/* Khi input được focus → đổi màu viền */
+.input-group:focus-within {
+  border-bottom: 2px solid rgb(47, 100, 201); /* xanh bootstrap */
+}
+
+.form-login button {
+  margin-top: 20px;
+  padding: 10px;
+  border: none;
+  background-color: rgb(47, 100, 201);
+  color: white;
+  font-weight: 500;
+  border-radius: 8px !important;
+  border-bottom: none;
+}
+
+.form-login button:hover {
+  background-color: white;
+  color: rgb(47, 100, 201);
+  border: 1px solid rgb(47, 100, 201);
+  transition: ease-in-out 0.5s;
+}
+
+.form-login p,
+a {
+  font-size: 15px;
+}
