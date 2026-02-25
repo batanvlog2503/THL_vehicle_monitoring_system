@@ -16,6 +16,9 @@ import "./index.css"
 
 import MainLayout from "./layouts/MainLayout"
 import Login from "./auth/Login/Login"
+import Home from "./components/home/Home"
+import Main from "./layouts/Main"
+import Dashboard from "./components/dashboard/Dashboard"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -24,8 +27,21 @@ const router = createBrowserRouter(
     >
       <Route
         index
+        element={<Home />}
+      ></Route>
+      <Route
+        path="login"
         element={<Login />}
       ></Route>
+      <Route
+        path="main"
+        element={<Main />}
+      >
+        <Route
+          index
+          element={<Dashboard />}
+        ></Route>
+      </Route>
     </Route>,
   ),
 )

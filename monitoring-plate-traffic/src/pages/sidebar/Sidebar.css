@@ -1,0 +1,37 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #ffffff;
+  padding-top: 30px;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.08); /* shadow bên phải */
+  position: fixed;
+  top: 100px; /* bằng chiều cao navbar */
+}
+
+/* List */
+.list-feature {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-feature li .link {
+  padding: 15px 25px;
+  font-size: 19px;
+  font-weight: 500;
+  color: #2f64c9;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: 0.1s ease;
+  margin: 15px;
+  text-decoration: none;
+}
+
+/* Hover effect */
+.list-feature li .link:hover {
+  background-color: rgba(47, 100, 201, 0.08);
+  border-left: 4px solid #2f64c9;
+  padding-left: 21px; /* bù lại vì có border */
+}

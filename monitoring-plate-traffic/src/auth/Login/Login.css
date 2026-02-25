@@ -1,5 +1,5 @@
 .login {
-  background-color: rgb(47, 100, 201);
+  background: linear-gradient(90deg, #5c8ade, #4facfe);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -70,7 +70,7 @@
   margin-top: 20px;
   padding: 10px;
   border: none;
-  background-color: rgb(47, 100, 201);
+  background: linear-gradient(90deg, #5c8ade, #4facfe);
   color: white;
   font-weight: 500;
   border-radius: 8px !important;

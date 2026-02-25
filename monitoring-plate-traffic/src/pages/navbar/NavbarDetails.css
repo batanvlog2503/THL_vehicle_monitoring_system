@@ -1,0 +1,39 @@
+.navbar-details {
+  width: 100%;
+  height: 100px;
+  background-color: #5c8ade;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+/* inner-wrap căn giữa nội dung */
+.navbar-details .inner-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 3 phần cách đều */
+  padding: 0 40px;
+}
+
+/* bỏ gạch chân */
+.navbar-details a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* title bên trái */
+.navbar-details .inner-title h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* phần giữa */
+
+/* user bên phải */
+.navbar-details .inner-user {
+  font-size: 18px;
+  font-weight: 500;
+  color: white; /* sửa lại để hiện chữ */
+  cursor: pointer;
+}

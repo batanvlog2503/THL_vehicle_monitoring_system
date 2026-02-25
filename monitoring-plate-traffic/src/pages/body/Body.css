@@ -1,0 +1,41 @@
+.body {
+  /* chiếm phần còn lại dưới navbar */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 120px;
+  padding: 50px;
+}
+
+.inner-route h1 {
+  font-size: 60px;
+  font-weight: 700;
+  color: black;
+}
+
+.inner-route span {
+  color: #6384c2;
+}
+
+.inner-started button {
+  padding: 15px;
+  font-size: 23px;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-weight: 500;
+  margin-top: 16px;
+  margin-bottom: 40px;
+
+  background: linear-gradient(90deg, #5c8ade, #4facfe);
+}
+.inner-started button:hover {
+  background: white;
+  color: #5c8ade;
+  border: 2px solid #5c8ade;
+  transition: 1s ease;
+}
+.inner-demo img {
+  width: 70%;
+}

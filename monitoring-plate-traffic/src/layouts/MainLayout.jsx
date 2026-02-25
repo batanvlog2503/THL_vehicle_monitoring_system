@@ -1,11 +1,10 @@
 import React from "react"
 import { Outlet } from "react-router-dom"
+import Home from "../components/home/Home"
 const MainLayout = () => {
   return (
     <div className="container-fluid main-layout p-0">
-      <div className="sticky-top">
-        <Outlet></Outlet>
-      </div>
+      <Outlet></Outlet>
     </div>
   )
 }
