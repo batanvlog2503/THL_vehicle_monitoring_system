@@ -1,0 +1,27 @@
+.vehicle {
+  padding: 25px;
+}
+.inner-introduction {
+  padding: 30px;
+  margin: 15px;
+
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+.inner-filter {
+  padding: 30px;
+  margin: 15px;
+
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.inner-introduction h3 {
+  color: #5c8ade;
+}
+
+.inner-filter label {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 5px;
+}

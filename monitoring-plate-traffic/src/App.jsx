@@ -19,6 +19,7 @@ import Login from "./auth/Login/Login"
 import Home from "./components/home/Home"
 import Main from "./layouts/Main"
 import Dashboard from "./components/dashboard/Dashboard"
+import Vehicle from "./components/vehicles/Vehicle"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -40,6 +41,10 @@ const router = createBrowserRouter(
         <Route
           index
           element={<Dashboard />}
+        ></Route>
+        <Route
+          path="vehicle"
+          element={<Vehicle />}
         ></Route>
       </Route>
     </Route>,

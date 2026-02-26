@@ -8,7 +8,7 @@ const NavbarHome = () => {
           <a href="/">
             <h4>
               {" "}
-              <i class="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
+              <i class="fa-solid fa-traffic-light"></i> THL Monitoring tân
             </h4>
           </a>
         </div>
@@ -19,8 +19,10 @@ const NavbarHome = () => {
           className="inner-user col-sm-12 col-lg-2 col-4"
           style={{ textAlign: "right" }}
         >
-          <i className="fa-regular fa-user"></i>
-          <span> Login</span>
+          <a href="/login">
+            <i className="fa-regular fa-user"></i>
+            <span> Login</span>
+          </a>
         </div>
       </div>
     </div>

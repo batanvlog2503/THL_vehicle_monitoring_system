@@ -17,7 +17,13 @@ const Dashboard = () => {
   return (
     <div className="container-fluid dashboard">
       <div className="inner-wrap row">
-        <div className="col-sm-12 col-md-8 col-lg-8 col-8 video">
+        <div className="col-12 col-md-8 video">
+          <div
+            className="inner-title text-align-left justify-content-left"
+            style={{ fontSize: "20px", fontWeight: "500" }}
+          >
+            <i class="fa-solid fa-video"></i> Real-Time Video Analysis
+          </div>
           <div className="video-screen">
             {videoURL ? (
               <video
@@ -41,7 +47,27 @@ const Dashboard = () => {
             />
           </label>
         </div>
-        <div className="col-sm-12 col-md-4 col-lg-4 col-4 data"></div>
+        <div className="col-12 col-md-4 data">
+          <div className="inner-title">
+            <h4>
+              <i class="fa-solid fa-chart-line"></i> Live Vehicle Detection
+            </h4>
+          </div>
+          <div className="inner-table">
+            <table className="table ">
+              <thead className="table-secondary">
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Speed</th>
+                  <th scope="col">Plate</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   )

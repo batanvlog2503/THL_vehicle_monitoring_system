@@ -11,7 +11,7 @@
 /* Khung video */
 .video-screen {
   width: 100%;
-  height: 400px;
+  height: 520px;
   background-color: #000;
   border-radius: 12px;
   overflow: hidden;
@@ -47,5 +47,20 @@
 }
 
 .upload-btn:hover {
-  opacity: 0.9;
+  opacity: 0.7;
+}
+
+.dashboard .inner-wrap .video {
+  padding: 10px;
+  border-right: 1px solid grey;
+}
+
+.dashboard .inner-wrap .inner-title {
+  margin: 8px;
+}
+
+.dashboard .inner-wrap .data {
+  padding: 15px;
+
+  border-radius: 16px;
 }
