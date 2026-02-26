@@ -20,6 +20,7 @@ import Home from "./components/home/Home"
 import Main from "./layouts/Main"
 import Dashboard from "./components/dashboard/Dashboard"
 import Vehicle from "./components/vehicles/Vehicle"
+import SignUp from "./auth/Logout/SignUp"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -33,6 +34,10 @@ const router = createBrowserRouter(
       <Route
         path="login"
         element={<Login />}
+      ></Route>
+      <Route
+        path="signup"
+        element={<SignUp />}
       ></Route>
       <Route
         path="main"

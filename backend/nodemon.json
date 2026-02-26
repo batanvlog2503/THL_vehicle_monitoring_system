@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "js json hbs scss",
+  "ignore": ["src/public"],
+  "exec": "node src/index.js"
+}

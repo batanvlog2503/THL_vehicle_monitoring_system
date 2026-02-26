@@ -1,12 +1,49 @@
 import React, { useState } from "react"
 import "./Login.css"
 import trafficLight from "./traffic_light.png"
+import axios from "axios"
+import { data } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 const Login = () => {
+  const navigate = useNavigate()
   const [users, setUsers] = useState({
     username: "",
     password: "",
   })
+
+  const [message, setMessage] = useState("")
+  const [type, setType] = useState("")
+
   const { username, password } = users
+
+  const handleInputChange = (e) => {
+    setUsers({ ...users, [e.target.name]: e.target.value })
+  }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/auth/login",
+        users,
+      )
+
+      console.log("Login SuccessFully", response.data.message)
+
+      setMessage(response.data.message)
+      setType("success")
+      setTimeout(() => {
+        ;(setMessage(""), navigate("/main"))
+      }, 2000)
+      setUsers({
+        username: "",
+        password: "",
+      })
+    } catch (error) {
+      setMessage(error.response?.data?.message || "Có lỗi xảy ra")
+      setType("danger")
+    }
+  }
   return (
     <div className="container-fluid login">
       <div className="wrapper launch">
@@ -25,10 +62,19 @@ const Login = () => {
             </h1>
             <p>Login to access the dashboard</p>
           </div>
-
+          {message && (
+            <div
+              className={`alert alert-${type}`}
+              style={{ fontSize: "12px", padding: "5px", textAlign: "center" }}
+              role="alert"
+            >
+              {message}
+            </div>
+          )}
           <form
             action=""
             className="input-group mb-5"
+            onSubmit={(e) => handleSubmit(e)}
           >
             <b style={{ fontSize: "15px" }}>Username</b>
             <div className="input-group input-enter mb-3">
@@ -47,6 +93,7 @@ const Login = () => {
                 aria-label="username"
                 aria-describedby="basic-addon1"
                 value={username}
+                onChange={(e) => handleInputChange(e)}
                 required
                 autoComplete="new-password"
               />
@@ -68,6 +115,7 @@ const Login = () => {
                 aria-label="password"
                 aria-describedby="basic-addon3"
                 value={password}
+                onChange={(e) => handleInputChange(e)}
                 required
                 autoComplete="new-password"
               />
@@ -83,7 +131,7 @@ const Login = () => {
 
           <div className="text-center">
             <p>
-              Bạn chưa có tài khoản? <a href="#">Đăng kí tài khoản</a>
+              Bạn chưa có tài khoản? <a href="/signup">Đăng kí tài khoản</a>
             </p>
           </div>
         </div>

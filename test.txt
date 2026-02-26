@@ -1,0 +1,147 @@
+- npm init
+- npm i morgan 
+- npm i express
+- npm i nodemon thay doi ngay tren server
+- npm i node-sass
+-npm install express-handlebars
+
+├── app.js
+└── views
+    ├── home.handlebars
+    └── layouts
+        └── main.handlebars
+
+2 directories, 3 files
+
+import express from 'express';
+import { engine } from 'express-handlebars';
+
+const app = express();
+
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './views');
+
+app.get('/', (req, res) => {
+    res.render('home');
+});
+
+app.listen(3000);
+
+
+├── resources
+│   └── views
+│       ├── layouts/
+│       │   └── main.handlebars
+│       ├── home.handlebars
+│       └── partials/  <-- THƯ MỤC BẮT BUỘC
+│           ├── header.handlebars  <-- Dành cho {{> header}}
+│           └── footer.handlebars  <-- Dành cho {{> footer}}
+
+
+vao scripts trong package json
+"watch": "sass src/resources/scss/app.scss src/public/css/app.css"
+npm run watch
+
+cài prettier
+npm i prettier lint-stage husky --save-dev
+
+
+- vào package.json cài scripts là beautiful
+prettier --single-quote --trailing-comma all --tab-width 4 --write \"src/**/*.{js,json,scss}\"
+
+- lint-staged dùng để sửa code khi đã add .
+
+-- npm run beautiful
+
+-- npm i mongoose // tạo giao tiếp model giữa server và csdl
+
+-- npm mongoose-slug-generator
+
+npm install slugify // phiên bản nhẹ hơn chuẩn bền
+
+
+
+muốn tạo hàm trong express handlebars
+tạo helpers.js để tạo hàm custom mà mình muốn 
+rồi ném vào engine helpers:helper
+
+
+-- npm install method-override
+dùng để có thể thêm put deleete
+
+
+npm i mongoose-delete
+
+-- middleware
+🧠 Middleware là gì?
+
+Middleware là một hàm đứng ở giữa request và response
+
+Luồng xử lý:
+
+Client → Middleware → Middleware → Route → Response
+
+
+Middleware có thể:
+
+Xử lý request
+
+Thay đổi request / response
+
+Dừng request
+
+Chuyển sang middleware tiếp theo
+
+✋ Middleware làm được những gì?
+
+Middleware có thể:
+
+Kiểm tra đăng nhập
+
+Validate dữ liệu
+
+Parse body
+
+Ghi log
+
+Bắt lỗi
+
+Phân quyền
+
+
+# middleware
+
+### ý nghĩa 
+-   Phần mềm trung gian( đứng giữa các thành phần trong mô hình phần mềm)
+
+Brower(client) ===========request=============> server(NodeJS)
+Brower(client) <=============response=========== server(NodeJS)
+
+### vai trò
+-- giống bác bảo vệ
+
+-- kiểm tra validation khi gửi lên server
+-- validation passed-> cho vào
+
+
+### ứng dụng
+-- dựng chức năng xác thực authentication
+-- phan quyền authorization
+--  để chia sẻ các giá trị của biến tới tất cả các views
+
+
+
+npm install --save mongoose-sequence
+
+autoincrement by sequence
+
+
+
+why use scss without css???
+5. Kết luận ngắn gọn
+CSS              	SCSS
+Viết trực tiếp	Viết “thông minh”
+Khó bảo trì	    Dễ scale
+Không biến	    Có biến
+Không logic	    Có cấu trúc

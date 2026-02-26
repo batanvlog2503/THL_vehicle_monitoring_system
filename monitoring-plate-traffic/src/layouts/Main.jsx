@@ -1,9 +1,14 @@
 import React from "react"
 import "./Main.css"
+import { useState, useEffect } from "react"
 import { Outlet } from "react-router-dom"
 import Sidebar from "../pages/sidebar/Sidebar"
 import NavbarDetails from "../pages/navbar/NavbarDetails"
 const Main = () => {
+  useEffect(() => {
+    document.title = "Trang chủ"
+  }, [])
+
   return (
     <div className="container-fluid main p-0">
       <div className="navbar-details sticky-top">
