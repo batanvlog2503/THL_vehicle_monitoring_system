@@ -68,9 +68,7 @@ const Vehicle = () => {
           </div>
         </div>
 
-        <div className="inner-list col-12">
-            
-        </div>
+        <div className="inner-list col-12"></div>
       </div>
     </div>
   )

@@ -18,6 +18,7 @@ import MainLayout from "./layouts/MainLayout"
 import Login from "./auth/Login/Login"
 import Home from "./components/home/Home"
 import Main from "./layouts/Main"
+import Statistic from "./components/statistics/Statistic"
 import Dashboard from "./components/dashboard/Dashboard"
 import Vehicle from "./components/vehicles/Vehicle"
 import SignUp from "./auth/Logout/SignUp"
@@ -50,6 +51,10 @@ const router = createBrowserRouter(
         <Route
           path="vehicle"
           element={<Vehicle />}
+        ></Route>
+        <Route
+          path="statistic"
+          element={<Statistic />}
         ></Route>
       </Route>
     </Route>,

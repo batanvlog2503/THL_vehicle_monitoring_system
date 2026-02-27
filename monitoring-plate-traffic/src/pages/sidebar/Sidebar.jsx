@@ -37,6 +37,14 @@ const Sidebar = () => {
             <i class="fa-regular fa-message"></i> AI Chatbot
           </NavLink>
         </li>
+        <li>
+          <NavLink
+            to="/main/history"
+            className="link"
+          >
+            <i class="fa-solid fa-clock-rotate-left"></i> History
+          </NavLink>
+        </li>
       </ul>
     </div>
   )
