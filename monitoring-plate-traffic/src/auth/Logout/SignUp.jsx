@@ -5,25 +5,27 @@ import axios from "axios"
 
 import { useNavigate } from "react-router-dom"
 const SignUp = () => {
-  const [users, setUsers] = useState({
-    username: "",
+  const [user, setUser] = useState({
+    name: "",
     password: "",
+    email: "",
+    mobile: "",
   })
   const navigate = useNavigate() // điều hướng
   const [message, setMessage] = useState("")
   const [type, setType] = useState("")
-  const { username, password } = users
+  const { name, password, email, mobile } = user
 
   const handleInputChange = (e) => {
-    setUsers({ ...users, [e.target.name]: e.target.value })
+    setUser({ ...user, [e.target.name]: e.target.value })
   }
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/signup",
-        users,
+        "http://localhost:3000/auth/register",
+        user,
       )
 
       console.log("success ", response.data)
@@ -32,9 +34,11 @@ const SignUp = () => {
       setTimeout(() => {
         setMessage("")
       }, 2000)
-      setUsers({
-        username: "",
+      setUser({
+        name: "",
         password: "",
+        email: "",
+        mobile: "",
       })
 
       //reset data
@@ -61,12 +65,19 @@ const SignUp = () => {
             <h1 style={{ fontSize: "30px", color: "Black", fontWeight: "700" }}>
               AI Traffic Monitoring System
             </h1>
-            <p>Sign Up to create username</p>
+            <p style={{ marginTop: "10px" }}>
+              Please register to login my website
+            </p>
           </div>
           {message && (
             <div
               className={`alert alert-${type}`}
-              style={{ fontSize: "12px", padding: "5px", textAlign: "center" }}
+              style={{
+                fontSize: "15px",
+                padding: "5px",
+                textAlign: "center",
+                fontWeight: "800",
+              }}
               role="alert"
             >
               {message}
@@ -77,10 +88,10 @@ const SignUp = () => {
             className="input-group mb-5"
             onSubmit={(e) => handleSubmit(e)}
           >
-            <b style={{ fontSize: "15px" }}>username</b>
+            <b style={{ fontSize: "14px" }}>Name</b>
             <div className="input-group input-enter mb-3">
               <label
-                htmlFor="username"
+                htmlFor="name"
                 className="input-group-text"
               >
                 <i className="fa-solid fa-user"></i>
@@ -88,18 +99,18 @@ const SignUp = () => {
               <input
                 type="text"
                 className="form-control"
-                name="username"
-                id="username"
-                placeholder="username"
-                aria-label="username"
+                name="name"
+                id="name"
+                placeholder="name"
+                aria-label="name"
                 aria-describedby="basic-addon1"
-                value={username}
+                value={name}
                 onChange={(e) => handleInputChange(e)}
                 required
                 autoComplete="new-password"
               />
             </div>
-            <b style={{ fontSize: "15px", marginBottom: "5px" }}>Password</b>
+            <b style={{ fontSize: "14px", marginBottom: "5px" }}>Password</b>
             <div className="input-group input-enter mb-3">
               <label
                 htmlFor="password"
@@ -121,16 +132,61 @@ const SignUp = () => {
                 autoComplete="new-password"
               />
             </div>
-
+            <b style={{ fontSize: "14px", marginBottom: "5px" }}>Email</b>
+            <div className="input-group input-enter mb-3">
+              <label
+                htmlFor="email"
+                className="input-group-text"
+              >
+                <i class="fa-solid fa-at"></i>
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                id="email"
+                placeholder="Email"
+                aria-label="email"
+                aria-describedby="basic-addon3"
+                value={email}
+                onChange={(e) => handleInputChange(e)}
+                required
+                autoComplete="new-password"
+              />
+            </div>
+            <b style={{ fontSize: "14px", marginBottom: "5px" }}>Mobile</b>
+            <div className="input-group input-enter mb-3">
+              <label
+                htmlFor="mobile"
+                className="input-group-text"
+              >
+                <i class="fa-solid fa-mobile"></i>
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                name="mobile"
+                id="mobile"
+                placeholder="mobile"
+                aria-label="mobile"
+                aria-describedby="basic-addon3"
+                value={mobile}
+                onChange={(e) => handleInputChange(e)}
+                required
+                autoComplete="new-password"
+              />
+            </div>
             <button
               type="submit"
               className="btn w-100"
             >
               Sign Up
             </button>
-          </form>   
-
-          <div className="text-center">
+          </form>
+          <div
+            className="text-center"
+            style={{ marginTop: "10px" }}
+          >
             <p>
               Bạn đã có tài khoản ? <a href="/login">Đăng nhập tài khoản</a>
             </p>

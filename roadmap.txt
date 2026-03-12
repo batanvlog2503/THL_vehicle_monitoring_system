@@ -1,0 +1,271 @@
+📊 Báo cáo tiến độ lần 1 (Tuần 1 → Tuần 2)
+Mục tiêu: Xây dựng nền tảng hệ thống
+👨‍💻 Đỗ Quang Huân (CV Core)
+
+Đã thực hiện:
+
+Tìm hiểu thư viện xử lý video
+
+OpenCV
+
+Xây dựng module đọc video
+
+cv2.VideoCapture()
+
+Hiển thị frame video realtime
+
+Tích hợp mô hình phát hiện phương tiện
+
+YOLOv8
+từ Ultralytics
+
+Detect được các phương tiện:
+
+car
+motorbike
+bus
+truck
+
+Vẽ bounding box lên video.
+
+👨‍💻 Phạm Ngọc Linh (License Plate)
+
+Đã thực hiện:
+
+Tìm hiểu bài toán License Plate Recognition
+
+Khảo sát dataset biển số
+
+Nghiên cứu OCR:
+
+EasyOCR
+
+Tesseract OCR
+
+Thử nghiệm OCR trên ảnh biển số tĩnh.
+
+Viết module đọc ảnh và cắt vùng biển số.
+
+👨‍💻 Phạm Thanh Tân (Web Demo)
+
+Đã thực hiện:
+
+Thiết kế UI web demo trên Figma
+
+Xây dựng giao diện web cơ bản
+
+Chức năng:
+
+Upload video
+
+Hiển thị video
+
+Thiết lập framework web
+
+Flask
+
+Test upload video từ web → server.
+
+📊 Báo cáo tiến độ lần 2 (Tuần 3 → Tuần 4)
+Mục tiêu: Tracking phương tiện + tính vận tốc
+👨‍💻 Đỗ Quang Huân
+
+Đã thực hiện:
+
+Tích hợp thuật toán tracking phương tiện
+
+ByteTrack
+hoặc
+
+DeepSORT
+
+Gán ID cho từng xe.
+
+Ví dụ:
+
+Car ID 1
+Car ID 2
+Car ID 3
+
+Theo dõi chuyển động của xe qua frame.
+
+Tính quãng đường di chuyển (pixel).
+
+Xây dựng module pixel → meter calibration.
+
+Tính vận tốc phương tiện.
+
+Hiển thị:
+
+ID + Speed
+
+trên video.
+
+👨‍💻 Phạm Ngọc Linh
+
+Đã thực hiện:
+
+Phát hiện vùng biển số trên xe.
+
+Cắt vùng biển số từ bounding box.
+
+Áp dụng OCR để đọc ký tự.
+
+Viết module làm sạch dữ liệu biển số
+
+Ví dụ:
+
+30A-12345
+
+Chuẩn hóa format biển số.
+
+👨‍💻 Phạm Thanh Tân
+
+Đã thực hiện:
+
+Hiển thị video AI trên web.
+
+Tạo trang hiển thị kết quả video.
+
+Thiết kế bảng dữ liệu.
+
+Ví dụ:
+
+ID	Type	Speed
+1	Car	45
+
+Kết nối web với AI script Python.
+
+📊 Báo cáo tiến độ lần 3 (Tuần 5 → Tuần 6)
+Mục tiêu: Nhận diện biển số hoàn chỉnh
+👨‍💻 Đỗ Quang Huân
+
+Đã thực hiện:
+
+Xuất dữ liệu phương tiện:
+
+ID
+bbox
+speed
+frame
+
+Tối ưu tốc độ xử lý video.
+
+Đồng bộ dữ liệu với module biển số.
+
+👨‍💻 Phạm Ngọc Linh
+
+Đã thực hiện:
+
+Hoàn thiện pipeline nhận diện biển số.
+
+Pipeline:
+
+vehicle bbox
+↓
+detect plate
+↓
+OCR
+↓
+clean text
+
+Gán biển số với ID xe.
+
+Ví dụ:
+
+ID 3 → 30A-12345
+
+Xác định vi phạm vượt tốc.
+
+👨‍💻 Phạm Thanh Tân
+
+Đã thực hiện:
+
+Hiển thị bảng thống kê.
+
+ID	Type	Speed	Plate
+3	Car	70	30A-12345
+
+Thiết kế nhiều trang web:
+
+Dashboard
+Upload Video
+Statistics
+
+Xuất dữ liệu CSV / Excel.
+
+📊 Báo cáo tiến độ lần 4 (Tuần 7 → Tuần 8)
+Mục tiêu: Hoàn thiện web + chatbot
+👨‍💻 Đỗ Quang Huân
+
+Đã thực hiện:
+
+Tối ưu pipeline xử lý video.
+
+Đảm bảo hệ thống chạy realtime ổn định.
+
+Xuất dữ liệu cuối cùng.
+
+👨‍💻 Phạm Ngọc Linh
+
+Đã thực hiện:
+
+Hoàn thiện module phân tích giao thông.
+
+Thống kê:
+
+tổng xe
+xe vượt tốc
+tốc độ trung bình
+👨‍💻 Phạm Thanh Tân
+
+Đã thực hiện:
+
+Hoàn thiện web demo.
+
+Chức năng:
+
+login
+upload video
+video AI
+statistics
+
+Xây dựng chatbot AI.
+
+User hỏi:
+
+Có bao nhiêu xe vượt tốc?
+
+Chatbot đọc dữ liệu CSV và trả lời.
+
+Hoàn thiện UI và trình diễn hệ thống.
+
+🎓 Khi demo cuối kỳ
+
+Pipeline hoàn chỉnh:
+
+Video / Webcam
+↓
+Vehicle Detection
+↓
+Tracking
+↓
+Speed Calculation
+↓
+Plate Recognition
+↓
+Violation Detection
+↓
+Web Dashboard
+↓
+Chatbot AI
+
+✅ Nếu bạn muốn, mình có thể viết thêm 1 bản "báo cáo tiến độ chuẩn để nộp giảng viên" (rất xịn) gồm:
+
+Timeline Gantt chart
+
+Sơ đồ hệ thống
+
+Phân công nhiệm vụ chuẩn đồ án
+
+(để bài của nhóm bạn nhìn giống project AI chuyên nghiệp).

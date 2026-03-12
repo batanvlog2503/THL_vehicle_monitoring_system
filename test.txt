@@ -145,3 +145,47 @@ Viết trực tiếp	Viết “thông minh”
 Khó bảo trì	    Dễ scale
 Không biến	    Có biến
 Không logic	    Có cấu trúc
+
+
+🟡 Backend tối thiểu cần có
+
+Nếu muốn đơn giản:
+
+Login
+
+Upload video
+
+Trả kết quả JSON
+
+Lưu DB
+
+Là đủ điểm ổn.
+
+🟢 Backend nâng cao (để được điểm cao)
+
+Phân quyền user
+
+Lịch sử xử lý video
+
+Dashboard thống kê
+
+Export CSV
+
+🚨 Sai lầm nhiều nhóm mắc
+
+❌ AI xử lý xong rồi in ra console
+❌ Không lưu DB
+❌ Không có API rõ ràng
+❌ Không có cấu trúc REST
+
+Giảng viên nhìn vào là trừ điểm ngay.
+
+🧠 Kiến trúc đẹp nên làm
+
+Frontend
+⬇
+Backend (NodeJS / SpringBoot)
+⬇
+AI Service (Python CV)
+⬇
+Database

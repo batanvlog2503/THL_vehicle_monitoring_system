@@ -45,7 +45,7 @@ const router = createBrowserRouter(
         element={<Main />}
       >
         <Route
-          index
+          index q
           element={<Dashboard />}
         ></Route>
         <Route

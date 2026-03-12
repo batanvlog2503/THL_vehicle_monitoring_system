@@ -3,3 +3,7 @@ npm i react-router-dom
 
 npm install cors
 
+
+npm create vite@latest
+
+//hello    
