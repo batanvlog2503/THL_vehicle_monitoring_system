@@ -1,59 +1,78 @@
 const User = require("../models/User")
+
+const { validationResult } = require("express-validator")
 class AuthControllers {
-  async login(req, res, next) {
+  async userLogin(req, res, next) {
     // [POST] /auth/login
     try {
       // lấy username + password
-      const { username, password } = req.body
+      const errors = validationResult(req)
 
-      if (!username || !password) {
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: "Errors",
+          errors: errors.array(),
+        })
+      }
+      const { email, name, password } = req.body
+      const user = await User.findOne({ email })
+
+      if (!user) {
         return res
           .status(400)
-          .json({ message: "Thiếu tài khoản hoặc mật khẩu" })
+          .json({ success: false, message: "Email doesn't exists !!!" })
       }
-      //Lỗi 400 – Bad Request
 
-      //Ý nghĩa:
-      //Server không thể xử lý yêu cầu vì request gửi lên bị sai cú pháp hoặc thiếu dữ liệu.
-
-      const user = await User.findOne({ username, password })
-      // Lỗi 401 – Unauthorized
-
-      // Ý nghĩa:
-      // Request chưa được xác thực (authentication) hoặc token không hợp lệ.
-      if (!user) {
-        return res.status(401).json({ message: "Tài khoản hoặc mật khẩu sai" })
+      if (password !== user.password || name !== user.name) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Name or Password Wrong !!!" })
       }
 
       return res.status(200).json({
+        success: true,
         message: "Login Successfully",
-        user: {
-          id: user._id,
-          username: user.username,
-        },
+        user: user,
       })
     } catch (error) {
-      res.status(500).json({ message: error.message })
-      next(error)
+      return res.status(400).json({ message: error.message })
     }
   }
-
-  async signup(req, res, next) {
+  //[POST] /auth/register
+  async userRegister(req, res, next) {
     try {
-      const { username, password } = req.body
+      const errors = validationResult(req)
 
-      const existingUser = await User.findOne({ username })
-
-      if (existingUser) {
-        return res.status(400).json({ message: "Username đã tồn tại" })
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: "Errors",
+          errors: errors.array(),
+        })
       }
-      const newUser = await User.create({ username, password })
-      console.log(req.body)
-      console.log("BODY:", req.body)
-      res.status(201).json({ message: "SignUp Successfully", user: newUser })
+      const { name, password, email, mobile } = req.body
+      const existingUser = await User.findOne({ email })
+      if (existingUser) {
+        return res.status(400).json({
+          success: false,
+          message: "Email already Exists !!!",
+        })
+      }
+
+      const newUser = new User({
+        name,
+        email,
+        mobile,
+        password,
+      })
+      await newUser.save()
+
+      return res
+        .status(201)
+        .json({ success: true, message: "SignUp Successfully", user: newUser })
     } catch (error) {
-      res.status(500).json({ message: error.message })
-      next(error)
+      return res.status(400).json({ success: false, message: error.message })
     }
   }
 }

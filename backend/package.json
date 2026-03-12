@@ -30,8 +30,10 @@
   "dependencies": {
     "bootstrap-icons": "^1.13.1",
     "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
     "express": "^5.1.0",
     "express-handlebars": "^8.0.4",
+    "express-validator": "^7.3.1",
     "method-override": "^3.0.0",
     "mongoose": "^9.1.4",
     "mongoose-delete": "^1.0.7",
