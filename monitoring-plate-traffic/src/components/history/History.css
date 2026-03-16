@@ -1,0 +1,10 @@
+.history-container {
+  height: 85vh; /* chiếm toàn bộ màn hình */
+  display: flex;
+  justify-content: center; /* căn giữa ngang */
+  align-items: center; /* căn giữa dọc */
+}
+
+.history-container img {
+  width: 200px; /* chỉnh kích thước ảnh nếu muốn */
+}

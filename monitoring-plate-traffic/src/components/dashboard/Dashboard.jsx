@@ -62,9 +62,81 @@ const Dashboard = () => {
                   <th scope="col">Speed</th>
                   <th scope="col">Plate</th>
                   <th scope="col">Status</th>
+                  <th scope="col">Video</th>
                 </tr>
               </thead>
-              <tbody></tbody>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Car</td>
+                  <td>65 km/h</td>
+                  <td>30A-12345</td>
+                  <td>Normal</td>
+                  <td>
+                    <button className="btn btn-primary btn-sm">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Motorbike</td>
+                  <td>55 km/h</td>
+                  <td>29B-56789</td>
+                  <td>Normal</td>
+                  <td>
+                    <button className="btn btn-primary btn-sm">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Truck</td>
+                  <td>80 km/h</td>
+                  <td>88C-22222</td>
+                  <td style={{ color: "red" }}>Over Speed</td>
+                  <td>
+                    <button className="btn btn-primary btn-sm">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Car</td>
+                  <td>72 km/h</td>
+                  <td>30H-67890</td>
+                  <td>Normal</td>
+                  <td>
+                    <button className="btn btn-primary btn-sm">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Bus</td>
+                  <td>60 km/h</td>
+                  <td>51B-11111</td>
+                  <td>Normal</td>
+                  <td>
+                    <button className="btn btn-primary btn-sm">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td>Motorbike</td>
+                  <td>45 km/h</td>
+                  <td>29X-33333</td>
+                  <td>Normal</td>
+                  <td>
+                    <button className="btn btn-primary btn-sm">View</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td>Car</td>
+                  <td>95 km/h</td>
+                  <td>30A-99999</td>
+                  <td style={{ style: "red" }}>Over Speed</td>
+                  <td>
+                    <button className="btn btn-primary btn-sm">View</button>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>

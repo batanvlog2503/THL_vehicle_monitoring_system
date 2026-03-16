@@ -22,6 +22,9 @@ import Statistic from "./components/statistics/Statistic"
 import Dashboard from "./components/dashboard/Dashboard"
 import Vehicle from "./components/vehicles/Vehicle"
 import SignUp from "./auth/Logout/SignUp"
+import History from "./components/history/History"
+import Chatbot from "./components/chatbot/Chatbot"
+import Webcam from "./components/webcam/Webcam"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -45,8 +48,13 @@ const router = createBrowserRouter(
         element={<Main />}
       >
         <Route
-          index q
+          index
+          q
           element={<Dashboard />}
+        ></Route>
+        <Route
+          path="webcam"
+          element={<Webcam />}
         ></Route>
         <Route
           path="vehicle"
@@ -55,6 +63,14 @@ const router = createBrowserRouter(
         <Route
           path="statistic"
           element={<Statistic />}
+        ></Route>
+        <Route
+          path="chatbot"
+          element={<Chatbot />}
+        ></Route>
+        <Route
+          path="history"
+          element={<History />}
         ></Route>
       </Route>
     </Route>,

@@ -15,6 +15,14 @@ const Sidebar = () => {
         </li>
         <li>
           <NavLink
+            to="/main/webcam"
+            className="link"
+          >
+            <i class="fa-solid fa-camera"></i> Webcam
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
             to="/main/vehicle"
             className="link"
           >

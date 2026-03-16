@@ -8,11 +8,14 @@ const NavbarDetails = () => {
           className="inner-title col-sm-12 col-lg-3 col-4"
           style={{ cursor: "pointer" }}
         >
-          <h4>
+          <a href="/main">
             {" "}
-            <i class="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
-          </h4>
-          <p>Statistics & Data Analysis</p>
+            <h4>
+              {" "}
+              <i class="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
+            </h4>
+            <p>Statistics & Data Analysis</p>
+          </a>
         </div>
         <div className="inner-feature col-sm-12 col-lg-6 col-4">
           <ul className="list-feature"></ul>
