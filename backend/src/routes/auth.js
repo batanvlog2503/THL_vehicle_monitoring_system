@@ -4,6 +4,8 @@ const {
   userValidator,
   userRegisterValidation,
 } = require("../helpers/validation")
+
+const auth = require("../app/middlewares/auth")
 const router = express.Router()
 const AuthControllers = require("../app/controllers/authControllers")
 

@@ -11,13 +11,13 @@ const generateAccessToken = async (user) => {
 }
 
 const generateRefreshToken = async (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "3h" })
+  return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "3h" })
 }
 class AuthControllers {
   async userLogin(req, res, next) {
     // [POST] /auth/login
     try {
-      // lấy username + password
+      // lấy email + password
       const errors = validationResult(req)
 
       if (!errors.isEmpty()) {
@@ -56,12 +56,27 @@ class AuthControllers {
         })
       }
 
+      // ví dụ login refresh còn hạn thì xóa đi lấy cái mới
+      // vì đã login
+      await RefreshToken.deleteMany({ user_id: userData._id })
+      const accessToken = await generateAccessToken({ user: userData })
+      const refreshToken = await generateRefreshToken({ user: userData })
+      console.log("TOKEN LOGIN: ", accessToken)
+      // tạo refreshToken
+      await RefreshToken.create({
+        user_id: userData._id,
+        refreshToken: refreshToken,
+      })
 
-      await RefreshToken.deleteMany({user_id:})
+      // gửi dữ liệu
       return res.status(200).json({
         success: true,
-        message: "Login Successfully",
-        user: user,
+        message: "Login Successfully !!!",
+        user: userData.toObject(),
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+        tokenType: "Bearer",
+        createAt: new Date(),
       })
     } catch (error) {
       return res.status(400).json({ message: error.message })

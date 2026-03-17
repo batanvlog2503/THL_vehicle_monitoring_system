@@ -24,22 +24,27 @@ const SignUp = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/register",
+        `${import.meta.env.VITE_APP_URL}/auth/register`,
         user,
       )
 
-      console.log("success ", response.data)
+      console.log("Register Successfully !!! ", response.data)
       setMessage(response.data.message)
       setType("success")
       setTimeout(() => {
         setMessage("")
       }, 2000)
+
       setUser({
         name: "",
         password: "",
         email: "",
         mobile: "",
       })
+
+      alert("Đăng ký thành công ✅, vui lòng xác nhận email")
+
+      navigate("/login")
 
       //reset data
     } catch (error) {
@@ -138,7 +143,7 @@ const SignUp = () => {
                 htmlFor="email"
                 className="input-group-text"
               >
-                <i class="fa-solid fa-at"></i>
+                <i className="fa-solid fa-at"></i>
               </label>
               <input
                 type="email"
@@ -160,7 +165,7 @@ const SignUp = () => {
                 htmlFor="mobile"
                 className="input-group-text"
               >
-                <i class="fa-solid fa-mobile"></i>
+                <i className="fa-solid fa-mobile"></i>
               </label>
               <input
                 type="text"

@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom"
 const Login = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState({
-    name: "",
     password: "",
     email: "",
   })
@@ -15,7 +14,7 @@ const Login = () => {
   const [message, setMessage] = useState("")
   const [type, setType] = useState("")
 
-  const { name, password, email } = user
+  const { password, email } = user
 
   const handleInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
@@ -25,7 +24,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/login",
+        `${import.meta.env.VITE_APP_URL}/auth/login`,
         user,
       )
 
@@ -78,35 +77,13 @@ const Login = () => {
             className="input-group mb-5"
             onSubmit={(e) => handleSubmit(e)}
           >
-            <b style={{ fontSize: "15px" }}>Name</b>
-            <div className="input-group input-enter mb-3">
-              <label
-                htmlFor="name"
-                className="input-group-text"
-              >
-                <i className="fa-solid fa-user"></i>
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                name="name"
-                id="name"
-                placeholder="name"
-                aria-label="name"
-                aria-describedby="basic-addon1"
-                value={name}
-                onChange={(e) => handleInputChange(e)}
-                required
-                autoComplete="new-password"
-              />
-            </div>
             <b style={{ fontSize: "15px", marginBottom: "5px" }}>Password</b>
             <div className="input-group input-enter mb-3">
               <label
                 htmlFor="password"
                 className="input-group-text"
               >
-                <i class="fa-solid fa-lock"></i>
+                <i className="fa-solid fa-lock"></i>
               </label>
               <input
                 type="password"
