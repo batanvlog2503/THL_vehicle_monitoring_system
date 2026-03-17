@@ -20,3 +20,9 @@ exports.userValidator = [
     minSymbols: 1,
   }),
 ]
+
+exports.userRegisterValidation = [
+  check("email", "please include a valid email !").isEmail().normalizeEmail({
+    gmail_remove_dots: true,
+  }),
+]

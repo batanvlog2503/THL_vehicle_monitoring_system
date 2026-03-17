@@ -1,6 +1,6 @@
 // tạo express
 const express = require("express")
-
+require("dotenv").config()
 // tạo cors
 
 const cors = require("cors")
