@@ -1,0 +1,203 @@
+🧠 1. Hiểu bản chất WebSocket (QUAN TRỌNG NHẤT)
+
+Trước hết, bạn cần hiểu:
+
+❓ WebSocket là gì?
+
+Là giao thức giao tiếp 2 chiều (full-duplex) giữa client ↔ server
+
+Khác HTTP:
+
+HTTP: request → response → đóng
+
+WebSocket: mở 1 connection → gửi dữ liệu liên tục
+
+👉 Trong code của bạn:
+
+const ws = new WebSocket("ws://localhost:8765")
+
+→ Đây là mở 1 "đường ống" dữ liệu realtime
+
+🔄 2. Lifecycle của WebSocket
+
+Bạn cần nắm rõ các trạng thái:
+
+Client (React)
+ws.onopen      // kết nối thành công
+ws.onmessage   // nhận data
+ws.onerror     // lỗi
+ws.onclose     // đóng kết nối
+Server (Python)
+async def stream(websocket):
+    await websocket.send(...)
+
+👉 Kiến thức cần học:
+
+Khi nào connection bị đóng?
+
+Cách reconnect (rất quan trọng với realtime)
+
+Heartbeat / ping-pong
+
+📦 3. Format dữ liệu truyền (JSON + Binary)
+
+Trong project của bạn:
+
+Bạn đang gửi:
+{
+  "status": "frame",
+  "frame": "base64...",
+  "detections": [...]
+}
+
+👉 Cần học:
+
+JSON serialization/deserialization
+
+Base64 (tại sao phải encode ảnh)
+
+Khi nào nên dùng binary thay vì base64 (tối ưu)
+
+🎥 4. Streaming realtime (case của bạn)
+
+Bạn đang làm:
+
+👉 Video → YOLO → encode → gửi → React vẽ lại
+
+Cần hiểu:
+
+FPS (frame per second)
+
+Buffer / delay
+
+Đồng bộ client-server
+
+Ví dụ:
+
+await asyncio.sleep(1/25)
+
+→ giới hạn 25 FPS
+
+👉 Đây là kiến thức Realtime Systems cơ bản
+
+⚡ 5. Async / Concurrency (Python & JS)
+
+Code của bạn dùng:
+
+async def stream(...)
+
+👉 Bạn cần học:
+
+async / await
+
+Event loop
+
+Non-blocking IO
+
+Nếu không hiểu phần này:
+→ WebSocket sẽ lag hoặc crash
+
+🧩 6. State management phía frontend
+
+Trong React:
+
+setDetections((prev) => { ... })
+
+👉 Bạn cần hiểu:
+
+State update async
+
+Immutable data
+
+Tránh re-render quá nhiều (performance)
+
+🔌 7. Quản lý connection (production-level)
+
+Hiện tại code của bạn chưa đủ production, bạn cần học thêm:
+
+a. Auto reconnect
+if (ws.closed) reconnect()
+b. Multiple clients
+
+Python hiện tại:
+
+websockets.serve(stream, ...)
+
+→ mỗi client 1 stream riêng
+
+👉 cần học:
+
+Broadcast
+
+Room / session
+
+🚀 8. Performance & Optimization (rất quan trọng với video AI)
+
+Bạn nên học:
+
+Giảm chất lượng ảnh (IMWRITE_JPEG_QUALITY)
+
+Resize frame
+
+Throttle FPS
+
+Chỉ gửi data khi cần
+
+🔐 9. Security cơ bản
+
+Bạn nên biết:
+
+ws:// vs wss://
+
+Authentication (token)
+
+Không expose localhost khi deploy
+
+📚 Lộ trình học đề xuất (ngắn gọn)
+Bước 1 (1–2 ngày)
+
+WebSocket basics
+
+Client API (JS)
+
+Bước 2 (2–3 ngày)
+
+Python websockets
+
+Async/await
+
+Bước 3 (3–5 ngày)
+
+Realtime streaming (video, FPS)
+
+Bước 4 (nâng cao)
+
+Scaling (Redis, pub/sub)
+
+WebRTC (nếu làm video real-time xịn)
+
+🎯 Tóm lại (dành riêng cho project của bạn)
+
+Bạn KHÔNG cần học lan man, chỉ cần nắm:
+
+WebSocket lifecycle
+
+JSON + Base64
+
+Async Python
+
+Realtime streaming (FPS, delay)
+
+React state update
+
+👉 Là đủ build hệ thống như bạn đang làm
+
+Nếu bạn muốn, mình có thể:
+
+Review kiến trúc project này cho bạn (rất đáng)
+
+Hoặc tối ưu để giảm lag ~50–70%
+
+Hoặc vẽ sơ đồ hệ thống để bạn hiểu sâu hơn
+
+Bạn muốn đi hướng nào tiếp?

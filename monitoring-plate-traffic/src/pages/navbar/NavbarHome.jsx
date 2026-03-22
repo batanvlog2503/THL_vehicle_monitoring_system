@@ -8,7 +8,7 @@ const NavbarHome = () => {
           <a href="/">
             <h4>
               {" "}
-              <i class="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
+              <i className="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
             </h4>
           </a>
         </div>

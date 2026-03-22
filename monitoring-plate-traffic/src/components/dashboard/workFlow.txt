@@ -1,0 +1,70 @@
+stream.py (Python)  ──WebSocket──►  Dashboard.jsx (React)
+  YOLO detect                         Hiển thị video + bảng
+
+  Python — stream.py
+1. Khởi động server
+pythonwebsockets.serve(stream, 'localhost', 8765)
+```
+Mở WebSocket server, chờ React kết nối vào.
+
+**2. Mỗi frame video, làm 3 việc:**
+```
+Đọc frame từ video
+      ↓
+YOLO track → lấy ID, class, confidence, bbox
+      ↓
+Encode frame (đã vẽ bbox sẵn) → base64 JPEG
+      ↓
+Gửi JSON qua WebSocket: { frame, detections }
+```
+
+Dùng `model.track(..., persist=True)` thay vì `detect` để YOLO **giữ nguyên ID** xuyên suốt video — object A luôn là ID=1 dù di chuyển.
+
+Khi hết video, gửi `{ status: 'done' }` để báo React kết thúc.
+
+---
+
+### React — `Dashboard.jsx`
+
+**`startStream()`** — mở WebSocket, lắng nghe message:
+```
+Nhận message
+      ↓
+status === 'done'? → cập nhật trạng thái, dừng
+      ↓
+Decode base64 → vẽ lên <canvas>
+      ↓
+Cập nhật bảng detections (merge theo ID)
+Logic merge bảng rất quan trọng:
+javascriptconst idx = updated.findIndex((x) => x.id === d.id)
+if (idx === -1) updated.push(d)   // ID mới → thêm dòng
+else updated[idx] = d              // ID cũ → cập nhật confidence
+```
+→ Bảng **tích lũy tất cả object đã xuất hiện**, không bị mất khi object ra khỏi frame.
+
+---
+
+### Luồng tổng quát
+```
+[Python]                        [React]
+  │                               │
+  │  ← client kết nối ──────────  startStream()
+  │                               │
+  │  gửi frame + detections ───►  vẽ canvas
+  │  (25fps)                      cập nhật bảng
+  │   ...                         ...
+  │  gửi { status: 'done' } ───►  setStatus("done")
+  │                               │
+cap.release()                   hiển thị ✅ Done
+
+img.src = `data:image/jpeg;base64,${data.frame}`
+```
+Trình duyệt tự hiểu chuỗi base64 đó là ảnh JPEG và hiển thị lên canvas — không cần decode thủ công.
+
+---
+
+### Tóm lại bằng hình:
+```
+numpy array     →    JPEG bytes     →    base64 string    →    hiển thị
+(ảnh + bbox)        (nén lại)           (JSON-safe)           trên canvas
+   frame_             buffer             frame_b64            img.src=...

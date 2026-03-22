@@ -1,0 +1,145 @@
+
+
+React Dashboard
+   ↓
+WebSocket connect
+   ↓
+Nhận frame (base64)
+   ↓
+Vẽ lên canvas
+   ↓
+Nhận detections
+   ↓
+Hiển thị bảng🧩 2. Những kiến thức bạn cần (chia theo mức độ)
+🟢 A. React cơ bản (QUAN TRỌNG NHẤT)
+
+Bạn cần hiểu:
+
+1️⃣ Function Component
+const Dashboard = () => {}
+
+👉 React hiện đại dùng function thay vì class
+
+2️⃣ Hook
+useState
+const [status, setStatus] = useState("idle")
+
+👉 lưu trạng thái UI
+
+useRef
+const canvasRef = useRef(null)
+
+👉 giữ reference tới DOM (canvas)
+
+👉 Nếu bạn chưa rõ:
+
+useState → dữ liệu
+useRef → DOM element
+🟡 B. WebSocket (Realtime)
+
+Bạn cần hiểu:
+
+const ws = new WebSocket("ws://localhost:8765")
+
+👉 tạo kết nối realtime
+
+Nhận dữ liệu:
+ws.onmessage = (event) => {}
+
+👉 server gửi gì → nhận ở đây
+
+👉 Kiến thức cần:
+
+client ↔ server
+event-driven
+JSON
+🔵 C. JavaScript ES6 (cực quan trọng)
+
+Bạn phải hiểu:
+
+1️⃣ Arrow function
+(d) => {}
+2️⃣ Spread operator
+const updated = [...prev]
+3️⃣ Array methods
+findIndex()
+map()
+forEach()
+
+👉 Đây là phần quan trọng nhất để hiểu logic
+
+🟣 D. Canvas API (VẼ VIDEO)
+const canvas = canvasRef.current
+const ctx = canvas.getContext("2d")
+Vẽ ảnh:
+ctx.drawImage(img, 0, 0)
+
+👉 bạn cần hiểu:
+
+canvas là gì
+context 2D
+drawImage
+🔴 E. Xử lý ảnh base64
+img.src = `data:image/jpeg;base64,${data.frame}`
+
+👉 nghĩa là:
+
+Python → encode image → base64 → React decode → vẽ
+🟤 F. Logic cập nhật bảng (RẤT QUAN TRỌNG)
+setDetections((prev) => {
+  const updated = [...prev]
+
+  data.detections.forEach((d) => {
+    const idx = updated.findIndex((x) => x.id === d.id)
+
+    if (idx === -1)
+      updated.push(d)
+    else
+      updated[idx] = d
+  })
+
+  return updated
+})
+
+👉 Đây là logic:
+
+Nếu ID mới → thêm
+Nếu đã có → update
+
+👉 Kiến thức cần:
+
+array
+immutable state (React)
+update state đúng cách
+🧱 3. Tóm lại bạn cần học gì
+🎯 Mức tối thiểu để hiểu code này
+1. React hooks (useState, useRef)
+2. JavaScript ES6
+3. WebSocket cơ bản
+4. Canvas API
+5. JSON data handling
+🚀 4. Lộ trình học NHANH cho bạn (2–3 ngày)
+🟢 Ngày 1
+React cơ bản
+useState
+useRef
+🟡 Ngày 2
+WebSocket
+JSON
+array (map, findIndex)
+🔵 Ngày 3
+Canvas (drawImage)
+hiểu flow code
+💡 5. Mức độ code của bạn
+
+Code này thuộc level:
+
+Frontend + Realtime + AI integration
+
+👉 Sinh viên bình thường:
+
+~ 5/10
+
+👉 Code bạn:
+
+~ 8/10 (rất tốt rồi)

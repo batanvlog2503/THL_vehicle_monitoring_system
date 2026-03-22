@@ -7,7 +7,7 @@ const { validationResult } = require("express-validator")
 const RefreshToken = require("../models/RefreshToken")
 
 const generateAccessToken = async (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" })
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" })
 }
 
 const generateRefreshToken = async (user) => {
@@ -28,7 +28,7 @@ class AuthControllers {
         })
       }
       const { email, password } = req.body
-      const userData = await User.findOne({ email })
+      const userData = await User.findOne({ email }).lean()
 
       if (!userData) {
         return res
@@ -59,8 +59,8 @@ class AuthControllers {
       // ví dụ login refresh còn hạn thì xóa đi lấy cái mới
       // vì đã login
       await RefreshToken.deleteMany({ user_id: userData._id })
-      const accessToken = await generateAccessToken({ user: userData })
-      const refreshToken = await generateRefreshToken({ user: userData })
+      const accessToken = await generateAccessToken(userData)
+      const refreshToken = await generateRefreshToken(userData)
       console.log("TOKEN LOGIN: ", accessToken)
       // tạo refreshToken
       await RefreshToken.create({
@@ -72,7 +72,7 @@ class AuthControllers {
       return res.status(200).json({
         success: true,
         message: "Login Successfully !!!",
-        user: userData.toObject(),
+        user: userData,
         accessToken: accessToken,
         refreshToken: refreshToken,
         tokenType: "Bearer",
@@ -180,7 +180,7 @@ class AuthControllers {
 
       const { email } = req.body
 
-      const userData = await User.findOne({ email })
+      const userData = await User.findOne({ email }).lean()
 
       console.log(process.env.SMTP_MAIL)
       console.log(process.env.SMTP_PASSWORD)

@@ -1,0 +1,201 @@
+// Dashboard.jsx
+import { useState, useRef } from "react"
+
+const COLORS = [
+  "#00C8FF", "#FF6B6B", "#6BFF6B", "#FFD93D",
+  "#C77DFF", "#FF9A3C", "#3CFFEC", "#FF3CAC",
+]
+
+const getColor = (id) => COLORS[id % COLORS.length]
+
+const Dashboard = () => {
+  const canvasRef = useRef(null)
+  const wsRef = useRef(null)
+  const [detections, setDetections] = useState([])
+  const [status, setStatus] = useState("idle")
+
+  const drawFrame = (frameB64, dets) => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext("2d")
+
+    const img = new Image()
+    img.src = `data:image/jpeg;base64,${frameB64}`
+    img.onload = () => {
+      // Cập nhật kích thước canvas theo frame
+      canvas.width = img.width
+      canvas.height = img.height
+
+      // 1. Vẽ frame gốc
+      ctx.drawImage(img, 0, 0)
+
+      // 2. Vẽ bbox cho từng detection
+      const scaleX = canvas.width / img.width
+      const scaleY = canvas.height / img.height
+
+      dets.forEach((d) => {
+        const [x1, y1, x2, y2] = d.bbox
+        const color = getColor(d.id)
+        const w = (x2 - x1) * scaleX
+        const h = (y2 - y1) * scaleY
+        const bx = x1 * scaleX
+        const by = y1 * scaleY
+
+        // Vẽ box
+        ctx.strokeStyle = color
+        ctx.lineWidth = 2
+        ctx.strokeRect(bx, by, w, h)
+
+        // Label background
+        const label = `#${d.id} ${d.label} ${(d.conf * 100).toFixed(0)}%`
+        ctx.font = "bold 13px sans-serif"
+        const textW = ctx.measureText(label).width
+        const labelH = 20
+        const labelY = by > labelH ? by - labelH : by + h
+
+        ctx.fillStyle = color
+        ctx.fillRect(bx, labelY, textW + 8, labelH)
+
+        // Label text
+        ctx.fillStyle = "#000"
+        ctx.fillText(label, bx + 4, labelY + 14)
+      })
+    }
+  }
+
+  const startStream = () => {
+    setDetections([])
+    setStatus("streaming")
+
+    const ws = new WebSocket("ws://localhost:8765")
+    wsRef.current = ws
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data)
+
+      if (data.status === "done") {
+        setStatus("done")
+        return
+      }
+
+      // Vẽ frame + bbox
+      drawFrame(data.frame, data.detections)
+
+      // Cập nhật bảng detection
+      setDetections((prev) => {
+        const updated = [...prev]
+        data.detections.forEach((d) => {
+          const idx = updated.findIndex((x) => x.id === d.id)
+          if (idx === -1) updated.push(d)
+          else updated[idx] = d
+        })
+        return updated
+      })
+    }
+
+    ws.onclose = () => setStatus("idle")
+  }
+
+  const stopStream = () => {
+    wsRef.current?.close()
+    setStatus("idle")
+  }
+
+  return (
+    <div className="container-fluid dashboard">
+      <div className="row">
+        {/* Canvas video */}
+        <div className="col-12 col-md-8">
+          <canvas
+            ref={canvasRef}
+            style={{ width: "100%", background: "#000" }}
+          />
+          <div className="mt-2 d-flex gap-2">
+            <button
+              className="btn btn-success"
+              onClick={startStream}
+              disabled={status === "streaming"}
+            >
+              ▶ Start
+            </button>
+            <button
+              className="btn btn-danger"
+              onClick={stopStream}
+              disabled={status !== "streaming"}
+            >
+              ⏹ Stop
+            </button>
+            <span
+              className={`badge my-auto ${
+                status === "streaming"
+                  ? "bg-success"
+                  : status === "done"
+                    ? "bg-secondary"
+                    : "bg-warning"
+              }`}
+            >
+              {status === "streaming"
+                ? "🔴 LIVE"
+                : status === "done"
+                  ? "✅ Done"
+                  : "⏸ Idle"}
+            </span>
+          </div>
+        </div>
+
+        {/* Bảng detection */}
+        <div className="col-12 col-md-4">
+          <h5>Live Detection — {detections.length} objects</h5>
+          <div style={{ overflowY: "auto", maxHeight: "80vh" }}>
+            <table className="table table-sm table-hover">
+              <thead className="table-dark sticky-top">
+                <tr>
+                  <th>ID</th>
+                  <th>Class</th>
+                  <th>Confidence</th>
+                </tr>
+              </thead>
+              <tbody>
+                {detections.length === 0 ? (
+                  <tr>
+                    <td colSpan={3} className="text-center text-muted py-3">
+                      {status === "streaming"
+                        ? "🔍 Đang phân tích..."
+                        : "Chưa có dữ liệu"}
+                    </td>
+                  </tr>
+                ) : (
+                  detections.map((d) => (
+                    <tr key={d.id}>
+                      <td>
+                        {/* Màu badge khớp với màu bbox trên canvas */}
+                        <span
+                          className="badge"
+                          style={{ background: getColor(d.id), color: "#000" }}
+                        >
+                          {d.id}
+                        </span>
+                      </td>
+                      <td>{d.label}</td>
+                      <td>
+                        <div className="progress" style={{ height: "6px" }}>
+                          <div
+                            className={`progress-bar ${d.conf > 0.7 ? "bg-success" : "bg-warning"}`}
+                            style={{ width: `${d.conf * 100}%` }}
+                          />
+                        </div>
+                        <small>{(d.conf * 100).toFixed(0)}%</small>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Dashboard

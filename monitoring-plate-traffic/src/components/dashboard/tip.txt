@@ -1,0 +1,4 @@
+💡 Mẹo nhỏ để "ghi điểm" trong báo cáo:
+Nếu thầy cô hỏi: "Tại sao em không vẽ Bbox ở Frontend cho chuyên nghiệp?", bạn hãy trả lời:
+
+"Em chọn vẽ sẵn ở Backend để đảm bảo tính đồng bộ tuyệt đối giữa khung hình và tọa độ đối tượng, tránh độ trễ hiển thị (UI Latency). Đồng thời, việc này giúp giảm tải tính toán cho trình duyệt, tập trung tài nguyên Frontend vào việc hiển thị biểu đồ và quản lý dữ liệu lưu vết (Log)."

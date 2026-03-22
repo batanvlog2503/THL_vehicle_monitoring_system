@@ -4,6 +4,7 @@ import trafficLight from "./traffic_light.png"
 import axios from "axios"
 import { data } from "react-router-dom"
 import { useNavigate } from "react-router-dom"
+import axiosInstance from "../../utils/axiosInstance"
 const Login = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState({
@@ -23,23 +24,27 @@ const Login = () => {
     e.preventDefault()
 
     try {
-      const response = await axios.post(
+      const response = await axiosInstance.post(
         `${import.meta.env.VITE_APP_URL}/auth/login`,
         user,
       )
-
-      console.log("Login SuccessFully", response.data.message)
-
-      setMessage(response.data.message)
-      setType("success")
-      setTimeout(() => {
-        ;(setMessage(""), navigate("/main"))
-      }, 2000)
-      setUser({
-        name: "",
-        password: "",
-        email: "",
-      })
+      if (response.data.success) {
+        console.log("Login SuccessFully", response.data.message)
+        const { accessToken, refreshToken, user: userData } = response.data
+        localStorage.setItem("accessToken", accessToken)
+        localStorage.setItem("refreshToken", refreshToken)
+        localStorage.setItem("user", JSON.stringify(userData))
+        setMessage(response.data.message)
+        setType("success")
+        setTimeout(() => {
+          ;(setMessage(""), navigate("/main"))
+        }, 2000)
+        setUser({
+          name: "",
+          password: "",
+          email: "",
+        })
+      }
     } catch (error) {
       setMessage(error.response?.data?.message || "Có lỗi xảy ra")
       setType("danger")
@@ -77,6 +82,28 @@ const Login = () => {
             className="input-group mb-5"
             onSubmit={(e) => handleSubmit(e)}
           >
+            <b style={{ fontSize: "14px", marginBottom: "5px" }}>Email</b>
+            <div className="input-group input-enter mb-3">
+              <label
+                htmlFor="email"
+                className="input-group-text"
+              >
+                <i className="fa-solid fa-at"></i>
+              </label>
+              <input
+                type="email"
+                className="form-control"
+                name="email"
+                id="email"
+                placeholder="Email"
+                aria-label="email"
+                aria-describedby="basic-addon3"
+                value={email}
+                onChange={(e) => handleInputChange(e)}
+                required
+                autoComplete="new-password"
+              />
+            </div>
             <b style={{ fontSize: "15px", marginBottom: "5px" }}>Password</b>
             <div className="input-group input-enter mb-3">
               <label
@@ -99,28 +126,7 @@ const Login = () => {
                 autoComplete="new-password"
               />
             </div>
-            <b style={{ fontSize: "14px", marginBottom: "5px" }}>Email</b>
-            <div className="input-group input-enter mb-3">
-              <label
-                htmlFor="email"
-                className="input-group-text"
-              >
-                <i class="fa-solid fa-at"></i>
-              </label>
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                id="email"
-                placeholder="Email"
-                aria-label="email"
-                aria-describedby="basic-addon3"
-                value={email}
-                onChange={(e) => handleInputChange(e)}
-                required
-                autoComplete="new-password"
-              />
-            </div>
+
             <button
               type="submit"
               className="btn w-100"

@@ -10,7 +10,7 @@ const Sidebar = () => {
             to="/main"
             className="link"
           >
-            <i class="fa-solid fa-person-running"></i> Dashboard
+            <i className="fa-solid fa-person-running"></i> Dashboard
           </NavLink>
         </li>
         <li>
@@ -18,7 +18,7 @@ const Sidebar = () => {
             to="/main/webcam"
             className="link"
           >
-            <i class="fa-solid fa-camera"></i> Webcam
+            <i className="fa-solid fa-camera"></i> Webcam
           </NavLink>
         </li>
         <li>
@@ -26,7 +26,7 @@ const Sidebar = () => {
             to="/main/vehicle"
             className="link"
           >
-            <i class="fa-solid fa-car"></i> Vehicle Analysis
+            <i className="fa-solid fa-car"></i> Vehicle Analysis
           </NavLink>
         </li>
         <li>
@@ -34,7 +34,7 @@ const Sidebar = () => {
             to="/main/statistic"
             className="link"
           >
-            <i class="fa-solid fa-chart-pie"></i> Statistics
+            <i className="fa-solid fa-chart-pie"></i> Statistics
           </NavLink>
         </li>
         <li>
@@ -42,7 +42,7 @@ const Sidebar = () => {
             to="/main/chatbot"
             className="link"
           >
-            <i class="fa-regular fa-message"></i> AI Chatbot
+            <i className="fa-regular fa-message"></i> AI Chatbot
           </NavLink>
         </li>
         <li>
@@ -50,7 +50,7 @@ const Sidebar = () => {
             to="/main/history"
             className="link"
           >
-            <i class="fa-solid fa-clock-rotate-left"></i> History
+            <i className="fa-solid fa-clock-rotate-left"></i> History
           </NavLink>
         </li>
       </ul>

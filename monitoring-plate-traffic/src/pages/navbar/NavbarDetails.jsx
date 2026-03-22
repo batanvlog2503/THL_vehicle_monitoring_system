@@ -12,7 +12,7 @@ const NavbarDetails = () => {
             {" "}
             <h4>
               {" "}
-              <i class="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
+              <i className="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
             </h4>
             <p>Statistics & Data Analysis</p>
           </a>

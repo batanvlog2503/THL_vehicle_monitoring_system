@@ -1,0 +1,11 @@
+# stream.py - chỉ thay 2 chỗ
+
+results = model.track(frame, persist=True)
+r = results[0]
+# frame_ = r.plot()  ← XÓA dòng này
+
+# ... phần lấy detections giữ nguyên ...
+
+# Đổi frame_ → frame (frame gốc, chưa vẽ)
+_, buffer = cv2.imencode('.jpg', frame, [cv2.IMWRITE_JPEG_QUALITY, 60])
+frame_b64 = base64.b64encode(buffer).decode('utf-8')

@@ -2,7 +2,7 @@ const User = require("../models/User")
 const RefreshToken = require("../models/RefreshToken")
 const jwt = require("jsonwebtoken")
 const generateAccessToken = async (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "5m" })
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" })
 }
 
 const generateRefreshToken = async (user) => {
@@ -14,36 +14,36 @@ class UserControllers {
   async refreshToken(req, res, next) {
     try {
       const { refreshToken } = req.body
+
       if (!refreshToken) {
-        return res.status(400).json({
-          message: "refreshToken invalid or expired !!! ",
+        return res.status(401).json({
           success: false,
+          message: "Refresh Token Expired !!! ",
         })
       }
-      console.log("RefreshToken: ", refreshToken)
+      console.log(`refreshToken: ${refreshToken}`)
+      // kiểm tra refresh token trong db
 
-      // kiểm tra refreshTokne trong db
-      const refreshTokenInDB = await RefreshToken.findOne({
+      const tokenInDB = await RefreshToken.findOne({
         refreshToken: refreshToken,
       })
 
-      if (!refreshTokenInDB) {
+      if (!tokenInDB) {
         return res.status(403).json({
           success: false,
           message: "Invalid Refresh Token !!!",
         })
       }
 
-      // verify refreshToken
-
+      // verify refresh Token
       const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
 
-      console.log("Decode")
+      // tìm user thông qua decoded
+      console.log("Decoded")
       console.log(JSON.stringify(decoded))
+      const userData = await User.findById(decoded._id).lean()
 
-      const user = await User.findById(decoded.user._id).lean()
-
-      if (!user) {
+      if (!userData) {
         return res.status(404).json({
           message: "User not found",
           success: false,
@@ -52,7 +52,7 @@ class UserControllers {
 
       // tạo accessToken mới
 
-      const newAccessToken = await generateAccessToken({ user })
+      const newAccessToken = await generateAccessToken(userData)
 
       return res.status(200).json({
         success: true,
@@ -60,9 +60,10 @@ class UserControllers {
         accessToken: newAccessToken,
       })
     } catch (error) {
+      console.log("REFRESH TOKEN ERROR:", error.message)
       return res.status(400).json({
-        message: error.message,
         success: false,
+        message: "Invalid or Refresh Token Expire !!!",
       })
     }
   }
