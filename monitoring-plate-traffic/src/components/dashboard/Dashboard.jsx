@@ -1,16 +1,28 @@
 import { useState, useRef } from "react"
 import "./Dashboard.css"
-import axios from "a"
+import axios from "axios"
 const Dashboard = () => {
+  const fileInputRef = useRef(null)
   const canvasRef = useRef(null)
   const wsRef = useRef(null)
   const imgBitmapRef = useRef(null)
 
   const [videoPath, setVideoPath] = useState(null) // 🔥 thêm
   const [detections, setDetections] = useState([])
-  const [status, setStatus] = useState("idle")
+  const [status, setStatus] = useState("idle") // không có tín hiệu //stopped
   const [showModal, setShowModal] = useState(false)
 
+  // default Date
+  const getVNDateString = () => {
+    const now = new Date()
+
+    // Định dạng: DD-MM-YYYY_HH-mm-ss
+    // Sử dụng 'en-GB' để lấy định dạng ngày/tháng/năm (DD/MM/YYYY) dễ xử lý hơn 'vi-VN'
+    const date = now.toLocaleDateString("en-GB").replace(/\//g, "-")
+    const time = now.toLocaleTimeString("en-GB").replace(/:/g, "-")
+
+    return `${date}_${time}`
+  }
   // ===== UPLOAD VIDEO =====
   const handleUpload = async (e) => {
     const file = e.target.files[0]
@@ -19,12 +31,15 @@ const Dashboard = () => {
     const formData = new FormData()
     formData.append("file", file)
 
-    const res = await fetch("http://localhost:8000/upload", {
-      method: "POST",
-      body: formData,
-    })
+    const response = await axios.post(
+      "http://localhost:8000/upload",
+      formData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      },
+    )
 
-    const data = await res.json()
+    const data = response.data
     setVideoPath(data.path)
 
     alert("Upload thành công!")
@@ -33,38 +48,52 @@ const Dashboard = () => {
   // ===== START STREAM =====
   const startStream = () => {
     if (!videoPath) {
+      // nếu không có video Path
       alert("Upload video trước!")
       return
     }
 
-    setDetections([])
-    setStatus("streaming")
+    setDetections([]) // chưa có gì
+    setStatus("streaming") // bắt đầu streaming
 
     const ws = new WebSocket("ws://localhost:8765")
-    ws.binaryType = "blob"
-    wsRef.current = ws
+    ws.binaryType = "blob" // binary large object kiểu dữ liệu đại diện dữ liệu thô
+    wsRef.current = ws // nếu để ws = new Websocket thì nó sẽ bị render và tạo lại nên dùng wsRef
 
-    // 🔥 gửi path video sang backend
+    //  gửi path video sang backend
     ws.onopen = () => {
-      ws.send(JSON.stringify({ path: videoPath }))
+      ws.send(JSON.stringify({ action: "start", path: videoPath })) // do websocket hoạt động gửi text or binary
     }
 
     ws.onmessage = async (event) => {
+      // nhận dữ liệu String
+      // nếu event.data = "string": xử lí JSON
+      // còn event.data = "blob" (dư liệu binary thô)
+      // meta → frame → meta → frame → ..
       if (typeof event.data === "string") {
-        const data = JSON.parse(event.data)
+        const data = JSON.parse(event.data) // lấy data gửi bên video python
 
         if (data.status === "done") {
+          // check video kết thúc thì setStatus = "done" và return dừng
           setStatus("done")
           return
         }
-
+        // cập nhật danh sách theo ID tracking
+        // mỗi object có 1 id nếu đẫ tồn tại thì update còn chưa có thì new
         if (data.type === "meta") {
+          // là meta là nhận về detections
           setDetections((prev) => {
             const updated = [...prev]
+
+            // type detections = [[id, label, cls, [x1, y1, x2, y2]]]
             data.detections.forEach((d) => {
-              const idx = updated.findIndex((x) => x.id === d.id)
-              if (idx === -1) updated.push(d)
-              else updated[idx] = d
+              // idx là vị trí từ  0 -> .....
+              const idx = updated.findIndex((x) => x.id === d.id) // tìm object có cùng id
+              if (idx === -1) {
+                updated.push(d) // chưa có thì thêm mới object
+              } else {
+                updated[idx] = d // ghi đè
+              }
             })
             return updated
           })
@@ -73,40 +102,66 @@ const Dashboard = () => {
       }
 
       // vẽ frame
-      const blob = event.data
-      const bitmap = await createImageBitmap(blob)
+      const blob = event.data // lấy ảnh đã encode từ python
+      const bitmap = await createImageBitmap(blob) // biến đổi binary thành
+
+      // bitmap giải nén jpg từ blob thành bitmap (dữ liệu hình ảnh gpu vẽ được )
       const canvas = canvasRef.current
-      const ctx = canvas.getContext("2d")
+      const context = canvas.getContext("2d")
 
       canvas.width = bitmap.width
       canvas.height = bitmap.height
-      ctx.drawImage(bitmap, 0, 0)
+      context.drawImage(bitmap, 0, 0)
 
-      if (imgBitmapRef.current) imgBitmapRef.current.close()
+      if (imgBitmapRef.current) {
+        imgBitmapRef.current.close() // vẽ xong rồi thì xóa cái frame cũ và cập nhật
+      } // vẽ xong không
       imgBitmapRef.current = bitmap
     }
 
     ws.onclose = () => {
-      if (status !== "done") setStatus("idle")
+      if (status !== "done") {
+        setStatus("idle")
+      }
+
+      // no signal
     }
   }
 
   const stopStream = () => {
-    wsRef.current?.close()
-    setStatus("stopped")
+    // wsRef.current?.close() // đóng
+
+    wsRef.current?.send(JSON.stringify({ action: "pause" }))
+    setStatus("stopped") //
+  }
+  const resumeStream = () => {
+    wsRef.current?.send(JSON.stringify({ action: "resume" }))
+    setStatus("streaming")
+  }
+  const confirmEnd = () => {
+    setShowModal(true)
   }
 
-  const confirmEnd = () => setShowModal(true)
-
   const endStream = () => {
-    wsRef.current?.close()
-    setStatus("idle")
-    setShowModal(false)
+    wsRef.current?.close() //kết thúc
+    setStatus("idle") // no signal
+    setShowModal(false) //
 
+    if (detections.length > 0) {
+      console.log("Auto exporting detections...")
+      exportCSV() // Gọi hàm export đã viết sẵn
+    }
+    // resetDataa
+    setDetections([])
+    setVideoPath(null)
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
     const canvas = canvasRef.current
     if (canvas) {
-      const ctx = canvas.getContext("2d")
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      const context = canvas.getContext("2d")
+      context.clearRect(0, 0, canvas.width, canvas.height) // vì ban đầu hiểu là rectangle nên clear
       canvas.width = 0
       canvas.height = 0
     }
@@ -129,7 +184,7 @@ const Dashboard = () => {
       "bbox_y1",
       "bbox_x2",
       "bbox_y2",
-    ]
+    ] // label
 
     const rows = detections.map((d) => [
       d.id,
@@ -141,13 +196,10 @@ const Dashboard = () => {
     const csv = [headers, ...rows].map((r) => r.join(",")).join("\n")
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
-
+    const fileName = `ket-qua-yolo_${getVNDateString()}.csv`
     const a = document.createElement("a")
     a.href = url
-    a.download = `detections_${new Date()
-      .toISOString()
-      .slice(0, 19)
-      .replace(/:/g, "-")}.csv`
+    a.download = fileName
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -177,31 +229,33 @@ const Dashboard = () => {
         {/* Body */}
         <div className="dash-body">
           {/* Video + Controls */}
-          <div className="video-panel">
+          <div className="video-panel inner-wrap-left-video">
             <div className="canvas-wrapper">
               <canvas ref={canvasRef} />
+              {/* không tìm thấy phân tích */}
               {status === "idle" && detections.length === 0 && (
                 <div className="canvas-placeholder">
                   <span className="ph-icon">⬡</span>
-                  <span>Awaiting stream</span>
+                  <span>Loading...</span>
                 </div>
               )}
             </div>
 
             <div className="controls">
-              {/* 🔥 Upload */}
+              {/* Upload */}
               <input
                 type="file"
                 accept="video/*"
+                ref={fileInputRef}
                 onChange={handleUpload}
               />
 
               <button
                 className="btn btn-start"
-                onClick={startStream}
-                disabled={isStreaming}
+                onClick={status === "stopped" ? resumeStream : startStream}
+                disabled={status === "streaming"}
               >
-                <span className="btn-icon">▶</span> Start
+                ▶ {status === "stopped" ? "Continue" : "Start"}
               </button>
 
               <button
@@ -222,14 +276,14 @@ const Dashboard = () => {
 
               <div className="controls-spacer" />
 
-              {detections.length > 0 && (
+              {/* {detections.length > 0 && (
                 <button
                   className="btn btn-export"
                   onClick={exportCSV}
                 >
                   <span className="btn-icon">↓</span> Export CSV
                 </button>
-              )}
+              )} */}
 
               {isStreaming && (
                 <div className="live-indicator">
@@ -238,10 +292,22 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
+            <div className="controls-note text-align-left">
+  <p> 
+     Lưu ý:
+  </p>
+  <ul>
+    <li>Video chất lượng cao có thể làm giảm FPS.</li>
+    <li>Nên dùng GPU để đạt hiệu suất tốt nhất.</li>
+    <li>Không upload video quá lớn để tránh lag.</li>
+    <li>Click "End" để kết thúc và xuất dữ liệu.</li>
+  </ul>
+</div>
           </div>
+         
 
           {/* Detection table */}
-          <div className="detect-panel">
+          <div className="detect-pane inner-wrap-right-detect">
             <div className="detect-header">
               <h2>Detections</h2>
               <span className="detect-count">{detections.length}</span>
@@ -267,7 +333,7 @@ const Dashboard = () => {
                     detections.map((d) => (
                       <tr key={d.id}>
                         <td>
-                          <span className="id-badge">#{d.id}</span>
+                          <span className="id-badge">{d.id}</span>
                         </td>
                         <td>
                           <span className="label-text">{d.label}</span>
@@ -307,7 +373,6 @@ const Dashboard = () => {
             className="modal-box"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="modal-icon">⏹</div>
             <h3 className="modal-title">Kết thúc stream?</h3>
             <p className="modal-desc">
               Stream sẽ bị dừng. Dữ liệu detection vẫn được giữ lại và bạn có

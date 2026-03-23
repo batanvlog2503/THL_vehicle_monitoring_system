@@ -28,7 +28,7 @@
 .dash-header h1 {
   font-family: "IBM Plex Mono", monospace;
   font-size: 18px;
-  letter-spacing: 0.2em;
+  letter-spacing: 0.1rem;
   text-transform: uppercase;
   color: #94a3b8;
   font-weight: 800;
@@ -136,7 +136,7 @@
 }
 
 /* ── Controls ── */
-.controls {
+.dash-root .controls {
   width: 100%;
   padding: 14px 20px;
   display: flex;
@@ -145,7 +145,7 @@
   border-top: 1px solid #1e2030;
 }
 
-.btn {
+.dash-root .btn {
   font-family: "IBM Plex Mono", monospace;
   font-size: 11px;
   letter-spacing: 0.12em;
@@ -163,49 +163,48 @@
   user-select: none;
 }
 
-.btn:disabled {
+.dash-root .btn:disabled {
   opacity: 0.3;
   cursor: not-allowed;
   pointer-events: none;
 }
 
-.btn-start {
+.dash-root .btn-start {
   color: #4ade80;
   border-color: #166534;
-  background: #052e1644;
+  font-weight: bold;
 }
-.btn-start:hover:not(:disabled) {
+.dash-root .btn-start:hover:not(:disabled) {
   background: #052e16aa;
   border-color: #4ade80;
   box-shadow: 0 0 12px #4ade8022;
 }
 
-.btn-stop {
+.dash-root .btn-stop {
   color: #f59e0b;
   border-color: #78350f;
-  background: #1c191744;
 }
-.btn-stop:hover:not(:disabled) {
+.dash-root .btn-stop:hover:not(:disabled) {
   background: orange;
   border-color: white;
+  color: white;
 }
 
-.btn-end {
+.dash-root .btn-end {
   color: #f87171;
   border-color: #7f1d1d;
-  background: #1f0a0a44;
 }
-.btn-end:hover:not(:disabled) {
+.dash-root .btn-end:hover:not(:disabled) {
   background: #f87171;
   border-color: #f87171;
-  box-shadow: 0 0 12px #f8717122;
+  color: white;
 }
 
-.btn-icon {
+.dash-root .btn-icon {
   font-size: 10px;
 }
 
-.controls-spacer {
+.dash-root .controls-spacer {
   flex: 1;
 }
 
@@ -271,20 +270,20 @@
   border-radius: 2px;
 }
 
-table {
+.dash-root table {
   width: 100%;
   border-collapse: collapse;
   font-size: 12px;
 }
 
-thead tr {
+.dash-root thead tr {
   background: #cac5c5f1;
   position: sticky;
   top: 0;
   z-index: 1;
 }
 
-thead th {
+.dash-root thead th {
   font-family: "IBM Plex Mono", monospace;
   font-size: 9px;
   letter-spacing: 0.2em;
@@ -296,23 +295,23 @@ thead th {
   border-bottom: 1px solid #1e2030;
 }
 
-tbody tr {
+.dash-root tbody tr {
   border-bottom: 1px solid #0f1420;
   transition: background 0.1s ease;
 }
 
-tbody tr:hover {
-  background: #e3e308;
+.dash-root tbody tr:hover {
+  background: #f9f920;
 }
 
-tbody td {
+.dash-root tbody td {
   font-size: 16px;
   padding: 9px 12px;
   vertical-align: middle;
   color: #94a3b8;
 }
 
-.id-badge {
+.dash-root .id-badge {
   font-family: "IBM Plex Mono", monospace;
   font-size: 12px;
   padding: 2px 7px;
@@ -350,11 +349,6 @@ tbody td {
   background: #f59e0b;
 }
 
-.conf-val {
-  font-family: "IBM Plex Mono", monospace;
-  font-size: 10px;
-  color: #475569;
-}
 .empty-row td {
   text-align: center;
   padding: 32px 0;
