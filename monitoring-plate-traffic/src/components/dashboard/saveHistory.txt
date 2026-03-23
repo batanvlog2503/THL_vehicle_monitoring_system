@@ -159,3 +159,13 @@ Bạn sẽ có:
 👉 Với bạn hiện tại:
 
 🔥 NodeJS + MongoDB + Python YOLO = chuẩn production mini system
+
+🎯 7. UX nên thêm
+
+Bạn có thể nâng cấp frontend:
+
+Trang History
+Click video → replay detections
+Timeline frame
+Filter object theo class
+Export CSV / JSON

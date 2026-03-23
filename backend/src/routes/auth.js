@@ -14,7 +14,7 @@ router.post("/register", userValidator, AuthControllers.userRegister)
 
 router.get("/mail-verification", AuthControllers.mailVerification)
 
-router.get(
+router.post(
   "/send-mail-verification",
   userRegisterValidation,
   AuthControllers.sendMailVerification,

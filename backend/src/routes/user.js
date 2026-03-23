@@ -7,4 +7,5 @@ const UserControllers = require("../app/controllers/userController")
 // không cần auth vì lúc này đã hết accessToken
 router.post("/refresh-token", UserControllers.refreshToken)
 
+router.post("/save-log", auth, UserControllers.createLog)
 module.exports = router

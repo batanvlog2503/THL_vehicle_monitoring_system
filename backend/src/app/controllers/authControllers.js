@@ -112,7 +112,7 @@ class AuthControllers {
       })
       const userData = await user.save()
 
-      const msg = `<p>Hi ${userData.name} dep trai top 1 server VN please <a href = ${process.env.APP_URL}/auth/mail-verification?id=${userData._id}>Verify </a>your mail to login account</p>`
+      const msg = `<p>Hi ${userData.name} dep trai top 1 server VN please <a href = "${process.env.APP_URL}/auth/mail-verification?id=${userData._id}">Verify </a>your mail to login account</p>`
 
       await mailer.sendMail(email, "Mail-verification", msg)
 

@@ -20,13 +20,17 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config
     if (
       error.response &&
-      error.response.status === 401 &&
+      (error.response.status === 401 || error.response.status === 403) &&
       !originalRequest._retry
     ) {
       originalRequest._retry = true
 
       const refreshToken = localStorage.getItem("refreshToken")
-
+      if (!refreshToken) {
+        localStorage.clear()
+        window.location.href = "/login"
+        return Promise.reject(error)
+      }
       try {
         const res = await axios.post(
           `${import.meta.env.VITE_APP_URL}/user/refresh-token`,

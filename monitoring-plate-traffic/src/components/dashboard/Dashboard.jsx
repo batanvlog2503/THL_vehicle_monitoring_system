@@ -1,12 +1,14 @@
 import { useState, useRef } from "react"
 import "./Dashboard.css"
+import axiosInstance from "../../utils/axiosInstance"
 import axios from "axios"
 const Dashboard = () => {
   const fileInputRef = useRef(null)
   const canvasRef = useRef(null)
   const wsRef = useRef(null)
   const imgBitmapRef = useRef(null)
-
+  const detectionsRef = useRef([])
+  const videoNameRef = useRef(null)
   const [videoPath, setVideoPath] = useState(null) // 🔥 thêm
   const [detections, setDetections] = useState([])
   const [status, setStatus] = useState("idle") // không có tín hiệu //stopped
@@ -23,11 +25,31 @@ const Dashboard = () => {
 
     return `${date}_${time}`
   }
+
+  const createLog = async () => {
+    try {
+      console.log("DATA SEND:", {
+        detections: detectionsRef.current,
+        videoName: videoNameRef.current,
+      })
+      const response = await axiosInstance.post(
+        `${import.meta.env.VITE_APP_URL}/user/save-log`,
+        { detections: detectionsRef.current, videoName: videoNameRef.current },
+      )
+
+      if (response.data.success) {
+        console.log("Save log Successfully !!!")
+      }
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
   // ===== UPLOAD VIDEO =====
   const handleUpload = async (e) => {
     const file = e.target.files[0]
     if (!file) return
-
+    const fileName = `ket-qua-yolo_${getVNDateString()}.csv`
+    videoNameRef.current = fileName
     const formData = new FormData()
     formData.append("file", file)
 
@@ -95,6 +117,8 @@ const Dashboard = () => {
                 updated[idx] = d // ghi đè
               }
             })
+
+            detectionsRef.current = updated
             return updated
           })
         }
@@ -142,7 +166,7 @@ const Dashboard = () => {
     setShowModal(true)
   }
 
-  const endStream = () => {
+  const endStream = async () => {
     wsRef.current?.close() //kết thúc
     setStatus("idle") // no signal
     setShowModal(false) //
@@ -150,6 +174,9 @@ const Dashboard = () => {
     if (detections.length > 0) {
       console.log("Auto exporting detections...")
       exportCSV() // Gọi hàm export đã viết sẵn
+      await createLog()
+      videoNameRef.current = null
+      detectionsRef.current = []
     }
     // resetDataa
     setDetections([])
@@ -277,13 +304,13 @@ const Dashboard = () => {
               <div className="controls-spacer" />
 
               {/* {detections.length > 0 && (
-                <button
-                  className="btn btn-export"
-                  onClick={exportCSV}
-                >
-                  <span className="btn-icon">↓</span> Export CSV
-                </button>
-              )} */}
+                  <button
+                    className="btn btn-export"
+                    onClick={exportCSV}
+                  >
+                    <span className="btn-icon">↓</span> Export CSV
+                  </button>
+                )} */}
 
               {isStreaming && (
                 <div className="live-indicator">
@@ -293,18 +320,15 @@ const Dashboard = () => {
               )}
             </div>
             <div className="controls-note text-align-left">
-  <p> 
-     Lưu ý:
-  </p>
-  <ul>
-    <li>Video chất lượng cao có thể làm giảm FPS.</li>
-    <li>Nên dùng GPU để đạt hiệu suất tốt nhất.</li>
-    <li>Không upload video quá lớn để tránh lag.</li>
-    <li>Click "End" để kết thúc và xuất dữ liệu.</li>
-  </ul>
-</div>
+              <p>Lưu ý:</p>
+              <ul>
+                <li>Video chất lượng cao có thể làm giảm FPS.</li>
+                <li>Nên dùng GPU để đạt hiệu suất tốt nhất.</li>
+                <li>Không upload video quá lớn để tránh lag.</li>
+                <li>Click "End" để kết thúc và xuất dữ liệu.</li>
+              </ul>
+            </div>
           </div>
-         
 
           {/* Detection table */}
           <div className="detect-pane inner-wrap-right-detect">

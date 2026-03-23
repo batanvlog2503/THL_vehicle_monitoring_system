@@ -1,0 +1,78 @@
+import cv2, json, asyncio, websockets, time
+from ultralytics import YOLO
+
+model = YOLO("yolov8n.pt")
+
+async def stream(websocket):
+    print("Client kết nối!")
+
+    cap = cv2.VideoCapture("sample.mp4")
+    target_fps = 25
+
+    try:
+        while True:
+            start_time = time.time()
+
+            ret, frame = cap.read()
+            if not ret:
+                await websocket.send(json.dumps({'status': 'done'}))
+                break
+
+            # 🔽 Resize giảm tải
+            frame = cv2.resize(frame, (640, 360))
+
+            # 🔍 YOLO tracking
+            results = model.track(frame, persist=True)
+            r = results[0]
+            frame_ = r.plot()
+
+            detections = []
+            boxes = r.boxes
+
+            if boxes.id is not None:
+                ids     = boxes.id.cpu().numpy().astype(int)
+                classes = boxes.cls.cpu().numpy().astype(int)
+                confs   = boxes.conf.cpu().numpy()
+                bboxes  = boxes.xyxy.cpu().numpy()
+
+                for obj_id, cls, conf, bbox in zip(ids, classes, confs, bboxes):
+                    detections.append({
+                        'id': int(obj_id),
+                        'label': model.names[cls],
+                        'conf': round(float(conf), 2),
+                        'bbox': bbox.tolist()
+                    })
+
+            # 🖼 Encode JPEG → binary
+            _, buffer = cv2.imencode('.jpg', frame_, [
+                cv2.IMWRITE_JPEG_QUALITY, 85
+            ])
+            frame_bytes = buffer.tobytes()
+
+            # 📦 Gửi metadata trước
+            await websocket.send(json.dumps({
+                'type': 'meta',
+                'detections': detections
+            }))
+
+            # 📦 Gửi frame binary
+            await websocket.send(frame_bytes)
+
+            # ⏱ FPS control chuẩn
+            elapsed = time.time() - start_time
+            await asyncio.sleep(max(0, 1/target_fps - elapsed))
+
+    except websockets.exceptions.ConnectionClosed:
+        print("Client ngắt kết nối")
+
+    finally:
+        cap.release()
+
+
+async def main():
+    async with websockets.serve(stream, "localhost", 8766, max_size=None):
+        print("WS chạy tại ws://localhost:8766")
+        await asyncio.Future()
+
+
+asyncio.run(main())

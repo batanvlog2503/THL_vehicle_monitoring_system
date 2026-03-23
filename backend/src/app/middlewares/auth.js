@@ -2,14 +2,14 @@ const jwt = require("jsonwebtoken")
 
 const User = require("../models/User")
 
-const verifyToken = async (req, res, next) => {
+const verifyToken = (req, res, next) => {
   try {
     const token = req.headers["authorization"]
 
     if (!token) {
       return res.status(403).json({
         success: false,
-        success: false,
+
         message: "Token required",
       })
     }
@@ -25,9 +25,10 @@ const verifyToken = async (req, res, next) => {
   } catch (error) {
     return res.status(401).json({
       success: false,
-      message: error.message,
+      message: "Unauthorized",
+      error: error.message,
     })
   }
 }
 
-module.exports = { verifyToken }
+module.exports = verifyToken

@@ -1,6 +1,7 @@
 const User = require("../models/User")
 const RefreshToken = require("../models/RefreshToken")
 const jwt = require("jsonwebtoken")
+const Log = require("../models/Log")
 const generateAccessToken = async (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" })
 }
@@ -64,6 +65,36 @@ class UserControllers {
       return res.status(400).json({
         success: false,
         message: "Invalid or Refresh Token Expire !!!",
+      })
+    }
+  }
+
+  // [POST] /user/save-log
+
+  async createLog(req, res, next) {
+    try {
+      const { detections, videoName } = req.body
+
+      const user_id = req.user._id
+      console.log("Detections ", detections)
+      console.log("videoName ", videoName)
+      const log = new Log({
+        user_id,
+        videoName,
+        detections,
+      })
+
+      await log.save()
+
+      return res.status(200).json({
+        success: true,
+        message: "Log saved",
+      })
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+        error: "Save Failed",
       })
     }
   }
