@@ -1,22 +1,53 @@
 import { useState, useRef } from "react"
 import "./Dashboard.css"
-
+import axios from "a"
 const Dashboard = () => {
   const canvasRef = useRef(null)
   const wsRef = useRef(null)
   const imgBitmapRef = useRef(null)
 
+  const [videoPath, setVideoPath] = useState(null) // 🔥 thêm
   const [detections, setDetections] = useState([])
   const [status, setStatus] = useState("idle")
   const [showModal, setShowModal] = useState(false)
 
+  // ===== UPLOAD VIDEO =====
+  const handleUpload = async (e) => {
+    const file = e.target.files[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const res = await fetch("http://localhost:8000/upload", {
+      method: "POST",
+      body: formData,
+    })
+
+    const data = await res.json()
+    setVideoPath(data.path)
+
+    alert("Upload thành công!")
+  }
+
+  // ===== START STREAM =====
   const startStream = () => {
+    if (!videoPath) {
+      alert("Upload video trước!")
+      return
+    }
+
     setDetections([])
     setStatus("streaming")
 
     const ws = new WebSocket("ws://localhost:8765")
     ws.binaryType = "blob"
     wsRef.current = ws
+
+    // 🔥 gửi path video sang backend
+    ws.onopen = () => {
+      ws.send(JSON.stringify({ path: videoPath }))
+    }
 
     ws.onmessage = async (event) => {
       if (typeof event.data === "string") {
@@ -41,10 +72,12 @@ const Dashboard = () => {
         return
       }
 
+      // vẽ frame
       const blob = event.data
       const bitmap = await createImageBitmap(blob)
       const canvas = canvasRef.current
       const ctx = canvas.getContext("2d")
+
       canvas.width = bitmap.width
       canvas.height = bitmap.height
       ctx.drawImage(bitmap, 0, 0)
@@ -63,10 +96,8 @@ const Dashboard = () => {
     setStatus("stopped")
   }
 
-  // Mở modal confirm trước khi End
   const confirmEnd = () => setShowModal(true)
 
-  // Thực sự kết thúc — giữ detections để xuất CSV
   const endStream = () => {
     wsRef.current?.close()
     setStatus("idle")
@@ -84,9 +115,9 @@ const Dashboard = () => {
       imgBitmapRef.current.close()
       imgBitmapRef.current = null
     }
-    // Không reset detections — giữ lại để xuất CSV
   }
 
+  // ===== EXPORT CSV =====
   const exportCSV = () => {
     if (detections.length === 0) return
 
@@ -99,6 +130,7 @@ const Dashboard = () => {
       "bbox_x2",
       "bbox_y2",
     ]
+
     const rows = detections.map((d) => [
       d.id,
       d.label,
@@ -112,7 +144,10 @@ const Dashboard = () => {
 
     const a = document.createElement("a")
     a.href = url
-    a.download = `detections_${new Date().toISOString().slice(0, 19).replace(/:/g, "-")}.csv`
+    a.download = `detections_${new Date()
+      .toISOString()
+      .slice(0, 19)
+      .replace(/:/g, "-")}.csv`
     a.click()
     URL.revokeObjectURL(url)
   }
@@ -154,6 +189,13 @@ const Dashboard = () => {
             </div>
 
             <div className="controls">
+              {/* 🔥 Upload */}
+              <input
+                type="file"
+                accept="video/*"
+                onChange={handleUpload}
+              />
+
               <button
                 className="btn btn-start"
                 onClick={startStream}
@@ -234,7 +276,9 @@ const Dashboard = () => {
                           <div className="conf-bar-wrap">
                             <div className="conf-bar-bg">
                               <div
-                                className={`conf-bar-fill ${d.conf > 0.7 ? "high" : "low"}`}
+                                className={`conf-bar-fill ${
+                                  d.conf > 0.7 ? "high" : "low"
+                                }`}
                                 style={{ width: `${d.conf * 100}%` }}
                               />
                             </div>

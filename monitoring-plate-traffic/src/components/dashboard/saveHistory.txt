@@ -1,0 +1,161 @@
+
+
+🧠 KIẾN TRÚC CHUẨN CHO BẠN
+React (stream UI)
+        ↓
+WebSocket (Python YOLO)
+        ↓
+NodeJS API (save history)
+        ↓
+MongoDB
+
+🎯 FLOW CHUẨN
+React nhận detections realtime
+Khi nhận "status": "done"
+👉 Gửi toàn bộ detections → NodeJS
+NodeJS lưu MongoDB
+
+⚛️ FRONTEND — SỬA NHẸ
+🔥 1. Lưu FULL history (quan trọng)
+
+❌ Hiện tại bạn đang overwrite theo id → mất history
+
+👉 Sửa lại:
+
+setDetections((prev) => [...prev, ...data.detections])
+
+if (data.status === "done") {
+  setStatus("done")
+
+  await fetch("http://localhost:3000/api/save-history", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      detections: detections,
+      videoName: videoPath || "uploaded_video"
+    }),
+  })
+
+  return
+}\
+
+🟢 BACKEND NODEJS — FULL CODE
+📦 Cài:
+npm install express mongoose cors
+🚀 server.js
+const express = require("express")
+const mongoose = require("mongoose")
+const cors = require("cors")
+
+const app = express()
+
+app.use(cors())
+app.use(express.json({ limit: "50mb" }))
+
+// ===== CONNECT MONGO =====
+mongoose.connect("mongodb://127.0.0.1:27017/yolo", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+
+console.log("MongoDB connected")
+
+// ===== SCHEMA =====
+const DetectionSchema = new mongoose.Schema({
+  frame: Number,
+  id: Number,
+  label: String,
+  conf: Number,
+  bbox: [Number],
+})
+
+const HistorySchema = new mongoose.Schema({
+  videoName: String,
+  createdAt: { type: Date, default: Date.now },
+  detections: [DetectionSchema],
+})
+
+const History = mongoose.model("History", HistorySchema)
+
+// ===== API SAVE =====
+app.post("/api/save-history", async (req, res) => {
+  try {
+    const { detections, videoName } = req.body
+
+    const history = new History({
+      videoName,
+      detections,
+    })
+
+    await history.save()
+
+    console.log("Saved history:", history._id)
+
+    res.json({ success: true })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: "Save failed" })
+  }
+})
+
+// ===== API GET =====
+app.get("/api/history", async (req, res) => {
+  const data = await History.find().sort({ createdAt: -1 })
+  res.json(data)
+})
+
+app.listen(3000, () => {
+  console.log("NodeJS running at http://localhost:3000")
+})
+📊 DỮ LIỆU LƯU TRONG MONGO
+{
+  "videoName": "abc.mp4",
+  "createdAt": "...",
+  "detections": [
+    {
+      "frame": 1,
+      "id": 3,
+      "label": "person",
+      "conf": 0.92,
+      "bbox": [x1, y1, x2, y2]
+    }
+  ]
+}
+
+🔥 QUAN TRỌNG (PHẢI SỬA BACKEND PYTHON)
+
+👉 Thêm frame vào detections
+
+frame_idx += 1
+
+detections.append({
+    'frame': frame_idx,
+    'id': int(obj_id),
+    'label': model.names[cls],
+    'conf': round(float(conf), 2),
+    'bbox': bbox.tolist()
+})
+🚀 KẾT QUẢ
+
+Bạn sẽ có:
+
+✅ Realtime tracking
+✅ Lưu toàn bộ history
+✅ MongoDB lưu theo video
+✅ Có thể query lại
+
+💡 NÂNG CẤP TIẾP (RẤT NÊN)
+
+👉 Bạn có thể làm:
+
+📺 Trang "History" (list video đã xử lý)
+📊 Click → xem lại detections
+🎞 Replay video + bounding box
+📈 thống kê số object
+🎯 KẾT LUẬN
+
+👉 Với bạn hiện tại:
+
+🔥 NodeJS + MongoDB + Python YOLO = chuẩn production mini system
