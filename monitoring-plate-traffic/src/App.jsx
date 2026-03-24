@@ -22,7 +22,8 @@ import Statistic from "./components/statistics/Statistic"
 import Dashboard from "./components/dashboard/Dashboard"
 import Vehicle from "./components/vehicles/Vehicle"
 import SignUp from "./auth/Logout/SignUp"
-import History from "./components/history/History"
+import Log from "./components/log/Log"
+import LogDetails from "./components/log/LogDetails"
 import Chatbot from "./components/chatbot/Chatbot"
 import Webcam from "./components/webcam/Webcam"
 const router = createBrowserRouter(
@@ -49,7 +50,6 @@ const router = createBrowserRouter(
       >
         <Route
           index
-          q
           element={<Dashboard />}
         ></Route>
         <Route
@@ -69,9 +69,13 @@ const router = createBrowserRouter(
           element={<Chatbot />}
         ></Route>
         <Route
-          path="history"
-          element={<History />}
+          path="log"
+          element={<Log />}
         ></Route>
+        <Route
+          path="log/:id"
+          element={<LogDetails />}
+        />
       </Route>
     </Route>,
   ),

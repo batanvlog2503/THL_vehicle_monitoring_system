@@ -47,7 +47,7 @@ const Sidebar = () => {
         </li>
         <li>
           <NavLink
-            to="/main/history"
+            to="/main/log"
             className="link"
           >
             <i className="fa-solid fa-clock-rotate-left"></i> History

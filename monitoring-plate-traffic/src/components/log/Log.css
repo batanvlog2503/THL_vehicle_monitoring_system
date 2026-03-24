@@ -1,0 +1,135 @@
+.log-container {
+  padding: 20px;
+}
+
+.log-container .inner-wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.log .inner-title h1 {
+  margin-bottom: 5px;
+}
+
+.log .inner-title p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* CARD */
+.log .card-log {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  padding: 16px;
+  margin-bottom: 16px;
+
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+/* Hover effect */
+.log .card-log:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* TITLE */
+.log .card-log h3 {
+  margin: 0;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.log .card-log h3 i {
+  color: rgb(6, 154, 234);
+}
+
+/* DETAILS ROW */
+.log .inner-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* EMAIL + TIME */
+.log .inner-email,
+.inner-time {
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* BUTTON */
+.log .inner-details button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  background: #1677ff;
+  color: #fff;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.log .inner-details button:hover {
+  background: #0f5ed7;
+  transform: scale(1.05);
+}
+
+/* SLUG SECTION */
+.log .inner-slug {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* COUNT TEXT */
+.log .inner-slug span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* LABEL LIST */
+.log .inner-slug ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* BADGE */
+.log .inner-slug li {
+  padding: 4px 10px;
+  font-size: 13px;
+
+  border-radius: 999px;
+  background: #aeeeb1;
+  color: #04310f;
+  border: 1px solid #e0e0e0;
+
+  transition: all 0.2s ease;
+}
+
+.log .inner-slug li:hover {
+  background: #e6f4ff;
+  border-color: #91caff;
+}

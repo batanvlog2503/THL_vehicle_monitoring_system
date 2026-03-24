@@ -21,7 +21,7 @@ const Dashboard = () => {
     // Định dạng: DD-MM-YYYY_HH-mm-ss
     // Sử dụng 'en-GB' để lấy định dạng ngày/tháng/năm (DD/MM/YYYY) dễ xử lý hơn 'vi-VN'
     const date = now.toLocaleDateString("en-GB").replace(/\//g, "-")
-    const time = now.toLocaleTimeString("en-GB").replace(/:/g, "-")
+    const time = now.toLocaleTimeString("en-GB").replace(/:/g, ":")
 
     return `${date}_${time}`
   }
