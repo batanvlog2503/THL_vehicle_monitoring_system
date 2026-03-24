@@ -8,4 +8,6 @@ const UserControllers = require("../app/controllers/userController")
 router.post("/refresh-token", UserControllers.refreshToken)
 
 router.post("/save-log", auth, UserControllers.createLog)
+router.get("/logs/:id", auth, UserControllers.getLogDetails)
+router.get("/logs", auth, UserControllers.getAllLog)
 module.exports = router

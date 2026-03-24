@@ -76,10 +76,12 @@ class UserControllers {
       const { detections, videoName } = req.body
 
       const user_id = req.user._id
+      const email = req.user.email
       console.log("Detections ", detections)
       console.log("videoName ", videoName)
       const log = new Log({
         user_id,
+        email,
         videoName,
         detections,
       })
@@ -95,6 +97,75 @@ class UserControllers {
         success: false,
         message: error.message,
         error: "Save Failed",
+      })
+    }
+  }
+
+  // [GET] /user/logs
+
+  async getAllLog(req, res, next) {
+    try {
+      const user_id = req.user._id.toString()
+      if (!user_id) {
+        return res.status(400).json({
+          success: false,
+          message: "Please login to use device",
+        })
+      }
+
+      const logs = await Log.find({ user_id: user_id })
+
+      if (!logs) {
+        return res.status(400).json({
+          success: false,
+          message: "No data log",
+        })
+      }
+      console.log(logs)
+      return res.status(200).json({
+        success: true,
+        message: "Get Logs Successfully !!!",
+        logs: logs,
+      })
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        error: error.message,
+      })
+    }
+  }
+
+  // [GET] /user/logs/:id
+
+  async getLogDetails(req, res, next) {
+    try {
+      const { id } = req.params
+
+      if (!id) {
+        return res.status(400).json({
+          success: false,
+          message: "Missing log id !!! ",
+        })
+      }
+
+      const log = await Log.findById(id)
+
+      if (!log) {
+        return res.status(404).json({
+          success: false,
+          message: "Log not found",
+        })
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Get Log Detail Successfully",
+        log: log,
+      })
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        error: error.message,
       })
     }
   }

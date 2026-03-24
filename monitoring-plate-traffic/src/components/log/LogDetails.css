@@ -1,0 +1,513 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap");
+
+/* ===================== VARIABLES ===================== */
+:root {
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0f4ff;
+  --accent-cyan: #0284c7;
+  --accent-green: #059669;
+  --accent-purple: #7c3aed;
+  --accent-orange: #ea580c;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-accent: rgba(2, 132, 199, 0.3);
+  --glow-cyan: 0 4px 24px rgba(2, 132, 199, 0.12);
+  --glow-green: 0 4px 24px rgba(5, 150, 105, 0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --mono: "JetBrains Mono", monospace;
+  --sans: "Be Vietnam Pro", sans-serif;
+}
+.export-csv {
+  padding: 10px;
+  margin-top: 20px;
+  border: none;
+  background-color: #2dd124;
+
+  color: white;
+}
+
+.export-csv:hover {
+  color: #2dd124;
+  border: 1px solid #2dd124;
+  background: white;
+  transition: 0.3s ease;
+}
+/* ===================== BASE ===================== */
+.log-details {
+  min-height: 100vh;
+  color: var(--text-primary);
+  padding: 2rem 1rem 4rem;
+}
+
+.log-details .inner-wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ===================== TITLE ===================== */
+.log-details .inner-title {
+  padding: 2rem 2rem 1.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent-cyan);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.04);
+  border-radius: var(--radius);
+  position: relative;
+  overflow: hidden;
+  animation: fadeSlideIn 0.5s ease both;
+}
+
+.log-details .inner-title::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(2, 132, 199, 0.02) 0%,
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+.log-details .inner-title h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  letter-spacing: -0.01em;
+}
+
+.log-details .inner-title h2 i {
+  color: var(--accent-cyan);
+  font-size: 1.1rem;
+}
+
+.log-details .inner-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.log-details .inner-info span {
+  font-size: 1rem;
+  color: var(--text-secondary);
+
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.log-details .inner-info span::before {
+  content: "◆";
+  color: var(--accent-cyan);
+  font-size: 0.5rem;
+}
+
+/* ===================== OVERVIEW ===================== */
+.log-details .inner-overview {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.04);
+  animation: fadeSlideIn 0.5s 0.1s ease both;
+}
+
+.log-details .inner-overview > h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #0fcaef;
+  margin: 0 0 1.5rem;
+}
+
+/* ===================== SUMMARY CARDS ===================== */
+.log-details .inner-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.log-details .inner-sum-detect,
+.log-details .inner-sum-type,
+.log-details .inner-last-frame {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1.25rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition:
+    border-color 0.25s,
+    transform 0.25s,
+    box-shadow 0.25s;
+  cursor: default;
+}
+
+.log-details .inner-sum-detect {
+  border-bottom: 2px solid var(--accent-cyan);
+}
+.log-details .inner-sum-detect:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.log-details .inner-sum-type {
+  border-bottom: 2px solid var(--accent-green);
+}
+.log-details .inner-sum-type:hover {
+  border-color: var(--accent-green);
+  box-shadow: var(--glow-green);
+}
+
+.log-details .inner-last-frame {
+  border-bottom: 2px solid var(--accent-purple);
+}
+.log-details .inner-last-frame:hover {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.15);
+}
+
+.log-details .inner-sum-detect p,
+.log-details .inner-sum-type p,
+.log-details .inner-last-frame p {
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+
+  margin: 0 0 0.5rem;
+}
+
+.log-details .inner-sum-detect h3,
+.log-details .inner-sum-type h3,
+.log-details .inner-last-frame h3 {
+  font-size: 2rem;
+  font-weight: 700;
+
+  margin: 0;
+  line-height: 1;
+}
+
+.log-details .inner-sum-detect h3 {
+  color: var(--accent-cyan);
+}
+.log-details .inner-sum-type h3 {
+  color: var(--accent-green);
+}
+.log-details .inner-last-frame h3 {
+  color: var(--accent-purple);
+}
+
+/* ===================== LABEL TAGS ===================== */
+.log-details .inner-overview > span {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+}
+
+.log-details ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.log-details ul li {
+  background: rgba(2, 132, 199, 0.07);
+  border: 1px solid rgba(2, 132, 199, 0.25);
+  color: var(--accent-cyan);
+
+  font-size: 0.9rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+
+  transition:
+    background 0.2s,
+    transform 0.2s;
+  cursor: pointer;
+}
+
+.log-details ul li:hover {
+  background: rgba(2, 132, 199, 0.14);
+  transform: translateY(-1px);
+}
+
+/* ===================== DETECTION TABLE ===================== */
+.log-details .inner-table {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 16px rgba(0, 0, 0, 0.04);
+  animation: fadeSlideIn 0.5s 0.2s ease both;
+}
+
+.log-details .inner-table > h3 {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+}
+
+/* ===================== SCROLL FRAME LIST ===================== */
+.log-details .inner-list-frame {
+  max-height: 520px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-right: 0.5rem;
+
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(2, 132, 199, 0.3) transparent;
+}
+
+.log-details .inner-list-frame::-webkit-scrollbar {
+  width: 4px;
+}
+.log-details .inner-list-frame::-webkit-scrollbar-track {
+  background: transparent;
+}
+.log-details .inner-list-frame::-webkit-scrollbar-thumb {
+  background: rgba(2, 132, 199, 0.3);
+  border-radius: 99px;
+}
+.log-details .inner-list-frame::-webkit-scrollbar-thumb:hover {
+  background: rgba(2, 132, 199, 0.55);
+}
+
+/* ===================== FRAME CARD ===================== */
+.log-details .inner-list-frame > .frame {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    transform 0.2s;
+  animation: fadeIn 0.3s ease both;
+}
+
+.log-details .inner-list-frame > .frame:hover {
+  border-color: rgba(2, 132, 199, 0.3);
+  background: #edf5ff;
+  transform: translateX(3px);
+}
+
+/* ---- Frame row 1 ---- */
+.log-details .frame1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.log-details .frame-id-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.log-details .frame-id-label > .frame {
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.65rem;
+  min-width: 48px;
+  text-align: center;
+}
+
+.log-details .frame-id-label > .frame h3 {
+  font-size: 0.85rem;
+  font-weight: 700;
+
+  margin: 0;
+}
+
+.log-details .id-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.log-details .id-label h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.log-details .id-label span {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+/* ---- Confidence ---- */
+.log-details .conf {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+}
+
+.log-details .conf span {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.log-details .conf h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-green);
+  margin: 0;
+}
+
+/* ---- Frame row 2: BBox grid ---- */
+.log-details .frame2 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.log-details .bbox {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: center;
+}
+
+.log-details .bbox span {
+  font-size: 0.62rem;
+  color: var(--text-muted);
+
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.log-details .bbox h4 {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ---- Frame row 3: full bbox string ---- */
+.log-details .frame3 {
+  border-top: 1px solid var(--border);
+  padding-top: 0.6rem;
+}
+
+.log-details .frame3 span {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  word-break: break-all;
+}
+
+/* ===================== ANIMATIONS ===================== */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 640px) {
+  .log-details {
+    padding: 1rem 0.75rem 3rem;
+  }
+
+  .log-details .inner-title,
+  .log-details .inner-overview,
+  .log-details .inner-table {
+    padding: 1.25rem;
+  }
+
+  .log-details .inner-summary {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .log-details .inner-sum-detect h3,
+  .log-details .inner-sum-type h3,
+  .log-details .inner-last-frame h3 {
+    font-size: 1.6rem;
+  }
+
+  .log-details .frame2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .log-details .frame1 {
+    flex-wrap: wrap;
+  }
+
+  .log-details .conf {
+    align-items: flex-start;
+  }
+
+  .log-details .inner-list-frame {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 400px) {
+  .log-details .frame2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .log-details .inner-title h2 {
+    font-size: 1.1rem;
+  }
+}

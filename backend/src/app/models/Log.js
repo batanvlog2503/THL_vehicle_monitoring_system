@@ -6,17 +6,19 @@ const DetectionSchema = new mongoose.Schema({
   label: { type: String },
   conf: { type: Number },
   bbox: [Number],
+  time: { type: String }, // "00:01:23" (hiển thị)
+  time_ms: { type: Number }, // 83000 (logic)
 })
 
 const LogSchema = new mongoose.Schema({
   user_id: String,
+  email: String,
   videoName: String,
   createdAt: { type: Date, default: Date.now },
   detections: [DetectionSchema],
 })
 
 module.exports = mongoose.model("Log", LogSchema)
-
 
 // {
 //   "user_id": "USER_ID_123",

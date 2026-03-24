@@ -111,10 +111,12 @@ const Dashboard = () => {
             data.detections.forEach((d) => {
               // idx là vị trí từ  0 -> .....
               const idx = updated.findIndex((x) => x.id === d.id) // tìm object có cùng id
+
+              const newObj = { ...d, time: data.time, time_ms: data.time_ms }
               if (idx === -1) {
-                updated.push(d) // chưa có thì thêm mới object
+                updated.push(newObj) // chưa có thì thêm mới object
               } else {
-                updated[idx] = d // ghi đè
+                updated[idx] = newObj // ghi đè
               }
             })
 
@@ -207,6 +209,8 @@ const Dashboard = () => {
       "id",
       "label",
       "conf",
+      "time",
+      "time_ms",
       "bbox_x1",
       "bbox_y1",
       "bbox_x2",
@@ -217,6 +221,8 @@ const Dashboard = () => {
       d.id,
       d.label,
       d.conf,
+      d.time,
+      d.time_ms,
       ...(d.bbox ?? ["", "", "", ""]),
     ])
 
@@ -344,6 +350,7 @@ const Dashboard = () => {
                     <th>ID</th>
                     <th>Class</th>
                     <th>Conf</th>
+                    <th>Time</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -377,6 +384,7 @@ const Dashboard = () => {
                             </span>
                           </div>
                         </td>
+                        <td>{d.time}</td>
                       </tr>
                     ))
                   )}
