@@ -3,6 +3,12 @@ import { useParams } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance"
 import { useState, useEffect } from "react"
 import "./LogDetails.css"
+
+import { chartColors, chartColorsBar } from "./chartColor"
+import { Chart as ChartJS, defaults } from "chart.js/auto"
+import { Radar, Line, Bar, Doughnut, Pie } from "react-chartjs-2"
+defaults.plugins.title.display = true
+defaults.plugins.title.color = "black"
 const LogDetails = () => {
   const { id } = useParams()
   const [log, setLog] = useState()
@@ -101,6 +107,15 @@ const LogDetails = () => {
       console.error(error.message)
     }
   }
+
+  const countLabel = (log) => {
+    const counts = {}
+    log?.detections.forEach((d) => {
+      counts[d.label] = (counts[d.label] || 0) + 1
+    })
+
+    return counts
+  }
   return (
     <div className="log-details container">
       <div className="inner-wrap ">
@@ -139,7 +154,43 @@ const LogDetails = () => {
             ))}
           </ul>
         </div>
-
+        <div className="inner-chart">
+          <div className="card pie">
+            <h3>Ratio of Detections</h3>
+            <Pie
+              data={{
+                labels: getUniqueLabels(log),
+                datasets: [
+                  {
+                    label: "Share of Detect Object",
+                    data: getUniqueLabels(log).map(
+                      (label) => countLabel(log)[label] || 0,
+                    ),
+                    backgroundColor: chartColors,
+                  },
+                ],
+              }}
+            ></Pie>
+          </div>
+          <div className="card bar">
+            <h3>Number of Detections</h3>
+            <Bar
+              data={{
+                labels: getUniqueLabels(log),
+                datasets: [
+                  {
+                    label: "Share of Detect Object",
+                    data: getUniqueLabels(log).map(
+                      (label) => countLabel(log)[label] || 0,
+                    ),
+                    backgroundColor: chartColors,
+                    borderRadius: 6,
+                  },
+                ],
+              }}
+            ></Bar>
+          </div>
+        </div>
         <div className="inner-table">
           <h3>Chi tiết phát hiện</h3>
           <div className="inner-list-frame">
@@ -209,7 +260,7 @@ const LogDetails = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Xác nhận export</h5>
+                <h4 className="modal-title-export">Xác nhận export</h4>
                 <button
                   type="button"
                   className="btn-close"

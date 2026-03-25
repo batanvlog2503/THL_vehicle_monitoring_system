@@ -86,7 +86,7 @@ const Log = () => {
                 </div>
 
                 <div className="inner-slug ">
-                  <span>#{detectList(log)} phát hiện</span>
+                  <span>{detectList(log)} phát hiện</span>
                   <ul className="d-flex flex-row">
                     {getUniqueLabels(log).map((label, index) => (
                       <li key={index}>

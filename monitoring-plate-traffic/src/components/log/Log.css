@@ -63,7 +63,16 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+.log-container .inner-slug span {
+  display: inline-block;
+  width: fit-content;
 
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  background: rgba(2, 132, 199, 0.1);
+  color: var(--accent-cyan);
+}
 /* EMAIL + TIME */
 .log .inner-email,
 .inner-time {

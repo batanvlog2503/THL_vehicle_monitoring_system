@@ -554,11 +554,3 @@
   align-items: center;
   justify-content: center;
 }
-.log-details .inner-chart h3 {
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  margin-bottom: 1rem;
-
-  color: var(--text-secondary); /* 🔥 quan trọng */
-}
