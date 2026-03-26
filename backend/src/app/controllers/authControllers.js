@@ -1,11 +1,11 @@
 const User = require("../models/User")
 const bcrypt = require("bcrypt")
-const randomstring = require("randomstring")
+const Randomstring = require("randomstring")
 const jwt = require("jsonwebtoken")
 const mailer = require("../../helpers/mailer")
 const { validationResult } = require("express-validator")
 const RefreshToken = require("../models/RefreshToken")
-
+const PasswordReset = require("../models/PasswordReset")
 const generateAccessToken = async (user) => {
   return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" })
 }
@@ -213,6 +213,129 @@ class AuthControllers {
       return res.status(400).json({
         message: error.message,
         success: false,
+      })
+    }
+  }
+
+  // [POST] /auth/forgot-password
+
+  async forgotPassword(req, res, next) {
+    try {
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: "Errors",
+          errors: errors.array(),
+        })
+      }
+
+      const { email } = req.body
+
+      const userData = await User.findOne({ email: email })
+
+      if (!userData) {
+        return res.status(400).json({
+          success: false,
+          message: "Email doesn't exists",
+        })
+      }
+
+      const randomstring = Randomstring.generate()
+
+      const msg = `<p>Hi ${userData.name} please click <a href="${process.env.APP_URL}/auth/reset-password?token=${randomstring}">Verify</a> to reset password</p>`
+
+      await PasswordReset.deleteMany({ user_id: userData._id }) // tránh spam
+
+      const passwordReset = new PasswordReset({
+        user_id: userData._id,
+        token: randomstring,
+      })
+
+      await passwordReset.save()
+      await mailer.sendMail(userData.email, "Reset Password", msg)
+
+      return res.status(201).json({
+        success: true,
+        message: "Reset password sent to your mail, please check",
+      })
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      })
+    }
+  }
+  // là nút verify khi click email xác nhận mậ khẩu
+  // để chuyển sang form  reset password
+  //[GET] /auth/reset-password
+
+  async resetPassword(req, res, next) {
+    try {
+      const { token } = req.query
+      if (!token) {
+        return res.render("404", {
+          success: false,
+          message: "Token doesn't exists",
+        })
+      }
+
+      const resetData = await PasswordReset.findOne({ token: token })
+
+      if (!resetData) {
+        return res.render("404", {
+          success: false,
+          message: "Password Reset doesn't exists",
+        })
+      }
+
+      return res.render("reset-password", { resetData: resetData.toObject() })
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
+      })
+    }
+  }
+
+  //[POST] /auth/updateP
+  async updatePassword(req, res, next) {
+    try {
+      // cái user_id do cái input tự động thầm gửi khi có value của resetData.user_id
+      const { user_id, password, c_password } = req.body
+      const errors = validationResult(req)
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: "Errors when reset password",
+          errors: errors.array(),
+        })
+      }
+      const resetData = await PasswordReset.findOne({ user_id: user_id })
+
+      if (password != c_password) {
+        return res.render("reset-password", {
+          resetData: resetData.toObject(),
+          errors: "Confirm Password Not Matching !!!",
+        })
+      }
+
+      const hashedPassword = await bcrypt.hash(c_password, 10)
+
+      await User.findByIdAndUpdate(user_id, {
+        password: hashedPassword,
+      })
+
+      await PasswordReset.deleteMany({ user_id })
+
+      console.log("under delete")
+      return res.render("reset-success")
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.message,
       })
     }
   }

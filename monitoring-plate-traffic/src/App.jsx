@@ -26,6 +26,7 @@ import Log from "./components/log/Log"
 import LogDetails from "./components/log/LogDetails"
 import Chatbot from "./components/chatbot/Chatbot"
 import Webcam from "./components/webcam/Webcam"
+import ForgotPassword from "./auth/ForgotPassword/ForgotPassword"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -43,6 +44,10 @@ const router = createBrowserRouter(
       <Route
         path="signup"
         element={<SignUp />}
+      ></Route>
+      <Route
+        path="forgot-password"
+        element={<ForgotPassword />}
       ></Route>
       <Route
         path="main"

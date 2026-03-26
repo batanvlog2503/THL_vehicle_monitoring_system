@@ -3,6 +3,8 @@ const express = require("express")
 const {
   userValidator,
   userRegisterValidation,
+  userForgotPasswordValidator,
+  userUpdatePasswordValidator,
 } = require("../helpers/validation")
 
 const auth = require("../app/middlewares/auth")
@@ -18,5 +20,17 @@ router.post(
   "/send-mail-verification",
   userRegisterValidation,
   AuthControllers.sendMailVerification,
+)
+
+router.post(
+  "/forgot-password",
+  userForgotPasswordValidator,
+  AuthControllers.forgotPassword,
+)
+router.get("/reset-password", AuthControllers.resetPassword)
+router.post(
+  "/update-password",
+  userUpdatePasswordValidator,
+  AuthControllers.updatePassword,
 )
 module.exports = router

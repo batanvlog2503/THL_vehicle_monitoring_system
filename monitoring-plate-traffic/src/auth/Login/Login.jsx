@@ -126,6 +126,12 @@ const Login = () => {
                 autoComplete="new-password"
               />
             </div>
+            <a
+              href=""
+              onClick={() => navigate("/forgot-password")}
+            >
+              Forgot Password
+            </a>
 
             <button
               type="submit"
