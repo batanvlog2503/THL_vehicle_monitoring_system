@@ -169,6 +169,33 @@ class UserControllers {
       })
     }
   }
+
+  // [POST] /user/logout
+
+  async logout(req, res, next) {
+    try {
+      const { refreshToken } = req.body
+      if (!refreshToken) {
+        return res.status(400).json({
+          success: false,
+          message: "RefreshToken Invalid or Not Found !!!",
+        })
+      }
+
+      // xóa RefreshToken
+
+      await RefreshToken.deleteOne({ refreshToken: refreshToken })
+      return res.status(200).json({
+        success: true,
+        message: "Logout Successfully !!! ",
+      })
+    } catch (error) {
+      return res.status(400).json({
+        message: error.message,
+        success: false,
+      })
+    }
+  }
 }
 
 module.exports = new UserControllers()

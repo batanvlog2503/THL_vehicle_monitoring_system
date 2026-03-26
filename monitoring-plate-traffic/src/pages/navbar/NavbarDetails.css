@@ -37,3 +37,18 @@
   color: white; /* sửa lại để hiện chữ */
   cursor: pointer;
 }
+
+.logout {
+  padding: 10px;
+  background-color: #5c8ade;
+  border: 1px solid white;
+  border-radius: 10px;
+  color: white;
+}
+
+.logout:hover {
+  background-color: white;
+  border: 1px solid #5c8ade;
+  color: #5c8ade;
+  transition: 1s ease;
+}
