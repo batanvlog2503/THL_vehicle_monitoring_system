@@ -6,9 +6,10 @@ const NavbarHome = () => {
       <div className="inner-wrap row">
         <div className="inner-title col-sm-12 col-lg-3 col-4">
           <a href="/">
-            <h4>
+            <h4 style={{ color: "#0d7cc2" }}>
               {" "}
-              <i className="fa-solid fa-traffic-light"></i> THL Monitoring Traffic
+              <i className="fa-solid fa-traffic-light"></i> THL Monitoring
+              Traffic
             </h4>
           </a>
         </div>
@@ -22,6 +23,14 @@ const NavbarHome = () => {
           <a href="/login">
             <i className="fa-regular fa-user"></i>
             <span> Login</span>
+          </a>
+          <a
+            href="/register"
+            style={{ border: "1px solid grey" }}
+          >
+            {" "}
+            <i className="fa-regular fa-user"></i>
+            <span> Register</span>
           </a>
         </div>
       </div>

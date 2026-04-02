@@ -55,7 +55,7 @@ const NavbarDetails = () => {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title">Confirm Logout</h5>
+                <h5 className="modal-title1">Confirm Logout</h5>
                 <button
                   className="btn-close"
                   onClick={() => setModal(false)}

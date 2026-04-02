@@ -1,8 +1,11 @@
 // chartColors.js
 
 export const chartColors = [
-  "#FF6384",
   "#36A2EB",
+  "#FFD700",
+  "#FF6347",
+  "#FF6384",
+
   "#FFCE56",
   "#4BC0C0",
   "#9966FF",
@@ -11,7 +14,7 @@ export const chartColors = [
   "#8DD1E1",
   "#FFB6C1",
   "#B0E57C",
-  "#FFD700",
+
   "#40E0D0",
   "#6495ED",
   "#FF7F50",
@@ -25,7 +28,7 @@ export const chartColors = [
   "#CD5C5C",
   "#7B68EE",
   "#00FA9A",
-  "#FF6347",
+
   "#4682B4",
   "#DDA0DD",
   "#98FB98",

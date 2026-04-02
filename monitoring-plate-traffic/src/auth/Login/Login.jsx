@@ -39,11 +39,6 @@ const Login = () => {
         setTimeout(() => {
           ;(setMessage(""), navigate("/main"))
         }, 2000)
-        setUser({
-          name: "",
-          password: "",
-          email: "",
-        })
       }
     } catch (error) {
       setMessage(error.response?.data?.message || "Có lỗi xảy ra")

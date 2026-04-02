@@ -119,3 +119,132 @@
   background-color: #5c8ade;
   color: white;
 }
+
+/* ================= ANIMATION ================= */
+
+/* Fade + slide khi load box */
+.inner-introduction,
+.inner-filter,
+.inner-list {
+  animation: fadeSlideUp 0.5s ease both;
+}
+
+/* delay nhẹ cho đẹp */
+.inner-filter {
+  animation-delay: 0.1s;
+}
+.inner-list {
+  animation-delay: 0.2s;
+}
+
+/* Table row hover mượt hơn */
+.table tbody tr {
+  transition: all 0.25s ease;
+}
+
+.table tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Button hover smooth hơn */
+.btn-view {
+  transition: all 0.25s ease;
+}
+
+.btn-view:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(92, 138, 222, 0.3);
+}
+
+/* Input focus animation */
+.inner-filter input[type="text"] {
+  transition: all 0.3s ease;
+}
+
+/* Checkbox hover */
+.inner-overspeed:hover {
+  opacity: 0.8;
+  transition: 0.2s;
+}
+
+/* ================= KEYFRAMES ================= */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Tablet */
+@media (max-width: 992px) {
+  .inner-filter input[type="text"],
+  .inner-filter .btn-secondary {
+    width: 100%;
+  }
+
+  .inner-overspeed {
+    margin-top: 15px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  .vehicle {
+    padding: 20px 10px;
+  }
+
+  .inner-introduction,
+  .inner-filter,
+  .inner-list {
+    padding: 18px;
+  }
+
+  .inner-introduction h3 {
+    font-size: 16px;
+  }
+
+  .table thead {
+    display: none; /* ẩn header table */
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table tr {
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: var(--shadow);
+  }
+
+  .table td {
+    padding: 10px;
+    text-align: right;
+    position: relative;
+    border: none;
+  }
+
+  /* fake label cho mobile */
+  .table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+}

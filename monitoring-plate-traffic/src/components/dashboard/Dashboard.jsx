@@ -2,19 +2,25 @@ import { useState, useRef } from "react"
 import "./Dashboard.css"
 import axiosInstance from "../../utils/axiosInstance"
 import axios from "axios"
+
+// Upload video lên backend (Python)
+// Stream video + nhận detection qua WebSocket
+// Hiển thị video + bounding box (canvas)
+// Lưu + export dữ liệu detection (CSV + API)
 const Dashboard = () => {
+  // giữ input đầu vào
   const fileInputRef = useRef(null)
-  const canvasRef = useRef(null)
-  const wsRef = useRef(null)
-  const imgBitmapRef = useRef(null)
-  const detectionsRef = useRef([])
-  const videoNameRef = useRef(null)
-  const [videoPath, setVideoPath] = useState(null) // 🔥 thêm
+  const canvasRef = useRef(null) // canvas vẽ video
+  const wsRef = useRef(null) // websocket connection
+  const imgBitmapRef = useRef(null) // lấy fram hiện tại
+  const detectionsRef = useRef([]) // lưu detection RealTime
+  const videoNameRef = useRef(null) // ten file CSV
+  const [videoPath, setVideoPath] = useState(null)
   const [detections, setDetections] = useState([])
   const [status, setStatus] = useState("idle") // không có tín hiệu //stopped
   const [showModal, setShowModal] = useState(false)
 
-  // default Date
+  // default Date // trả về thời gian thực việt nam
   const getVNDateString = () => {
     const now = new Date()
 
@@ -25,7 +31,7 @@ const Dashboard = () => {
 
     return `${date}_${time}`
   }
-
+  // tạo log để lưu vào trong log
   const createLog = async () => {
     try {
       console.log("DATA SEND:", {

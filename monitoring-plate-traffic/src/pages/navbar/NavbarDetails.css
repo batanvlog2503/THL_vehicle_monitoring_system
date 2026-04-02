@@ -52,3 +52,113 @@
   color: #5c8ade;
   transition: 1s ease;
 }
+
+/* Overlay */
+.modal.show {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  animation: fadeIn 0.25s ease;
+}
+
+/* Center modal */
+.modal-dialog {
+  display: flex;
+  align-items: center;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+/* Modal box */
+.modal-content {
+  border-radius: 16px;
+  border: none;
+  padding: 10px;
+
+  color: black;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: scaleIn 0.25s ease;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Header */
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-title1 {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* Close button */
+.btn-close {
+  filter: invert(1);
+  opacity: 0.7;
+}
+.btn-close:hover {
+  opacity: 1;
+}
+
+/* Body */
+.modal-body {
+  font-size: 15px;
+  color: black;
+  padding: 20px 10px;
+  text-align: center;
+}
+
+/* Footer */
+.modal-footer {
+  border-top: none;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Buttons */
+.modal-footer .btn {
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+/* Cancel button */
+.modal-footer .btn-secondary {
+  background: #444;
+  border: none;
+}
+.modal-footer .btn-secondary:hover {
+  background: #666;
+}
+
+/* Logout button */
+.modal-footer .btn-primary {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+  border: none;
+}
+.modal-footer .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(255, 75, 43, 0.4);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

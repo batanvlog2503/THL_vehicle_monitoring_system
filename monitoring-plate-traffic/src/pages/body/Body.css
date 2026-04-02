@@ -1,23 +1,34 @@
+/* ===== BODY ===== */
 .body {
-  /* chiếm phần còn lại dưới navbar */
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
   margin-top: 120px;
   padding: 50px;
+
+  animation: fadeIn 1s ease;
 }
 
+/* ===== TITLE ===== */
 .inner-route h1 {
   font-size: 60px;
   font-weight: 700;
   color: black;
+
+  animation: slideDown 0.8s ease;
 }
 
 .inner-route span {
   color: #6384c2;
 }
 
+/* ===== TEXT ===== */
+.inner-route p {
+  animation: fadeIn 1.2s ease;
+}
+
+/* ===== BUTTON ===== */
 .inner-started button {
   padding: 15px;
   font-size: 23px;
@@ -29,13 +40,126 @@
   margin-bottom: 40px;
 
   background: linear-gradient(90deg, #5c8ade, #4facfe);
+
+  transition: all 0.3s ease;
+  animation: slideUp 1s ease;
 }
+
+/* hover mượt hơn */
 .inner-started button:hover {
   background: white;
   color: #5c8ade;
   border: 2px solid #5c8ade;
-  transition: 1s ease;
+  transform: scale(1.08);
 }
+
+/* ===== IMAGE ===== */
 .inner-demo img {
   width: 70%;
+
+  border-radius: 20px;
+  transition: all 0.4s ease;
+  animation: zoomIn 1.2s ease;
+}
+
+/* hover ảnh */
+.inner-demo img:hover {
+  transform: scale(1.05);
+}
+
+/* ===== ANIMATION ===== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablet */
+@media (max-width: 992px) {
+  .inner-route h1 {
+    font-size: 45px;
+  }
+
+  .inner-started button {
+    font-size: 18px;
+    padding: 12px;
+  }
+
+  .inner-demo img {
+    width: 85%;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .body {
+    margin-top: 80px;
+    padding: 20px;
+  }
+
+  .inner-route h1 {
+    font-size: 32px;
+  }
+
+  .inner-route p {
+    font-size: 14px;
+  }
+
+  .inner-started button {
+    font-size: 16px;
+    padding: 10px;
+  }
+
+  .inner-demo img {
+    width: 100%;
+  }
+}
+
+/* Small mobile */
+@media (max-width: 480px) {
+  .inner-route h1 {
+    font-size: 26px;
+  }
+
+  .inner-started button {
+    width: 100%;
+  }
 }

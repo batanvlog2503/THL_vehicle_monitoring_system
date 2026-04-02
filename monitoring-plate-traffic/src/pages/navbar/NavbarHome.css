@@ -22,5 +22,79 @@
 .navbar .inner-user {
   font-size: 20px;
   font-weight: 500;
+}
+
+.inner-user a {
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 8px 18px;
+  border-radius: 25px;
+
+  transition: all 0.3s ease;
+}
+
+/* ===== LOGIN (WHITE) ===== */
+.inner-user a:first-child {
+  background: white;
+}
+
+.inner-user a:first-child:hover {
+  background: #5c8ade;
+  color: white;
+
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(92, 138, 222, 0.4);
+}
+
+/* ===== REGISTER (BLUE) ===== */
+.inner-user a:last-child {
+  background: linear-gradient(90deg, #5c8ade, #4facfe);
+  color: white;
+  border: none;
+}
+
+.inner-user a:last-child:hover {
+  background: white;
   color: #5c8ade;
+
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(92, 138, 222, 0.4);
+}
+
+/* CLICK EFFECT */
+.inner-user a:active {
+  transform: scale(0.95);
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .inner-wrap {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .inner-user {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .inner-user a {
+    flex: 1;
+    justify-content: center;
+  }
+
+  .inner-title h4 {
+    font-size: 18px;
+    text-align: center;
+  }
 }
