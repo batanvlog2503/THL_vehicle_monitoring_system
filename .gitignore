@@ -1,27 +1,8 @@
-# Python
-__pycache__/
-*.pyc
-
-# Environment
-venv/
 venv_gpu/
-
-# Dataset
-dataset/
 train/
 test/
-
-# YOLO
+dataset/
 runs/
-
-# Weights
-*.pt
-!models/best.pt
-
-# Media
 *.mp4
 *.jpg
 *.png
-
-# VSCode
-.vscode/
