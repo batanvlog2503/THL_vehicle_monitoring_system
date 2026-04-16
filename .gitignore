@@ -1,5 +1,5 @@
 venv_gpu/
-train/
+trains/
 test/
 dataset/
 *.mp4
