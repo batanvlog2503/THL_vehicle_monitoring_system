@@ -13,31 +13,12 @@ while cap.isOpened():
     frame = cv2.resize(frame, (640, 640))
 
     results = model.track(
-        frame,a
+        frame,
         persist=True,
         conf=0.3,
         tracker="bytetrack.yaml"
     )
     annotated_frame = results[0].plot()
-
-    # ===== LẤY ID =====
-    boxes = results[0].boxes
-
-    if boxes is not None and boxes.id is not None:
-        for box, track_id in zip(boxes.xyxy, boxes.id):
-            x1, y1, x2, y2 = map(int, box)
-
-            # vẽ ID lên box
-            cv2.putText(
-                annotated_frame,
-                f"ID: {int(track_id)}",
-                (x1, y1 - 10),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                0.6,
-                (0, 255, 0),
-                2
-            )
-
     cv2.imshow("Tracking", annotated_frame)
 
     if cv2.waitKey(25) & 0xFF == ord('q'):
