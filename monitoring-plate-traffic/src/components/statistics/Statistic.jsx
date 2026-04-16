@@ -54,9 +54,9 @@ const Statistic = () => {
       <div className="inner-wrap">
         {/* INTRO */}
         <div className="inner-introduction">
-          <h3>
+          <h4>
             <i className="fa-solid fa-car"></i> Statistics
-          </h3>
+          </h4>
           <span>Traffic data visualization</span>
         </div>
 

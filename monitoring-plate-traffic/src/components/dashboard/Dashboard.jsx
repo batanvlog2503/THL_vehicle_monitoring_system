@@ -1,5 +1,5 @@
 import { useState, useRef } from "react"
-import "./Dashboard.css"
+import "./Dashboard.scss"
 import axiosInstance from "../../utils/axiosInstance"
 import axios from "axios"
 
@@ -8,6 +8,18 @@ import axios from "axios"
 // Hiển thị video + bounding box (canvas)
 // Lưu + export dữ liệu detection (CSV + API)
 const Dashboard = () => {
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  })
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type })
+
+    setTimeout(() => {
+      setToast({ show: false, message: "", type: "success" })
+    }, 3000)
+  }
   // giữ input đầu vào
   const fileInputRef = useRef(null)
   const canvasRef = useRef(null) // canvas vẽ video
@@ -51,33 +63,41 @@ const Dashboard = () => {
     }
   }
   // ===== UPLOAD VIDEO =====
+  // TRONG Dashboard.jsx
+
   const handleUpload = async (e) => {
     const file = e.target.files[0]
     if (!file) return
+
     const fileName = `ket-qua-yolo_${getVNDateString()}.csv`
     videoNameRef.current = fileName
+
     const formData = new FormData()
     formData.append("file", file)
 
-    const response = await axios.post(
-      "http://localhost:8000/upload",
-      formData,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      },
-    )
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/upload",
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      )
 
-    const data = response.data
-    setVideoPath(data.path)
+      // QUAN TRỌNG: Backend trả về { path: "..." }
+      const serverPath = response.data.path
+      setVideoPath(serverPath) // Cập nhật state để startStream lấy đúng path này
 
-    alert("Upload thành công!")
+      showToast("Upload video thành công", "success")
+    } catch (error) {
+      showToast("Upload thất bại!", "error")
+      console.error(error)
+    }
   }
 
   // ===== START STREAM =====
   const startStream = () => {
     if (!videoPath) {
       // nếu không có video Path
-      alert("Upload video trước!")
+      showToast("Vui lòng upload video trước!", "error")
       return
     }
 
@@ -113,7 +133,7 @@ const Dashboard = () => {
           setDetections((prev) => {
             const updated = [...prev]
 
-            // type detections = [[id, label, cls, [x1, y1, x2, y2]]]
+            // type detections = [[id, label,conf, [x1, y1, x2, y2]]]
             data.detections.forEach((d) => {
               // idx là vị trí từ  0 -> .....
               const idx = updated.findIndex((x) => x.id === d.id) // tìm object có cùng id
@@ -178,7 +198,7 @@ const Dashboard = () => {
     wsRef.current?.close() //kết thúc
     setStatus("idle") // no signal
     setShowModal(false) //
-
+    showToast("Đã kết thúc và lưu dữ liệu ✅", "success")
     if (detections.length > 0) {
       console.log("Auto exporting detections...")
       exportCSV() // Gọi hàm export đã viết sẵn
@@ -264,6 +284,18 @@ const Dashboard = () => {
                   : "○ Idle"}
           </span>
         </header>
+        {toast.show && (
+          <div className={`custom-toast3 ${toast.type}`}>
+            <i
+              className={`fa-solid ${
+                toast.type === "success"
+                  ? "fa-circle-check"
+                  : "fa-circle-exclamation"
+              }`}
+            ></i>
+            <span>{toast.message}</span>
+          </div>
+        )}
 
         {/* Body */}
         <div className="dash-body">
@@ -411,7 +443,7 @@ const Dashboard = () => {
             className="modal-box"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3 className="modal-title">Kết thúc stream?</h3>
+            <h3 className="modal-title1">Kết thúc stream?</h3>
             <p className="modal-desc">
               Stream sẽ bị dừng. Dữ liệu detection vẫn được giữ lại và bạn có
               thể xuất CSV sau khi kết thúc.

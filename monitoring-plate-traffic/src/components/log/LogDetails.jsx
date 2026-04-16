@@ -2,7 +2,7 @@ import React from "react"
 import { useParams } from "react-router-dom"
 import axiosInstance from "../../utils/axiosInstance"
 import { useState, useEffect } from "react"
-import "./LogDetails.css"
+import "./LogDetails.scss"
 
 import { chartColors, chartColorsBar } from "./chartColor"
 import { Chart as ChartJS, defaults } from "chart.js/auto"
@@ -10,6 +10,18 @@ import { Radar, Line, Bar, Doughnut, Pie } from "react-chartjs-2"
 defaults.plugins.title.display = true
 defaults.plugins.title.color = "black"
 const LogDetails = () => {
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  })
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type })
+
+    setTimeout(() => {
+      setToast({ show: false, message: "", type: "success" })
+    }, 3000)
+  }
   const { id } = useParams()
   const [log, setLog] = useState()
 
@@ -28,7 +40,7 @@ const LogDetails = () => {
 
   const exportCSV = (log) => {
     if (!log?.detections?.length) {
-      alert("Không có dữ liệu để export")
+      showToast("Không có dữ liệu để export", "error")
       return
     }
 
@@ -62,6 +74,8 @@ const LogDetails = () => {
     a.download = fileName
     a.click()
     URL.revokeObjectURL(url)
+
+    showToast("Export CSV thành công ", "success")
   }
   const getUniqueLabels = (log) => {
     return [...new Set(log?.detections?.map((d) => d.label))] || []
@@ -252,6 +266,18 @@ const LogDetails = () => {
           </button>
         </div>
       </div>
+      {toast.show && (
+        <div className={`custom-toast2 ${toast.type}`}>
+          <i
+            className={`fa-solid ${
+              toast.type === "success"
+                ? "fa-circle-check"
+                : "fa-circle-exclamation"
+            }`}
+          ></i>
+          <span>{toast.message}</span>
+        </div>
+      )}
       {showModal && (
         <div
           className="modal show d-block"

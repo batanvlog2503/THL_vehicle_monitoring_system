@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import "./SignUp.css"
+import "./SignUp.scss"
 import trafficLight from "../Login/traffic_light.png"
 import axios from "axios"
 
@@ -12,10 +12,20 @@ const SignUp = () => {
     mobile: "",
   })
   const navigate = useNavigate() // điều hướng
-  const [message, setMessage] = useState("")
-  const [type, setType] = useState("")
-  const { name, password, email, mobile } = user
 
+  const { name, password, email, mobile } = user
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  })
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type })
+
+    setTimeout(() => {
+      setToast({ show: false, message: "", type: "success" })
+    }, 3000)
+  }
   const handleInputChange = (e) => {
     setUser({ ...user, [e.target.name]: e.target.value })
   }
@@ -29,11 +39,7 @@ const SignUp = () => {
       )
 
       console.log("Register Successfully !!! ", response.data)
-      setMessage(response.data.message)
-      setType("success")
-      setTimeout(() => {
-        setMessage("")
-      }, 2000)
+      showToast("Đăng ký thành công , vui lòng xác nhận email", "success")
 
       setUser({
         name: "",
@@ -42,15 +48,11 @@ const SignUp = () => {
         mobile: "",
       })
 
-      alert("Đăng ký thành công ✅, vui lòng xác nhận email")
-
-      navigate("/login")
-
-      //reset data
+      setTimeout(() => {
+        navigate("/login")
+      }, 2000)
     } catch (error) {
-      console.error("SignUp Error:", error)
-      setMessage(error.response?.data?.message || "Có lỗi xảy ra")
-      setType("danger")
+      showToast(error.response?.data?.message || "Có lỗi xảy ra", "error")
     }
   }
 
@@ -74,20 +76,7 @@ const SignUp = () => {
               Please register to login my website
             </p>
           </div>
-          {message && (
-            <div
-              className={`alert alert-${type}`}
-              style={{
-                fontSize: "15px",
-                padding: "5px",
-                textAlign: "center",
-                fontWeight: "800",
-              }}
-              role="alert"
-            >
-              {message}
-            </div>
-          )}
+
           <form
             action=""
             className="input-group mb-5"
@@ -198,6 +187,18 @@ const SignUp = () => {
           </div>
         </div>
       </div>
+      {toast.show && (
+        <div className={`custom-toast2 ${toast.type}`}>
+          <i
+            className={`fa-solid ${
+              toast.type === "success"
+                ? "fa-circle-check"
+                : "fa-circle-exclamation"
+            }`}
+          ></i>
+          <span>{toast.message}</span>
+        </div>
+      )}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import "./Login.css"
+import "./Login.scss"
 import trafficLight from "./traffic_light.png"
 import axios from "axios"
 import { data } from "react-router-dom"
@@ -11,7 +11,19 @@ const Login = () => {
     password: "",
     email: "",
   })
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+    type: "success",
+  })
 
+  const showToast = (message, type = "success") => {
+    setToast({ show: true, message, type })
+
+    setTimeout(() => {
+      setToast({ show: false, message: "", type: "success" })
+    }, 3000)
+  }
   const [message, setMessage] = useState("")
   const [type, setType] = useState("")
 
@@ -34,15 +46,13 @@ const Login = () => {
         localStorage.setItem("accessToken", accessToken)
         localStorage.setItem("refreshToken", refreshToken)
         localStorage.setItem("user", JSON.stringify(userData))
-        setMessage(response.data.message)
-        setType("success")
+        showToast(response.data.message, "success")
         setTimeout(() => {
           ;(setMessage(""), navigate("/main"))
         }, 2000)
       }
     } catch (error) {
-      setMessage(error.response?.data?.message || "Có lỗi xảy ra")
-      setType("danger")
+      showToast(error.response?.data?.message || "Có lỗi xảy ra", "error")
     }
   }
   return (
@@ -63,15 +73,7 @@ const Login = () => {
             </h1>
             <p>Login to access the dashboard</p>
           </div>
-          {message && (
-            <div
-              className={`alert alert-${type}`}
-              style={{ fontSize: "12px", padding: "5px", textAlign: "center" }}
-              role="alert"
-            >
-              {message}
-            </div>
-          )}
+
           <form
             action=""
             className="input-group mb-5"
@@ -146,6 +148,18 @@ const Login = () => {
           </div>
         </div>
       </div>
+      {toast.show && (
+        <div className={`custom-toast2 ${toast.type}`}>
+          <i
+            className={`fa-solid ${
+              toast.type === "success"
+                ? "fa-circle-check"
+                : "fa-circle-exclamation"
+            }`}
+          ></i>
+          <span>{toast.message}</span>
+        </div>
+      )}
     </div>
   )
 }

@@ -7,11 +7,11 @@ const { validationResult } = require("express-validator")
 const RefreshToken = require("../models/RefreshToken")
 const PasswordReset = require("../models/PasswordReset")
 const generateAccessToken = async (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "1m" })
+  return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "3h" })
 }
 
 const generateRefreshToken = async (user) => {
-  return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "3h" })
+  return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
 }
 class AuthControllers {
   async userLogin(req, res, next) {
