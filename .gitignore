@@ -2,7 +2,6 @@ venv_gpu/
 train/
 test/
 dataset/
-runs/
 *.mp4
 *.jpg
 *.png
