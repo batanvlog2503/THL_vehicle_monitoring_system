@@ -1,0 +1,7 @@
+venv_gpu/
+train/
+runs/
+*.pt
+__pycache__/
+*.mp4
+GitNexus/
