@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="333c38d2-70ff-4433-af0d-ab024a95cac3" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.vscode/settings.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/color-support" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/color-support.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/color-support.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/detect-libc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/detect-libc.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/detect-libc.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/glob" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/glob.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/glob.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/handlebars" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/handlebars.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/handlebars.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/husky" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/husky.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/husky.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/lint-staged" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/lint-staged.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/lint-staged.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/mkdirp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/mkdirp.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/mkdirp.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nanoid" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nanoid.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nanoid.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-gyp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-gyp.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-gyp.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-sass" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-sass.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-sass.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-which" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-which.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/node-which.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nodemon" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nodemon.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nodemon.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nodetouch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nodetouch.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nodetouch.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nopt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nopt.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/nopt.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/pidtree" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/pidtree.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/pidtree.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/prettier" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/prettier.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/prettier.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/resolve" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/resolve.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/resolve.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/rimraf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/rimraf.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/rimraf.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/sass" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/sass.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/sass.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/sassgraph" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/sassgraph.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/sassgraph.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/semver" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/semver.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/semver.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/uglifyjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/uglifyjs.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/uglifyjs.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/yaml.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.bin/yaml.ps1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/.package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/LICENSE.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/commonjs/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/commonjs/index.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/commonjs/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/commonjs/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/commonjs/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/esm/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/esm/index.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/esm/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/esm/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/dist/esm/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/balanced-match/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/commonjs/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/commonjs/index.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/commonjs/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/commonjs/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/commonjs/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/esm/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/esm/index.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/esm/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/esm/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/dist/esm/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/brace-expansion/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/cliui/LICENSE.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/cliui/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/cliui/build/index.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/cliui/build/index.d.cts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/cliui/build/lib/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/cliui/index.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@isaacs/cliui/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/.esm-wrapper.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/browser.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/browser.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/browser.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data-browser.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data-browser.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data-browser.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data-browser.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-data.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-src.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-src.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-src.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/code-points-src.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/generate-code-points.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/generate-code-points.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/generate-code-points.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/generate-code-points.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/index.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/index.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/memory-code-points.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/memory-code-points.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/memory-code-points.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/memory-code-points.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/node.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/node.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/node.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/node.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/util.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/util.d.ts.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/util.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/dist/util.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@mongodb-js/saslprep/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher-win32-x64/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher-win32-x64/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher-win32-x64/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher-win32-x64/watcher.node" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/LICENSE" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/binding.gyp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/index.d.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/index.js.flow" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/scripts/build-from-source.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Backend.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Backend.hh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Debounce.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Debounce.hh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/DirTree.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/DirTree.hh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Event.hh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Glob.cc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Glob.hh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/PromiseRunner.hh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/node_modules/@parcel/watcher/src/Signal.hh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/dog.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/labels" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/old.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirement.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/sample.mp4" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/stream.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yolov8n-seg.pt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/yolov8n.pt" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 6
+}]]></component>
+  <component name="ProjectId" id="3CRk6qAkKSFdIM1bpmEUMLGoYXL" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.detect_image_yolo.executor": "Run",
+    "Python.vehicle_detection.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "dev",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Admin/OneDrive - ptit.edu.vn/Desktop/THL_vehicle_monitor/THL_vehicle_monitoring_system/cv"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-348a24fa61fa-5312c7369657-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-251.23774.444" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="333c38d2-70ff-4433-af0d-ab024a95cac3" name="Changes" comment="" />
+      <created>1776355597727</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776355597727</updated>
+    </task>
+    <servers />
+  </component>
+</project>

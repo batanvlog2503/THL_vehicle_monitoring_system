@@ -10,7 +10,7 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "ollama",
 })
 
-const MODEL = process.env.AI_MODEL || "llama3" // OpenAI: "gpt-4o-mini"
+const MODEL = process.env.AI_MODEL || "llama3.2" // OpenAI: "gpt-4o-mini"
 
 router.post("/", async (req, res) => {
   try {
