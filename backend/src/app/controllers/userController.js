@@ -103,29 +103,71 @@ class UserControllers {
 
   // [GET] /user/logs
 
+  // async getAllLog(req, res, next) {
+  //   try {
+  //     const user_id = req.user._id.toString()
+  //     if (!user_id) {
+  //       return res.status(400).json({
+  //         success: false,
+  //         message: "Please login to use device",
+  //       })
+  //     }
+
+  //     const logs = await Log.find({ user_id: user_id }).sort({ createdAt: -1 })
+
+  //     if (!logs) {
+  //       return res.status(400).json({
+  //         success: false,
+  //         message: "No data log",
+  //       })
+  //     }
+  //     console.log(logs)
+  //     return res.status(200).json({
+  //       success: true,
+  //       message: "Get Logs Successfully !!!",
+  //       logs: logs,
+  //     })
+  //   } catch (error) {
+  //     return res.status(400).json({
+  //       success: false,
+  //       error: error.message,
+  //     })
+  //   }
+  // }
+
   async getAllLog(req, res, next) {
     try {
       const user_id = req.user._id.toString()
+      const { date } = req.query // 👉 nhận từ query ?date=2026-04-17
+
       if (!user_id) {
         return res.status(400).json({
           success: false,
-          message: "Please login to use device",
+          message: "Please login",
         })
       }
 
-      const logs = await Log.find({ user_id: user_id })
+      let filter = { user_id }
 
-      if (!logs) {
-        return res.status(400).json({
-          success: false,
-          message: "No data log",
-        })
+      // 👉 nếu có date thì lọc theo ngày
+      if (date) {
+        const start = new Date(date)
+        start.setHours(0, 0, 0, 0)
+
+        const end = new Date(date)
+        end.setHours(23, 59, 59, 999)
+
+        filter.createdAt = {
+          $gte: start,
+          $lte: end,
+        }
       }
-      console.log(logs)
+
+      const logs = await Log.find(filter).sort({ createdAt: -1 })
+
       return res.status(200).json({
         success: true,
-        message: "Get Logs Successfully !!!",
-        logs: logs,
+        logs,
       })
     } catch (error) {
       return res.status(400).json({
@@ -134,7 +176,6 @@ class UserControllers {
       })
     }
   }
-
   // [GET] /user/logs/:id
 
   async getLogDetails(req, res, next) {

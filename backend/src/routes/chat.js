@@ -73,7 +73,7 @@ QUY TẮC QUAN TRỌNG:
         },
         { role: "user", content: wrappedMessage },
       ],
-      temperature: 0.1, // ← rất thấp để AI không sáng tạo
+      temperature: 0.2, // ← rất thấp để AI không sáng tạo
       max_tokens: 500,
     })
 
