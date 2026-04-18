@@ -27,12 +27,12 @@ const LogDetails = () => {
 
   const [showModal, setShowModal] = useState(false)
   // default Date
-  const getVNDateString = (log) => {
+  const getVNDateString = (log) => {  
     if (!log?.createdAt) return "unknown"
 
     const dateObj = new Date(log.createdAt)
 
-    const date = dateObj.toLocaleDateString("en-GB").replace(/\//g, "-")
+    const date = dateObj.toLocaleDateString("en-GB").replace(/\//g, "_")
     const time = dateObj.toLocaleTimeString("en-GB").replace(/:/g, "-")
 
     return `${date}_${time}`

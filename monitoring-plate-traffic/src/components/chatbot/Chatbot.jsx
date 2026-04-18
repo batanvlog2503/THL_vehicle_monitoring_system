@@ -1,8 +1,17 @@
 import React, { useState, useRef, useEffect } from "react"
 import axios from "axios"
 import "./Chatbot.scss"
+import { marked } from "marked"
+import { useBlocker } from "react-router-dom"
 
-const Chatbot = ({ userId }) => {
+import ConfirmModal from "./ConfirmModel"
+// Cấu hình marked
+marked.setOptions({
+  breaks: true, // xuống dòng với \n
+  gfm: true, // hỗ trợ GitHub markdown
+})
+const Chatbot = () => {
+  const [lang, setLang] = useState("vi") // ← thêm state ngôn ngữ
   const [messages, setMessages] = useState([
     {
       sender: "bot",
@@ -10,6 +19,9 @@ const Chatbot = ({ userId }) => {
       time: new Date(),
     },
   ])
+
+  const user = JSON.parse(localStorage.getItem("user"))
+  const userId = user?._id || "unknown_user"
   const [input, setInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [isOpen, setIsOpen] = useState(true)
@@ -21,6 +33,10 @@ const Chatbot = ({ userId }) => {
     "Top 3 video có nhiều phát hiện nhất",
     "Xu hướng phát hiện trong tuần",
   ]
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      messages.length > 1 && currentLocation.pathname !== nextLocation.pathname,
+  )
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -39,19 +55,28 @@ const Chatbot = ({ userId }) => {
 
     setMessages((prev) => [
       ...prev,
-      { sender: "user", text: content, time: new Date() },
+      {
+        sender: "user",
+        text: content, // ← convert markdown → HTML,
+        time: new Date(),
+      },
     ])
     setInput("")
     setLoading(true)
 
     try {
-      const res = await axios.post("http://localhost:5000/chat", {
+      const res = await axios.post(`${import.meta.env.VITE_APP_URL}/chat`, {
         message: content,
         user_id: userId,
+        lang, // ← truyền ngôn ngữ lên server
       })
       setMessages((prev) => [
         ...prev,
-        { sender: "bot", text: res.data.reply, time: new Date() },
+        {
+          sender: "bot",
+          text: marked.parse(res.data.reply), // ← thêm marked.parse vào đây
+          time: new Date(),
+        },
       ])
     } catch {
       setMessages((prev) => [
@@ -102,6 +127,22 @@ const Chatbot = ({ userId }) => {
             <span className="status-dot" />
             Đang hoạt động
           </span>
+        </div>
+        {/* Thêm language toggle vào header-actions */}
+        <div className="lang-toggle">
+          <button
+            className={`lang-btn ${lang === "vi" ? "active" : ""}`}
+            onClick={() => setLang("vi")}
+          >
+            VI
+          </button>
+          <span>|</span>
+          <button
+            className={`lang-btn ${lang === "en" ? "active" : ""}`}
+            onClick={() => setLang("en")}
+          >
+            EN
+          </button>
         </div>
         <div className="header-actions">
           <button
@@ -220,6 +261,11 @@ const Chatbot = ({ userId }) => {
           </svg>
         </button>
       </div>
+      <ConfirmModal
+        isOpen={blocker.state === "blocked"}
+        onConfirm={() => blocker.proceed()} // cho đi, lịch sử mất
+        onCancel={() => blocker.reset()} // ở lại
+      />
     </div>
   )
 }

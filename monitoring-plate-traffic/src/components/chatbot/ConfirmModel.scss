@@ -1,0 +1,170 @@
+// src/components/ConfirmModal.scss
+
+.chatbot-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 16px;
+
+  animation: chatbot-overlay-in 0.25s ease forwards;
+
+  @keyframes chatbot-overlay-in {
+    from {
+      background: rgba(0, 0, 0, 0);
+      backdrop-filter: blur(0px);
+    }
+    to {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+    }
+  }
+
+  // Khi đóng
+  &.closing {
+    animation: chatbot-overlay-out 0.2s ease forwards;
+
+    @keyframes chatbot-overlay-out {
+      from {
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+      }
+      to {
+        background: rgba(0, 0, 0, 0);
+        backdrop-filter: blur(0px);
+      }
+    }
+  }
+}
+
+.chatbot-modal-box {
+  background: white;
+  border-radius: 16px;
+  padding: 32px 28px 24px;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.05),
+    0 20px 48px rgba(0, 0, 0, 0.15);
+
+  animation: chatbot-modal-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+  @keyframes chatbot-modal-in {
+    from {
+      opacity: 0;
+      transform: scale(0.85) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  &.closing {
+    animation: chatbot-modal-out 0.2s ease forwards;
+
+    @keyframes chatbot-modal-out {
+      from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+      to {
+        opacity: 0;
+        transform: scale(0.9) translateY(10px);
+      }
+    }
+  }
+
+  // Icon cảnh báo
+  .chatbot-modal-icon {
+    width: 56px;
+    height: 56px;
+    background: #fff5f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+    animation: chatbot-icon-bounce 0.4s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)
+      both;
+
+    @keyframes chatbot-icon-bounce {
+      from {
+        transform: scale(0);
+      }
+      to {
+        transform: scale(1);
+      }
+    }
+  }
+
+  h3 {
+    margin: 0 0 8px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a202c;
+  }
+
+  p {
+    color: #718096;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin: 0 0 24px;
+  }
+
+  .chatbot-modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+
+    @media (max-width: 360px) {
+      flex-direction: column-reverse;
+    }
+
+    button {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+
+      &:active {
+        transform: scale(0.96);
+      }
+    }
+
+    .chatbot-btn-cancel {
+      border: 1.5px solid #e2e8f0;
+      background: white;
+      color: #4a5568;
+
+      &:hover {
+        background: #f7fafc;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      }
+    }
+
+    .chatbot-btn-confirm {
+      border: none;
+      background: linear-gradient(135deg, #fc5c7d, #e53e3e);
+      color: white;
+      box-shadow: 0 4px 12px rgba(229, 62, 62, 0.35);
+
+      &:hover {
+        background: linear-gradient(135deg, #e53e3e, #c53030);
+        box-shadow: 0 6px 16px rgba(229, 62, 62, 0.45);
+        transform: translateY(-1px);
+      }
+    }
+  }
+}

@@ -24,7 +24,7 @@ const Sidebar = () => {
         <li>
           <NavLink
             to="/main/vehicle"
-            className="link"
+            className={({ isActive }) => "link " + (isActive ? "active" : "")}
           >
             <i className="fa-solid fa-car"></i> Vehicle Analysis
           </NavLink>
@@ -32,7 +32,7 @@ const Sidebar = () => {
         <li>
           <NavLink
             to="/main/statistic"
-            className="link"
+            className={({ isActive }) => "link " + (isActive ? "active" : "")}
           >
             <i className="fa-solid fa-chart-pie"></i> Statistics
           </NavLink>

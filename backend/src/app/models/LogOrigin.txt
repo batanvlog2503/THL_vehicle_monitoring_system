@@ -9,7 +9,6 @@ const DetectionSchema = new mongoose.Schema({
   speed: { type: Number },
   time: { type: String }, // "00:01:23" (hiển thị)
   time_ms: { type: Number }, // 83000 (logic)
-  status: { type: String }, // "violation" hoặc "normal"
 })
 
 const LogSchema = new mongoose.Schema({

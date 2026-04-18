@@ -1,0 +1,13 @@
+User hỏi
+   ↓
+Backend (NodeJS)
+   ↓
+Query MongoDB (Log)
+   ↓
+Xử lý stats (bạn đã làm 👍)
+   ↓
+Đưa vào prompt (context)
+   ↓
+AI (llama3 / OpenAI)
+   ↓
+Trả lời

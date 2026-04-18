@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { Outlet } from "react-router-dom"
 import Sidebar from "../pages/sidebar/Sidebar"
 import NavbarDetails from "../pages/navbar/NavbarDetails"
+import Chatbot from "../components/chatbot/Chatbot"
 const Main = () => {
   return (
     <div className="container-fluid main p-0">

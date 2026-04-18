@@ -31,7 +31,7 @@ const Dashboard = () => {
   const [detections, setDetections] = useState([])
   const [status, setStatus] = useState("idle") // không có tín hiệu //stopped
   const [showModal, setShowModal] = useState(false)
-
+  const [speedLimit, setSpeedLimit] = useState(60) // mặc định 60 km/h
   // default Date // trả về thời gian thực việt nam
   const getVNDateString = () => {
     const now = new Date()
@@ -46,20 +46,28 @@ const Dashboard = () => {
   // tạo log để lưu vào trong log
   const createLog = async () => {
     try {
-      console.log("DATA SEND:", {
+      const payload = {
         detections: detectionsRef.current,
-        videoName: videoNameRef.current,
-      })
+        videoName: videoNameRef.current || "unknown_video",
+      }
+
+      console.log("🚀 SEND LOG API:", payload)
+
       const response = await axiosInstance.post(
         `${import.meta.env.VITE_APP_URL}/user/save-log`,
-        { detections: detectionsRef.current, videoName: videoNameRef.current },
+        payload,
       )
 
+      console.log("✅ RESPONSE:", response.data)
+
       if (response.data.success) {
-        console.log("Save log Successfully !!!")
+        showToast("Save log thành công", "success")
+      } else {
+        showToast("Save log thất bại", "error")
       }
     } catch (error) {
-      console.error(error.message)
+      console.error("❌ SAVE LOG ERROR:", error.response?.data || error.message)
+      showToast("Lỗi save log", "error")
     }
   }
   // ===== UPLOAD VIDEO =====
@@ -122,8 +130,14 @@ const Dashboard = () => {
         const data = JSON.parse(event.data) // lấy data gửi bên video python
 
         if (data.status === "done") {
-          // check video kết thúc thì setStatus = "done" và return dừng
           setStatus("done")
+
+          // 🔥 AUTO EXPORT
+          if (detectionsRef.current.length > 0) {
+            exportCSV()
+            createLog()
+          }
+
           return
         }
         // cập nhật danh sách theo ID tracking
@@ -138,7 +152,15 @@ const Dashboard = () => {
               // idx là vị trí từ  0 -> .....
               const idx = updated.findIndex((x) => x.id === d.id) // tìm object có cùng id
 
-              const newObj = { ...d, time: data.time, time_ms: data.time_ms }
+              const newObj = {
+                ...d,
+                time: data.time,
+                speed: d.speed ?? null,
+
+                // 🔥 LOCK STATUS 1 LẦN DUY NHẤT
+                status:
+                  d.speed && d.speed > speedLimit ? "violation" : "normal",
+              }
               if (idx === -1) {
                 updated.push(newObj) // chưa có thì thêm mới object
               } else {
@@ -172,11 +194,7 @@ const Dashboard = () => {
     }
 
     ws.onclose = () => {
-      if (status !== "done") {
-        setStatus("idle")
-      }
-
-      // no signal
+      setStatus((prev) => (prev === "done" ? "done" : "idle"))
     }
   }
 
@@ -195,74 +213,64 @@ const Dashboard = () => {
   }
 
   const endStream = async () => {
-    wsRef.current?.close() //kết thúc
-    setStatus("idle") // no signal
-    setShowModal(false) //
-    showToast("Đã kết thúc và lưu dữ liệu ✅", "success")
-    if (detections.length > 0) {
-      console.log("Auto exporting detections...")
-      exportCSV() // Gọi hàm export đã viết sẵn
-      await createLog()
-      videoNameRef.current = null
-      detectionsRef.current = []
-    }
-    // resetDataa
-    setDetections([])
-    setVideoPath(null)
+    wsRef.current?.send(JSON.stringify({ action: "stop" }))
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = ""
-    }
-    const canvas = canvasRef.current
-    if (canvas) {
-      const context = canvas.getContext("2d")
-      context.clearRect(0, 0, canvas.width, canvas.height) // vì ban đầu hiểu là rectangle nên clear
-      canvas.width = 0
-      canvas.height = 0
-    }
+    setShowModal(false)
+    setStatus("idle")
 
-    if (imgBitmapRef.current) {
-      imgBitmapRef.current.close()
-      imgBitmapRef.current = null
-    }
+    setTimeout(async () => {
+      console.log("DETECTIONS:", detectionsRef.current)
+
+      if (detectionsRef.current.length > 0) {
+        await createLog()
+        exportCSV()
+      }
+
+      showToast("Đã lưu DB thành công ", "success")
+    }, 1200) // 👈 quan trọng
   }
 
   // ===== EXPORT CSV =====
   const exportCSV = () => {
-    if (detections.length === 0) return
+    if (detectionsRef.current.length === 0) return
 
     const headers = [
       "id",
       "label",
       "conf",
       "time",
-      "time_ms",
+
+      "speed",
+      "status",
       "bbox_x1",
       "bbox_y1",
       "bbox_x2",
       "bbox_y2",
-    ] // label
+    ]
 
-    const rows = detections.map((d) => [
+    const rows = detectionsRef.current.map((d) => [
       d.id,
       d.label,
       d.conf,
       d.time,
-      d.time_ms,
+
+      d.speed ?? "",
+      d.status ?? "",
       ...(d.bbox ?? ["", "", "", ""]),
     ])
 
     const csv = [headers, ...rows].map((r) => r.join(",")).join("\n")
+
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
-    const fileName = `ket-qua-yolo_${getVNDateString()}.csv`
+
     const a = document.createElement("a")
     a.href = url
-    a.download = fileName
+    a.download = videoNameRef.current || `yolo_${Date.now()}.csv`
     a.click()
+
     URL.revokeObjectURL(url)
   }
-
   const isStreaming = status === "streaming"
   const isActive =
     status === "streaming" || status === "stopped" || status === "done"
@@ -298,6 +306,21 @@ const Dashboard = () => {
         )}
 
         {/* Body */}
+        <div className="speed-limit-box">
+          <label>Speed limit:</label>
+
+          <select
+            value={speedLimit}
+            onChange={(e) => setSpeedLimit(Number(e.target.value))}
+          >
+            <option value={30}>30 km/h</option>
+            <option value={40}>40 km/h</option>
+            <option value={50}>50 km/h</option>
+            <option value={60}>60 km/h</option>
+            <option value={80}>80 km/h</option>
+            <option value={100}>100 km/h</option>
+          </select>
+        </div>
         <div className="dash-body">
           {/* Video + Controls */}
           <div className="video-panel inner-wrap-left-video">
@@ -388,13 +411,16 @@ const Dashboard = () => {
                     <th>ID</th>
                     <th>Class</th>
                     <th>Conf</th>
+                    <th>Speed</th>
                     <th>Time</th>
+                    <th>Status</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   {detections.length === 0 ? (
                     <tr className="empty-row">
-                      <td colSpan={3}>
+                      <td colSpan={5}>
                         {isStreaming ? "Analysing..." : "No data"}
                       </td>
                     </tr>
@@ -404,9 +430,11 @@ const Dashboard = () => {
                         <td>
                           <span className="id-badge">{d.id}</span>
                         </td>
+
                         <td>
                           <span className="label-text">{d.label}</span>
                         </td>
+
                         <td>
                           <div className="conf-bar-wrap">
                             <div className="conf-bar-bg">
@@ -422,7 +450,27 @@ const Dashboard = () => {
                             </span>
                           </div>
                         </td>
+
+                        <td>
+                          {d.speed ? (
+                            <span className="speed-val">{d.speed} km/h</span>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
+
                         <td>{d.time}</td>
+                        <td>
+                          {d.status ? (
+                            <span className={`status ${d.status}`}>
+                              {d.status === "violation"
+                                ? "Violation"
+                                : "Normal"}
+                            </span>
+                          ) : (
+                            "-"
+                          )}
+                        </td>
                       </tr>
                     ))
                   )}

@@ -1,5 +1,5 @@
 import React from "react"
-import "./Log.css"
+import "./Log.scss"
 import loadingImage from "./loading.png"
 import axiosInstance from "../../utils/axiosInstance"
 import { useState, useEffect } from "react"
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 const Log = () => {
   const navigate = useNavigate()
   const [logs, setLogs] = useState([])
-
+  const [selectedDate, setSelectedDate] = useState("")
   const detectList = (log) => {
     const detections = log?.detections || []
     if (detections.length === 0) return 0
@@ -39,15 +39,14 @@ const Log = () => {
   }, [])
   const getAllLogs = async () => {
     try {
-      const response = await axiosInstance.get(
-        `${import.meta.env.VITE_APP_URL}/user/logs`,
-      )
+      const url = selectedDate
+        ? `${import.meta.env.VITE_APP_URL}/user/logs?date=${selectedDate}`
+        : `${import.meta.env.VITE_APP_URL}/user/logs`
 
-      console.log("Logs ", response.data)
+      const response = await axiosInstance.get(url)
 
       if (response.data.success) {
         setLogs(response.data.logs)
-        console.log("Get All Logs Successfully !!!")
       }
     } catch (error) {
       console.error("Error ", error.message)
@@ -57,10 +56,29 @@ const Log = () => {
     <div className="log-container container">
       <div className="log inner-wrap">
         <div className="inner-title d-flex flex-column">
-          <h1>Lịch sử phát hiện</h1>
+          <h1>Lịch sử phát hiện ({logs.length})</h1>
           <p>Xem tất cả các log phát hiện từ video xử lí</p>
+          <div className="filter-box">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
 
-          {logs.length > 0 &&
+            <button onClick={getAllLogs}>
+              <i className="fa-solid fa-filter"></i> Lọc
+            </button>
+
+            <button
+              onClick={() => {
+                setSelectedDate("")
+                getAllLogs()
+              }}
+            >
+              Reset
+            </button>
+          </div>
+          {logs.length > 0 ? (
             logs.map((log) => (
               <div
                 className="card-log"
@@ -85,7 +103,7 @@ const Log = () => {
                   </button>
                 </div>
 
-                <div className="inner-slug ">
+                <div className="inner-slug">
                   <span>{detectList(log)} phát hiện</span>
                   <ul className="d-flex flex-row">
                     {getUniqueLabels(log).map((label, index) => (
@@ -96,7 +114,13 @@ const Log = () => {
                   </ul>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <div className="empty-state">
+              <h3>Không có dữ liệu</h3>
+              <p>Không tìm thấy video nào trong ngày này</p>
+            </div>
+          )}
         </div>
       </div>
     </div>
