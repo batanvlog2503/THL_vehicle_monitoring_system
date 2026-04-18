@@ -19,18 +19,40 @@ router.post("/", async (req, res) => {
     console.log("user_id:", user_id)
     console.log("Số logs tìm thấy:", logs.length)
 
-    // ✅ Tính toán sẵn, KHÔNG để AI tự đếm
+    //  Tính toán sẵn, KHÔNG để AI tự đếm
+    const uniqueViolationIds = new Set()
+
+    logs.forEach((log) => {
+      log.detections?.forEach((d) => {
+        if (d.status === "violation") {
+          uniqueViolationIds.add(d.id)
+        }
+      })
+    })
+    // gom log và detections thành 1 cấu trúc dễ hiểu cho AI, tránh để AI phải tự suy luận từ dữ liệu thô
     const stats = {
       tongSoVideo: logs.length,
-      danhSachVideo: logs.map((l, i) => ({
-        stt: i + 1,
+
+      tongViolationXe: uniqueViolationIds.size, // ✅ XE THỰC
+
+      tongViolationFrame: logs.reduce((sum, log) => {
+        return (
+          sum +
+          (log.detections?.filter((d) => d.status === "violation").length || 0)
+        )
+      }, 0),
+
+      danhSachVideo: logs.map((l) => ({
         videoName: l.videoName,
-        createdAt: l.createdAt,
-        soLanPhatHien: l.detections?.length || 0,
-        cacNhan: [...new Set(l.detections?.map((d) => d.label))],
+
+        soXeViPham: new Set(
+          l.detections
+            ?.filter((d) => d.status === "violation")
+            ?.map((d) => d.id),
+        ).size,
       })),
     }
-
+    // biến dữ liệu stat trên thành prompt dạng văn bản dễ hiểu, tránh để AI phải tự suy luận từ dữ liệu thô
     const context = logs.length
       ? `Tổng số lịch sử phân tích: ${stats.tongSoVideo} video\n\n` +
         `Danh sách:\n${JSON.stringify(stats.danhSachVideo, null, 2)}`
@@ -73,7 +95,7 @@ QUY TẮC QUAN TRỌNG:
         },
         { role: "user", content: wrappedMessage },
       ],
-      temperature: 0.2, // ← rất thấp để AI không sáng tạo
+      temperature: 0.4  , // ← rất thấp để AI không sáng tạo
       max_tokens: 500,
     })
 
