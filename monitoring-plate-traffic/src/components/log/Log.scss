@@ -1,24 +1,25 @@
+/* ===================== */
+/* CONTAINER CHÍNH */
+/* ===================== */
 .log-container {
-  /* ===================== */
-  /* VARIABLES */
-  /* ===================== */
   --primary: #1677ff;
   --bg: #f5f7fb;
   --text: #2b3445;
-
+  --muted: #64748b;
   --card: #ffffff;
   --border: #e5e7eb;
-
   --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.08);
 
-  /* ===================== */
-  /* BASE */
-  /* ===================== */
   padding: 24px;
   height: 100vh;
   overflow-y: auto;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 
+  /* Scrollbar cho container này */
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -28,21 +29,18 @@
     border-radius: 10px;
   }
 
-  /* ===================== */
-  /* WRAP */
-  /* ===================== */
+  /* Wrap nội dung */
   .inner-wrap {
     max-width: 1000px;
     margin: 0 auto;
   }
 
-  /* ===================== */
-  /* HEADER */
-  /* ===================== */
+  /* Header Section */
   .inner-title {
     h1 {
       font-size: 26px;
       color: var(--text);
+      margin-bottom: 8px;
     }
 
     p {
@@ -51,22 +49,17 @@
     }
   }
 
-  /* ===================== */
-  /* FILTER */
-  /* ===================== */
+  /* Filter Section */
   .filter-box {
     display: flex;
     align-items: center;
     gap: 10px;
-
     padding: 12px;
     margin-bottom: 20px;
-
+    background: var(--card);
     border-radius: 12px;
-
     box-shadow: var(--shadow-sm);
-
-    animation: fadeDown 0.4s ease;
+    animation: logFadeDown 0.4s ease;
 
     input {
       padding: 10px 14px;
@@ -74,6 +67,7 @@
       border: 1px solid var(--border);
       outline: none;
       transition: 0.25s;
+      flex: 1;
 
       &:focus {
         border-color: var(--primary);
@@ -89,6 +83,7 @@
       color: white;
       cursor: pointer;
       transition: 0.25s;
+      font-weight: 500;
 
       &:hover {
         transform: translateY(-2px);
@@ -98,52 +93,47 @@
       &:last-child {
         background: #e5e7eb;
         color: #333;
+
+        &:hover {
+          background: #d1d5db;
+          box-shadow: none;
+        }
       }
     }
   }
 
-  /* ===================== */
-  /* CARD */
-  /* ===================== */
+  /* Card Log Item */
   .card-log {
     background: var(--card);
     border-radius: 14px;
     padding: 16px;
     margin-bottom: 16px;
-
     border: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
-
     transition: 0.3s ease;
-    animation: fadeUp 0.5s ease forwards;
-
+    animation: logFadeUp 0.5s ease forwards;
     opacity: 0;
 
     &:hover {
-      transform: translateY(-6px) scale(1.01);
+      transform: translateY(-4px);
       box-shadow: var(--shadow-md);
+      border-color: var(--primary);
     }
 
-    /* stagger */
-    &:nth-child(1) {
-      animation-delay: 0.05s;
-    }
-    &:nth-child(2) {
-      animation-delay: 0.1s;
-    }
-    &:nth-child(3) {
-      animation-delay: 0.15s;
-    }
-    &:nth-child(4) {
-      animation-delay: 0.2s;
+    /* Staggered animation cho 4 item đầu */
+    @for $i from 1 through 4 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.05}s;
+      }
     }
 
     h3 {
       font-size: 18px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       display: flex;
       align-items: center;
       gap: 8px;
+      color: var(--text);
 
       i {
         color: var(--primary);
@@ -151,15 +141,15 @@
     }
   }
 
-  /* ===================== */
-  /* DETAILS */
-  /* ===================== */
+  /* Log Details */
   .inner-details {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--border);
 
     .inner-email,
     .inner-time {
@@ -178,27 +168,29 @@
       color: white;
       cursor: pointer;
       transition: 0.25s;
+      font-size: 13px;
 
       &:hover {
-        transform: translateY(-2px);
+        opacity: 0.9;
+        transform: translateY(-1px);
       }
     }
   }
 
-  /* ===================== */
-  /* TAG */
-  /* ===================== */
+  /* Tags/Slugs */
   .inner-slug {
     display: flex;
     flex-direction: column;
     gap: 8px;
 
-    span {
+    .slug-badge {
       width: fit-content;
       padding: 4px 10px;
       border-radius: 999px;
       background: rgba(22, 119, 255, 0.1);
       color: var(--primary);
+      font-weight: 500;
+      font-size: 12px;
     }
 
     ul {
@@ -208,36 +200,34 @@
       padding: 0;
       margin: 0;
       list-style: none;
-    }
 
-    li {
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 13px;
+      li {
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        background: #f0f7ff;
+        border: 1px solid #bae0ff;
+        color: #0958d9;
+        transition: 0.2s;
 
-      background: #e6f4ff;
-      border: 1px solid #91caff;
-
-      transition: 0.2s;
-
-      &:hover {
-        background: #bae0ff;
+        &:hover {
+          background: #bae0ff;
+          cursor: default;
+        }
       }
     }
   }
 
-  /* ===================== */
-  /* EMPTY STATE */
-  /* ===================== */
+  /* Empty State */
   .empty-state {
     text-align: center;
-    padding: 40px 20px;
+    padding: 60px 20px;
     color: var(--muted);
-    animation: fadeUp 0.4s ease;
+    animation: logFadeUp 0.4s ease forwards;
 
     img {
       width: 120px;
-      opacity: 0.7;
+      opacity: 0.5;
       margin-bottom: 15px;
     }
 
@@ -251,13 +241,11 @@
     }
   }
 
-  /* ===================== */
-  /* ANIMATION */
-  /* ===================== */
-  @keyframes fadeUp {
+  /* Keyframes (đặt tên riêng biệt để tránh trùng) */
+  @keyframes logFadeUp {
     from {
       opacity: 0;
-      transform: translateY(25px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -265,7 +253,7 @@
     }
   }
 
-  @keyframes fadeDown {
+  @keyframes logFadeDown {
     from {
       opacity: 0;
       transform: translateY(-15px);
@@ -280,12 +268,13 @@
   /* RESPONSIVE */
   /* ===================== */
 
-  /* Tablet */
   @media (max-width: 768px) {
     .filter-box {
       flex-wrap: wrap;
-
-      input,
+      input {
+        width: 100%;
+        flex: none;
+      }
       button {
         flex: 1;
       }
@@ -294,29 +283,27 @@
     .inner-details {
       flex-direction: column;
       align-items: flex-start;
+      gap: 8px;
+
+      button {
+        width: 100%;
+        margin-top: 5px;
+      }
     }
   }
 
-  /* Mobile */
   @media (max-width: 480px) {
     padding: 12px;
 
     .card-log {
       padding: 12px;
-
       h3 {
-        font-size: 15px;
+        font-size: 16px;
       }
-    }
-
-    .inner-details button {
-      width: 100%;
     }
 
     .filter-box {
       flex-direction: column;
-
-      input,
       button {
         width: 100%;
       }

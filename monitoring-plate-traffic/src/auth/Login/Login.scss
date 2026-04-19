@@ -17,7 +17,7 @@
 }
 
 /* ===== FORM WRAPPER ===== */
-.wrapper .form-login {
+.login .wrapper .form-login {
   background-color: white;
   border-radius: 30px;
   backdrop-filter: blur(20px);
@@ -33,44 +33,44 @@
 }
 
 /* Hover nhẹ */
-.wrapper .form-login:hover {
+.login .wrapper .form-login:hover {
   transform: translateY(-5px);
 }
 
 /* ===== TITLE ===== */
-.title-login .traffic-light {
+.login .title-login .traffic-light {
   width: 25%;
   animation: pulse 2s infinite;
 }
 
-.title-login p {
+.login .title-login p {
   font-size: 15px;
 }
 
 /* ===== INPUT ===== */
-.input-group-text {
+.login .input-group-text {
   background-color: transparent !important;
   border: none !important;
 }
 
-.form-control {
+.login .form-control {
   border: none !important;
   box-shadow: none !important;
 }
 
 /* line dưới input */
-.input-enter {
+.login .input-enter {
   border-bottom: 1px solid #ccc;
   transition: all 0.2s ease;
 }
 
 /* focus input */
-.input-group:focus-within {
+.login .input-group:focus-within {
   border-bottom: 2px solid rgb(47, 100, 201);
 }
 
 /* ===== BUTTON ===== */
-.form-login button:not(.previous-login) {
+.login .form-login button:not(.previous-login) {
   margin-top: 20px;
   padding: 12px;
   border: none;
@@ -96,21 +96,21 @@ a {
 }
 
 /* ===== MODAL ===== */
-.modal.show {
+.login .modal.show {
   background: rgba(0, 0, 0, 0.5);
   animation: fadeIn 0.3s ease;
 }
 
-.modal-dialog {
+.login .modal-dialog {
   animation: scaleUp 0.3s ease;
 }
 
-.modal-content {
+.login .modal-content {
   border-radius: 15px;
   padding: 10px;
 }
 
-.modal-title1 {
+.login .modal-title1 {
   font-weight: bold;
 }
 
@@ -161,7 +161,7 @@ a {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 992px) {
-  .wrapper .form-login {
+  .login .wrapper .form-login {
     width: 70%;
     height: auto;
     padding: 20px;
@@ -169,7 +169,7 @@ a {
 }
 
 @media (max-width: 768px) {
-  .wrapper .form-login {
+  .login .wrapper .form-login {
     width: 90%;
     border-radius: 20px;
   }
@@ -182,22 +182,22 @@ a {
 }
 
 @media (max-width: 480px) {
-  .wrapper .form-login {
+  .login .wrapper .form-login {
     width: 95%;
     padding: 15px;
   }
 
-  .form-login button {
+  .login .form-login button {
     font-size: 14px;
     padding: 10px;
   }
 
-  .title-login p {
+  .login .title-login p {
     font-size: 13px;
   }
 }
 
-.custom-toast2 {
+.login .custom-toast2 {
   position: fixed;
   top: 20px;
   right: 20px;

@@ -3,10 +3,6 @@ import "./Dashboard.scss"
 import axiosInstance from "../../utils/axiosInstance"
 import axios from "axios"
 
-// Upload video lên backend (Python)
-// Stream video + nhận detection qua WebSocket
-// Hiển thị video + bounding box (canvas)
-// Lưu + export dữ liệu detection (CSV + API)
 const Dashboard = () => {
   const [toast, setToast] = useState({
     show: false,
@@ -15,51 +11,45 @@ const Dashboard = () => {
   })
   const showToast = (message, type = "success") => {
     setToast({ show: true, message, type })
-
-    setTimeout(() => {
-      setToast({ show: false, message: "", type: "success" })
-    }, 3000)
+    setTimeout(
+      () => setToast({ show: false, message: "", type: "success" }),
+      3000,
+    )
   }
-  // giữ input đầu vào
+
   const fileInputRef = useRef(null)
-  const canvasRef = useRef(null) // canvas vẽ video
-  const wsRef = useRef(null) // websocket connection
-  const imgBitmapRef = useRef(null) // lấy fram hiện tại
-  const detectionsRef = useRef([]) // lưu detection RealTime
-  const videoNameRef = useRef(null) // ten file CSV
+  const canvasRef = useRef(null)
+  const wsRef = useRef(null)
+  const imgBitmapRef = useRef(null)
+  const detectionsRef = useRef([])
+  const videoNameRef = useRef(null)
+  const hasExportedRef = useRef(false) // ✅ tránh double export
+
   const [videoPath, setVideoPath] = useState(null)
   const [detections, setDetections] = useState([])
-  const [status, setStatus] = useState("idle") // không có tín hiệu //stopped
+  const [status, setStatus] = useState("idle")
   const [showModal, setShowModal] = useState(false)
-  const [speedLimit, setSpeedLimit] = useState(60) // mặc định 60 km/h
-  // default Date // trả về thời gian thực việt nam
+  const [speedLimit, setSpeedLimit] = useState(60)
+
   const getVNDateString = () => {
     const now = new Date()
-
-    // Định dạng: DD-MM-YYYY_HH-mm-ss
-    // Sử dụng 'en-GB' để lấy định dạng ngày/tháng/năm (DD/MM/YYYY) dễ xử lý hơn 'vi-VN'
     const date = now.toLocaleDateString("en-GB").replace(/\//g, "-")
     const time = now.toLocaleTimeString("en-GB").replace(/:/g, ":")
-
     return `${date}_${time}`
   }
-  // tạo log để lưu vào trong log
+
   const createLog = async () => {
     try {
       const payload = {
         detections: detectionsRef.current,
         videoName: videoNameRef.current || "unknown_video",
       }
-
       console.log("🚀 SEND LOG API:", payload)
-
       const response = await axiosInstance.post(
         `${import.meta.env.VITE_APP_URL}/user/save-log`,
         payload,
       )
-
       console.log("✅ RESPONSE:", response.data)
-
       if (response.data.success) {
         showToast("Save log thành công", "success")
       } else {
@@ -70,8 +60,6 @@ const Dashboard = () => {
       showToast("Lỗi save log", "error")
     }
   }
-  // ===== UPLOAD VIDEO =====
-  // TRONG Dashboard.jsx
 
   const handleUpload = async (e) => {
     const file = e.target.files[0]
@@ -89,11 +77,8 @@ const Dashboard = () => {
         formData,
         { headers: { "Content-Type": "multipart/form-data" } },
       )
-
-      // QUAN TRỌNG: Backend trả về { path: "..." }
       const serverPath = response.data.path
-      setVideoPath(serverPath) // Cập nhật state để startStream lấy đúng path này
-
+      setVideoPath(serverPath)
       showToast("Upload video thành công", "success")
     } catch (error) {
       showToast("Upload thất bại!", "error")
@@ -101,73 +86,53 @@ const Dashboard = () => {
     }
   }
 
-  // ===== START STREAM =====
   const startStream = () => {
-    if (!videoPath) {
-      // nếu không có video Path
-      showToast("Vui lòng upload video trước!", "error")
-      return
+    if (wsRef.current) {
+      wsRef.current.close()
+      wsRef.current = null
     }
 
-    setDetections([]) // chưa có gì
-    setStatus("streaming") // bắt đầu streaming
+    setDetections([])
+    detectionsRef.current = [] // 🔥 BẮT BUỘC
+    setStatus("streaming")
 
     const ws = new WebSocket("ws://localhost:8765")
-    ws.binaryType = "blob" // binary large object kiểu dữ liệu đại diện dữ liệu thô
-    wsRef.current = ws // nếu để ws = new Websocket thì nó sẽ bị render và tạo lại nên dùng wsRef
+    wsRef.current = ws
 
-    //  gửi path video sang backend
     ws.onopen = () => {
-      ws.send(JSON.stringify({ action: "start", path: videoPath })) // do websocket hoạt động gửi text or binary
+      ws.send(JSON.stringify({ action: "start", path: videoPath }))
     }
 
     ws.onmessage = async (event) => {
-      // nhận dữ liệu String
-      // nếu event.data = "string": xử lí JSON
-      // còn event.data = "blob" (dư liệu binary thô)
-      // meta → frame → meta → frame → ..
       if (typeof event.data === "string") {
-        const data = JSON.parse(event.data) // lấy data gửi bên video python
+        const data = JSON.parse(event.data)
 
         if (data.status === "done") {
           setStatus("done")
-
-          // 🔥 AUTO EXPORT
-          if (detectionsRef.current.length > 0) {
+          // ✅ dùng flag tránh export 2 lần
+          if (detectionsRef.current.length > 0 && !hasExportedRef.current) {
+            hasExportedRef.current = true
             exportCSV()
             createLog()
           }
-
           return
         }
-        // cập nhật danh sách theo ID tracking
-        // mỗi object có 1 id nếu đẫ tồn tại thì update còn chưa có thì new
+
         if (data.type === "meta") {
-          // là meta là nhận về detections
           setDetections((prev) => {
             const updated = [...prev]
-
-            // type detections = [[id, label,conf, [x1, y1, x2, y2]]]
             data.detections.forEach((d) => {
-              // idx là vị trí từ  0 -> .....
-              const idx = updated.findIndex((x) => x.id === d.id) // tìm object có cùng id
-
+              const idx = updated.findIndex((x) => x.id === d.id)
               const newObj = {
                 ...d,
                 time: data.time,
                 speed: d.speed ?? null,
-
-                // 🔥 LOCK STATUS 1 LẦN DUY NHẤT
                 status:
                   d.speed && d.speed > speedLimit ? "violation" : "normal",
               }
-              if (idx === -1) {
-                updated.push(newObj) // chưa có thì thêm mới object
-              } else {
-                updated[idx] = newObj // ghi đè
-              }
+              if (idx === -1) updated.push(newObj)
+              else updated[idx] = newObj
             })
-
             detectionsRef.current = updated
             return updated
           })
@@ -175,62 +140,60 @@ const Dashboard = () => {
         return
       }
 
-      // vẽ frame
-      const blob = event.data // lấy ảnh đã encode từ python
-      const bitmap = await createImageBitmap(blob) // biến đổi binary thành
-
-      // bitmap giải nén jpg từ blob thành bitmap (dữ liệu hình ảnh gpu vẽ được )
+      const blob = event.data
+      const bitmap = await createImageBitmap(blob)
       const canvas = canvasRef.current
       const context = canvas.getContext("2d")
-
       canvas.width = bitmap.width
       canvas.height = bitmap.height
       context.drawImage(bitmap, 0, 0)
-
-      if (imgBitmapRef.current) {
-        imgBitmapRef.current.close() // vẽ xong rồi thì xóa cái frame cũ và cập nhật
-      } // vẽ xong không
+      if (imgBitmapRef.current) imgBitmapRef.current.close()
       imgBitmapRef.current = bitmap
     }
 
     ws.onclose = () => {
-      setStatus((prev) => (prev === "done" ? "done" : "idle"))
+      console.log("WS closed")
     }
   }
 
   const stopStream = () => {
-    // wsRef.current?.close() // đóng
-
     wsRef.current?.send(JSON.stringify({ action: "pause" }))
-    setStatus("stopped") //
+    setStatus("stopped")
   }
+
   const resumeStream = () => {
     wsRef.current?.send(JSON.stringify({ action: "resume" }))
     setStatus("streaming")
   }
+
   const confirmEnd = () => {
+    console.log("confirmEnd called, status:", status)
     setShowModal(true)
   }
 
-  const endStream = async () => {
-    wsRef.current?.send(JSON.stringify({ action: "stop" }))
-
+  const endStream = () => {
+    console.log("✅ endStream called")
     setShowModal(false)
-    setStatus("idle")
 
-    setTimeout(async () => {
-      console.log("DETECTIONS:", detectionsRef.current)
-
-      if (detectionsRef.current.length > 0) {
-        await createLog()
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ action: "stop" }))
+      showToast("Đang dừng stream...", "success")
+      // export sẽ được gọi khi onmessage nhận { status: "done" } từ backend
+    } else {
+      // WS đã đóng (video hết), export luôn
+      setStatus("done")
+      if (detectionsRef.current.length > 0 && !hasExportedRef.current) {
+        hasExportedRef.current = true
         exportCSV()
+        createLog()
       }
+    }
 
-      showToast("Đã lưu DB thành công ", "success")
-    }, 1200) // 👈 quan trọng
+    // ✅ Reset videoPath để buộc upload lại video mới, tránh reuse data cũ
+    setVideoPath(null)
+    if (fileInputRef.current) fileInputRef.current.value = ""
   }
 
-  // ===== EXPORT CSV =====
   const exportCSV = () => {
     if (detectionsRef.current.length === 0) return
 
@@ -239,7 +202,6 @@ const Dashboard = () => {
       "label",
       "conf",
       "time",
-
       "speed",
       "status",
       "bbox_x1",
@@ -247,30 +209,26 @@ const Dashboard = () => {
       "bbox_x2",
       "bbox_y2",
     ]
-
     const rows = detectionsRef.current.map((d) => [
       d.id,
       d.label,
       d.conf,
       d.time,
-
       d.speed ?? "",
       d.status ?? "",
       ...(d.bbox ?? ["", "", "", ""]),
     ])
 
     const csv = [headers, ...rows].map((r) => r.join(",")).join("\n")
-
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
     const url = URL.createObjectURL(blob)
-
     const a = document.createElement("a")
     a.href = url
     a.download = videoNameRef.current || `yolo_${Date.now()}.csv`
     a.click()
-
     URL.revokeObjectURL(url)
   }
+
   const isStreaming = status === "streaming"
   const isActive =
     status === "streaming" || status === "stopped" || status === "done"
@@ -278,7 +236,6 @@ const Dashboard = () => {
   return (
     <>
       <div className="dash-root">
-        {/* Header */}
         <header className="dash-header">
           <div className="logo-dot" />
           <h1>YOLO Object Detection — Stream Dashboard</h1>
@@ -292,23 +249,18 @@ const Dashboard = () => {
                   : "○ Idle"}
           </span>
         </header>
+
         {toast.show && (
           <div className={`custom-toast3 ${toast.type}`}>
             <i
-              className={`fa-solid ${
-                toast.type === "success"
-                  ? "fa-circle-check"
-                  : "fa-circle-exclamation"
-              }`}
+              className={`fa-solid ${toast.type === "success" ? "fa-circle-check" : "fa-circle-exclamation"}`}
             ></i>
             <span>{toast.message}</span>
           </div>
         )}
 
-        {/* Body */}
         <div className="speed-limit-box">
           <label>Speed limit:</label>
-
           <select
             value={speedLimit}
             onChange={(e) => setSpeedLimit(Number(e.target.value))}
@@ -321,12 +273,11 @@ const Dashboard = () => {
             <option value={100}>100 km/h</option>
           </select>
         </div>
+
         <div className="dash-body">
-          {/* Video + Controls */}
           <div className="video-panel inner-wrap-left-video">
             <div className="canvas-wrapper">
               <canvas ref={canvasRef} />
-              {/* không tìm thấy phân tích */}
               {status === "idle" && detections.length === 0 && (
                 <div className="canvas-placeholder">
                   <span className="ph-icon">⬡</span>
@@ -336,7 +287,6 @@ const Dashboard = () => {
             </div>
 
             <div className="controls">
-              {/* Upload */}
               <input
                 type="file"
                 accept="video/*"
@@ -347,7 +297,7 @@ const Dashboard = () => {
               <button
                 className="btn btn-start"
                 onClick={status === "stopped" ? resumeStream : startStream}
-                disabled={status === "streaming"}
+                disabled={isStreaming}
               >
                 ▶ {status === "stopped" ? "Continue" : "Start"}
               </button>
@@ -370,15 +320,6 @@ const Dashboard = () => {
 
               <div className="controls-spacer" />
 
-              {/* {detections.length > 0 && (
-                  <button
-                    className="btn btn-export"
-                    onClick={exportCSV}
-                  >
-                    <span className="btn-icon">↓</span> Export CSV
-                  </button>
-                )} */}
-
               {isStreaming && (
                 <div className="live-indicator">
                   <div className="live-dot" />
@@ -386,6 +327,7 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
+
             <div className="controls-note text-align-left">
               <p>Lưu ý:</p>
               <ul>
@@ -397,7 +339,6 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Detection table */}
           <div className="detect-pane inner-wrap-right-detect">
             <div className="detect-header">
               <h2>Detections</h2>
@@ -416,11 +357,10 @@ const Dashboard = () => {
                     <th>Status</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {detections.length === 0 ? (
                     <tr className="empty-row">
-                      <td colSpan={5}>
+                      <td colSpan={6}>
                         {isStreaming ? "Analysing..." : "No data"}
                       </td>
                     </tr>
@@ -430,18 +370,14 @@ const Dashboard = () => {
                         <td>
                           <span className="id-badge">{d.id}</span>
                         </td>
-
                         <td>
                           <span className="label-text">{d.label}</span>
                         </td>
-
                         <td>
                           <div className="conf-bar-wrap">
                             <div className="conf-bar-bg">
                               <div
-                                className={`conf-bar-fill ${
-                                  d.conf > 0.7 ? "high" : "low"
-                                }`}
+                                className={`conf-bar-fill ${d.conf > 0.7 ? "high" : "low"}`}
                                 style={{ width: `${d.conf * 100}%` }}
                               />
                             </div>
@@ -450,7 +386,6 @@ const Dashboard = () => {
                             </span>
                           </div>
                         </td>
-
                         <td>
                           {d.speed ? (
                             <span className="speed-val">{d.speed} km/h</span>
@@ -458,7 +393,6 @@ const Dashboard = () => {
                             "-"
                           )}
                         </td>
-
                         <td>{d.time}</td>
                         <td>
                           {d.status ? (
@@ -481,14 +415,28 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Modal confirm End */}
       {showModal && (
         <div
           className="modal-overlay"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
           onClick={() => setShowModal(false)}
         >
           <div
             className="modal-box"
+            style={{
+              background: "white",
+              borderRadius: 12,
+              padding: 28,
+              minWidth: 320,
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="modal-title1">Kết thúc stream?</h3>
@@ -496,7 +444,15 @@ const Dashboard = () => {
               Stream sẽ bị dừng. Dữ liệu detection vẫn được giữ lại và bạn có
               thể xuất CSV sau khi kết thúc.
             </p>
-            <div className="modal-actions">
+            <div
+              className="modal-actions"
+              style={{
+                display: "flex",
+                gap: 12,
+                marginTop: 20,
+                justifyContent: "flex-end",
+              }}
+            >
               <button
                 className="btn btn-modal-cancel"
                 onClick={() => setShowModal(false)}
@@ -505,7 +461,10 @@ const Dashboard = () => {
               </button>
               <button
                 className="btn btn-modal-confirm"
-                onClick={endStream}
+                onClick={() => {
+                  console.log("✅ CONFIRM CLICKED")
+                  endStream()
+                }}
               >
                 Xác nhận
               </button>

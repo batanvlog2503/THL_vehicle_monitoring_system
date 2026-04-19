@@ -22,7 +22,10 @@ const Statistic = () => {
       console.error(err)
     }
   }
-
+  // tổng violations
+  const totalViolations = logs
+    .flatMap((l) => l?.detections || [])
+    .filter((d) => d.status === "violation").length
   // tổng detections
   const totalDetections = logs.reduce(
     (t, log) => t + (log.detections?.length || 0),
@@ -82,7 +85,7 @@ const Statistic = () => {
 
           <div className="inner bad">
             <i className="fa-solid fa-triangle-exclamation"></i>
-            <h3>78</h3>
+            <h3>{totalViolations}</h3>
             <span>Violations</span>
           </div>
         </div>

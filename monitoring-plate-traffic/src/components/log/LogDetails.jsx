@@ -27,7 +27,7 @@ const LogDetails = () => {
 
   const [showModal, setShowModal] = useState(false)
   // default Date
-  const getVNDateString = (log) => {  
+  const getVNDateString = (log) => {
     if (!log?.createdAt) return "unknown"
 
     const dateObj = new Date(log.createdAt)
@@ -158,7 +158,15 @@ const LogDetails = () => {
             <div className="inner-last-frame">
               <p>Số loại đối tượng</p>
               <br />
-              <h3>45</h3>
+              <h3>{Object.keys(countLabel(log)).length}</h3>
+            </div>
+            <div className="inner-total-violation">
+              <p>Tổng vi phạm</p>
+              <br />
+              <h3>
+                {log?.detections?.filter((d) => d.status === "violation")
+                  .length || 0}
+              </h3>
             </div>
           </div>
           <span>Phân bố đối tượng</span>
@@ -225,6 +233,26 @@ const LogDetails = () => {
                         <i className="fa-solid fa-clock"></i> {detect?.time}
                       </span>
                     </div>
+                  </div>
+                  <div className="speed-info">
+                    <span className="speed-label">Speed</span>
+                    {detect?.speed != null ? (
+                      <h3 className="speed-number">{detect.speed} km/h</h3>
+                    ) : (
+                      <span className="speed-na">—</span>
+                    )}
+                  </div>
+
+                  <div className="status-info">
+                    {detect?.status ? (
+                      <span
+                        className={`status-badge ${detect.status.toLowerCase()}`}
+                      >
+                        {detect.status}
+                      </span>
+                    ) : (
+                      <span className="speed-na">—</span>
+                    )}
                   </div>
                   <div className="conf">
                     <span>Độ tin cậy: </span>

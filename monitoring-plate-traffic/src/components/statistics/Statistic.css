@@ -29,7 +29,7 @@
 }
 
 /* CARD */
-.inner {
+.statistic .inner {
   background: #fff;
   padding: 20px;
   border-radius: 12px;
@@ -38,21 +38,21 @@
   transition: 0.25s;
 }
 
-.inner:hover {
+.statistic .inner:hover {
   transform: translateY(-6px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-.inner i {
+.statistic .inner i {
   font-size: 24px;
 }
 
-.inner h4 {
+.statistic .inner h4 {
   font-size: 26px;
   margin: 10px 0;
 }
 
-.inner span {
+.statistic .inner span {
   font-size: 14px;
   color: #666;
 }
@@ -65,7 +65,7 @@
 }
 
 /* CHART */
-.inner-chart {
+.statistic .inner-chart {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;

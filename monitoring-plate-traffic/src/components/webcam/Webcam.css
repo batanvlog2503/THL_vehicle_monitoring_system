@@ -365,7 +365,7 @@
   background: rgba(239, 68, 68, 0.1);
 }
 
-.modal-overlay {
+.webcam-root .modal-overlay {
   position: fixed;
   inset: 0;
   background: rgba(30, 58, 95, 0.35);
@@ -375,7 +375,7 @@
   justify-content: center;
   backdrop-filter: blur(3px);
 }
-.modal-box {
+.webcam-root .modal-box {
   background: #ffffff;
   border: 1.5px solid var(--wc-border);
   border-radius: 10px;
@@ -384,7 +384,7 @@
   max-width: 94vw;
   box-shadow: 0 16px 48px rgba(29, 110, 245, 0.12);
 }
-.modal-header {
+.webcam-root .modal-header {
   display: flex;
   align-items: center;
   gap: 10px;

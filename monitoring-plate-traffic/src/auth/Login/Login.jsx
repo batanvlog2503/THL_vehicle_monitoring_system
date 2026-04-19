@@ -132,7 +132,8 @@ const Login = () => {
 
             <button
               type="submit"
-              className="btn w-100"
+              className="btn w-100 text-center"
+              style={{ textAlign: "center" }}
             >
               Login
             </button>
@@ -140,7 +141,13 @@ const Login = () => {
 
           <div
             className="text-center"
-            style={{ marginTop: "10px" }}
+            style={{
+              marginTop: "10px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center !important",
+            }}
           >
             <p>
               Bạn chưa có tài khoản? <a href="/signup">Đăng kí tài khoản</a>
