@@ -1,0 +1,7 @@
+
+path: E:/LPR_ttcs/dataset
+train: train/images
+val: val/images
+
+nc: 1
+names: ['plate']

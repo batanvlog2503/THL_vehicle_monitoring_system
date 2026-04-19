@@ -1,0 +1,13 @@
+﻿metric,value
+num_images,149
+det_tp,136
+det_fp,9
+det_fn,13
+det_precision,0.937931
+det_recall,0.912752
+det_f1,0.92517
+det_mean_iou_on_tp,0.853716
+ocr_num_images_with_gt,149
+ocr_plate_accuracy,0.322148
+ocr_avg_cer,0.268669
+ocr_avg_char_accuracy,0.731331

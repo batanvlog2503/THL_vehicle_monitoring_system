@@ -1,42 +1,48 @@
 from ultralytics import YOLO
 import multiprocessing
+import os
 
 def main():
     multiprocessing.freeze_support()
 
+    os.makedirs(r"E:/LPR_ttcs/runs", exist_ok=True)
+
     model = YOLO("yolo11n.pt")
 
     model.train(
-        data="coco8.yaml",
-        epochs=60,
-        imgsz=768,
-        batch=4,
-        lr0=0.0001,
-        optimizer="AdamW",
-        pretrained=True,
+        data=r"E:/LPR_ttcs/data.yaml",
+        epochs=80,
+        imgsz=640,
+        batch=16,
         device=0,
-        name="License_Plate_Model-v11",
+        workers=0,
+        amp=False,
+        cache=False,
 
-        mosaic=0.0,
+        optimizer="AdamW",
+        lr0=0.001,
+        pretrained=True,
+
+        mosaic=0.2,
         mixup=0.0,
-        translate=0.01,
-        scale=0.03,
-        degrees=0.5,
+        copy_paste=0.0,
+        degrees=2.0,
+        translate=0.05,
+        scale=0.15,
         shear=0.0,
+        perspective=0.0,
+        fliplr=0.5,
+        flipud=0.0,
         hsv_h=0.01,
-        hsv_s=0.2,
+        hsv_s=0.3,
         hsv_v=0.2,
 
-        project="E:/LPR_ttcs/runs",
-
         patience=20,
-        deterministic=True,
-        workers=1,
-        amp=True,
-        dropout=0.05,
-        close_mosaic=0,
+        close_mosaic=10,
 
-        freeze=0,
+        project=r"E:/LPR_ttcs/runs",
+        name="plate_only_train",
+        exist_ok=True
     )
 
 if __name__ == "__main__":
