@@ -1,7 +1,11 @@
 const express = require("express")
 const router = express.Router()
 const Log = require("../app/models/Log")
+
 const OpenAI = require("openai")
+const { buildStats } = require("./utils/buildStats")
+const { detectIntent } = require("./utils/detectIntent")
+const { answerByRule } = require("./utils/answerByRule")
 
 const openai = new OpenAI({
   baseURL: process.env.OLLAMA_BASE_URL || "http://localhost:11434",
@@ -20,39 +24,9 @@ router.post("/", async (req, res) => {
     console.log("Số logs tìm thấy:", logs.length)
 
     //  Tính toán sẵn, KHÔNG để AI tự đếm
-    const uniqueViolationIds = new Set()
 
-    logs.forEach((log) => {
-      log.detections?.forEach((d) => {
-        if (d.status === "violation") {
-          uniqueViolationIds.add(d.id)
-        }
-      })
-    })
-    // gom log và detections thành 1 cấu trúc dễ hiểu cho AI, tránh để AI phải tự suy luận từ dữ liệu thô
-    const stats = {
-      tongSoVideo: logs.length,
+    const stats = buildStats(logs)
 
-      tongViolationXe: uniqueViolationIds.size, // ✅ XE THỰC
-
-      tongViolationFrame: logs.reduce((sum, log) => {
-        return (
-          sum +
-          (log.detections?.filter((d) => d.status === "violation").length || 0)
-        )
-      }, 0),
-
-      danhSachVideo: logs.map((l) => ({
-        videoName: l.videoName,
-
-        soXeViPham: new Set(
-          l.detections
-            ?.filter((d) => d.status === "violation")
-            ?.map((d) => d.id),
-        ).size,
-      })),
-    }
-    // biến dữ liệu stat trên thành prompt dạng văn bản dễ hiểu, tránh để AI phải tự suy luận từ dữ liệu thô
     const context = logs.length
       ? `Tổng số lịch sử phân tích: ${stats.tongSoVideo} video\n\n` +
         `Danh sách:\n${JSON.stringify(stats.danhSachVideo, null, 2)}`
@@ -95,14 +69,15 @@ QUY TẮC QUAN TRỌNG:
         },
         { role: "user", content: wrappedMessage },
       ],
-      temperature: 0.4  , // ← rất thấp để AI không sáng tạo
+      temperature: 0.4, // ← rất thấp để AI không sáng tạo
       max_tokens: 500,
     })
-
-    res.json({ reply: completion.choices[0].message.content })
+    return res.json({
+      reply: completion.choices[0].message.content,
+    })
   } catch (err) {
     console.error(err)
-    res.status(500).json({ reply: "Lỗi khi gọi AI: " + err.message })
+    res.status(500).json({ reply: "Lỗi server: " + err.message })
   }
 })
 

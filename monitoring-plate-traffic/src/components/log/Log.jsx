@@ -6,6 +6,9 @@ import { useState, useEffect } from "react"
 
 import { useNavigate } from "react-router-dom"
 const Log = () => {
+  const hasViolation = (log) => {
+    return log?.detections?.some((d) => d.status === "violation")
+  }
   const navigate = useNavigate()
   const [logs, setLogs] = useState([])
   const [selectedDate, setSelectedDate] = useState("")
@@ -81,7 +84,7 @@ const Log = () => {
           {logs.length > 0 ? (
             logs.map((log) => (
               <div
-                className="card-log"
+                className={`card-log ${hasViolation(log) ? "has-violation" : ""}`}
                 key={log._id}
               >
                 <h3>

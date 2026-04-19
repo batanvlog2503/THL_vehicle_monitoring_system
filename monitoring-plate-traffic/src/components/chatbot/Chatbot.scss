@@ -103,6 +103,7 @@ $radius-card: 16px;
 // ─── Base ───────────────────────────────────────────────────────────────────
 .chatbot-wrapper {
   display: flex;
+
   flex-direction: column;
   // width: 100%;
   max-width: 100%;
@@ -259,7 +260,7 @@ $radius-card: 16px;
   gap: 10px;
   background: #f8f8fc;
   min-height: 380px;
-  max-height: 440px;
+  max-height: 600px;
   scroll-behavior: smooth;
 
   @media (prefers-color-scheme: dark) {
