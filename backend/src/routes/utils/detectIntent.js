@@ -23,7 +23,6 @@ function detectIntent(message) {
       /bao nhiêu video|số video|tổng.*video|how many video/i.test(msg),
     wantsViolation: /vi phạm|violation|xe vi phạm/i.test(msg),
     wantsList: /danh sách|liệt kê|list/i.test(msg),
-    wantsLabel: /nhãn|label|loại|đối tượng|object/i.test(msg),
   }
 }
 

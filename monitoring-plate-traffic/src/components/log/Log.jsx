@@ -59,7 +59,8 @@ const Log = () => {
     <div className="log-container container">
       <div className="log inner-wrap">
         <div className="inner-title d-flex flex-column">
-          <h1>Lịch sử phát hiện ({logs.length})</h1>
+          {/* ({logs.length}) */}
+          <h1>Lịch sử phát hiện </h1>
           <p>Xem tất cả các log phát hiện từ video xử lí</p>
           <div className="filter-box">
             <input

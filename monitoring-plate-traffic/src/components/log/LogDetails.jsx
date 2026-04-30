@@ -155,11 +155,11 @@ const LogDetails = () => {
               <br />
               <h3>{detectList(log)}</h3>
             </div>
-            <div className="inner-last-frame">
+            {/* <div className="inner-last-frame">
               <p>Số loại đối tượng</p>
               <br />
               <h3>{Object.keys(countLabel(log)).length}</h3>
-            </div>
+            </div> */}
             <div className="inner-total-violation">
               <p>Tổng vi phạm</p>
               <br />

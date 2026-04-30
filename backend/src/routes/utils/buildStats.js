@@ -17,3 +17,31 @@ function buildStats(logs) {
 }
 
 module.exports = { buildStats }
+
+
+//  danhSachVideo: logs.map((l, i) => {
+//       const detections = l.detections || []
+
+//       const violations = detections.filter(
+//         (d) => normalize(d.status) === "violation",
+//       )
+
+//       const speedViolations = detections.filter(
+//         (d) =>
+//           normalize(d.status) === "violation" ||
+//           (d.speed && d.speed > 60), // 🔥 vi phạm tốc độ
+
+//       )
+//  danhSachVideo: logs.map((l, i) => {
+//       const detections = l.detections || []
+
+//       const violations = detections.filter(
+//         (d) => normalize(d.status) === "violation",
+//       )
+
+//       const speedViolations = detections.filter(
+//         (d) =>
+//           normalize(d.status) === "violation" ||
+//           (d.speed && d.speed > 60), // 🔥 vi phạm tốc độ
+
+//       )
