@@ -1,403 +1,478 @@
-  @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap");
 
-  /* ================= BASE ================= */
+/* ================= BASE ================= */
 
-  $bg: #ffffff;
-  $panel: #f8fafc;
-  $border: #e2e8f0;
-  $text: #0f172a;
-  $muted: #64748b;
+$bg: #ffffff;
+$panel: #f8fafc;
+$border: #e2e8f0;
+$text: #0f172a;
+$muted: #64748b;
 
-  $green: #16a34a;
-  $red: #ef4444;
-  $yellow: #f59e0b;
-  $cyan: #0ea5e9;
+$green: #16a34a;
+$red: #ef4444;
+$yellow: #f59e0b;
+$cyan: #0ea5e9;
 
-  .dash-root {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 28px 32px;
-    gap: 24px;
+.dash-root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 32px;
+  gap: 24px;
 
-    background: $bg;
-    color: $text;
-    font-family: "IBM Plex Sans", sans-serif;
+  background: $bg;
+  color: $text;
+  font-family: "IBM Plex Sans", sans-serif;
 
-    animation: fadePage 0.4s ease;
+  animation: fadePage 0.4s ease;
+}
+
+/* ================= HEADER ================= */
+
+.dash-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid $border;
+  padding-bottom: 18px;
+
+  .logo-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $cyan;
+    box-shadow: 0 0 8px rgba($cyan, 0.3);
   }
 
-  /* ================= HEADER ================= */
-
-  .dash-header {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    border-bottom: 1px solid $border;
-    padding-bottom: 18px;
-
-    .logo-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: $cyan;
-      box-shadow: 0 0 8px rgba($cyan, 0.3);
-    }
-
-    h1 {
-      font-family: "IBM Plex Mono", monospace;
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: 0.05rem;
-      text-transform: uppercase;
-    }
-  }
-
-  /* ================= STATUS ================= */
-
-  .status-badge {
-    margin-left: auto;
+  h1 {
     font-family: "IBM Plex Mono", monospace;
-    font-size: 11px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.05rem;
     text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 6px;
-    border: 1px solid $border;
-    background: $panel;
-
-    &.streaming {
-      color: $green;
-      border-color: rgba($green, 0.3);
-      background: rgba($green, 0.08);
-    }
-
-    &.stopped {
-      color: $yellow;
-      border-color: rgba($yellow, 0.3);
-      background: rgba($yellow, 0.08);
-    }
-
-    &.done {
-      color: $cyan;
-      border-color: rgba($cyan, 0.3);
-      background: rgba($cyan, 0.08);
-    }
-
-    &.idle {
-      color: $muted;
-    }
   }
+}
 
-  /* ================= LAYOUT ================= */
+/* ================= STATUS ================= */
 
-  .dash-body {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 20px;
+.status-badge {
+  margin-left: auto;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid $border;
+  background: $panel;
 
-    @media (max-width: 900px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  /* ================= VIDEO ================= */
-
-  .video-panel {
-    border: 1px solid $border;
-    border-radius: 10px;
-    overflow: hidden;
-    background: $panel;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .canvas-wrapper {
-    position: relative;
-    width: 100%;
-    min-height: 260px;
-
-    display: block;
-
-    canvas {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-  }
-
-  .canvas-placeholder {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: $muted;
-
-    .ph-icon {
-      font-size: 40px;
-      opacity: 0.3;
-    }
-  }
-
-  /* ================= CONTROLS ================= */
-
-  .dash-root .controls {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 14px 16px;
-    border-top: 1px solid $border;
-    background: $panel;
-  }
-
-  .dash-root .btn {
-    font-family: "IBM Plex Mono", monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    padding: 8px 14px;
-    border-radius: 6px;
-    border: 1px solid $border;
-    background: white;
-    cursor: pointer;
-    transition: 0.2s ease;
-
-    display: flex;
-    align-items: center;
-    gap: 6px;
-
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-    }
-
-    &:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-  }
-
-  .dash-root .btn-start {
+  &.streaming {
     color: $green;
     border-color: rgba($green, 0.3);
-
-    &:hover {
-      background: rgba($green, 0.08);
-    }
+    background: rgba($green, 0.08);
   }
 
-  .dash-root .btn-stop {
+  &.stopped {
     color: $yellow;
     border-color: rgba($yellow, 0.3);
-
-    &:hover {
-      background: rgba($yellow, 0.08);
-    }
+    background: rgba($yellow, 0.08);
   }
 
-  .dash-root .btn-end {
-    color: $red;
-    border-color: rgba($red, 0.3);
-
-    &:hover {
-      background: rgba($red, 0.08);
-    }
+  &.done {
+    color: $cyan;
+    border-color: rgba($cyan, 0.3);
+    background: rgba($cyan, 0.08);
   }
 
-  .live-indicator {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: $green;
-    font-size: 11px;
-    text-transform: uppercase;
-  }
-
-  .live-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: $green;
-    animation: blink 1.2s infinite;
-  }
-
-  /* ================= TABLE ================= */
-
-  .detect-pane {
-    border: 1px solid $border;
-    border-radius: 10px;
-    overflow: hidden;
-    background: white;
-  }
-
-  .detect-header {
-    padding: 12px 16px;
-    border-bottom: 1px solid $border;
-    display: flex;
-    align-items: center;
-
-    h2 {
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      color: $muted;
-    }
-
-    .detect-count {
-      margin-left: auto;
-      color: $cyan;
-      font-weight: 600;
-    }
-  }
-
-  .detect-scroll {
-    max-height: 60vh;
-    overflow-y: auto;
-  }
-
-  .dash-root table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-
-  .dash-root thead {
-    position: sticky;
-    top: 0;
-    background: #f1f5f9;
-  }
-
-  .dash-root th {
-    text-align: left;
-    padding: 10px;
-    font-size: 11px;
+  &.idle {
     color: $muted;
-    text-transform: uppercase;
+  }
+}
+
+/* ================= LAYOUT ================= */
+
+.dash-body {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= VIDEO ================= */
+
+.video-panel {
+  border: 1px solid $border;
+  border-radius: 10px;
+  overflow: hidden;
+  background: $panel;
+  display: flex;
+  flex-direction: column;
+}
+
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+
+  display: block;
+
+  canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}
+
+.canvas-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: $muted;
+
+  .ph-icon {
+    font-size: 40px;
+    opacity: 0.3;
+  }
+}
+
+/* ================= CONTROLS ================= */
+
+.dash-root .controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-top: 1px solid $border;
+  background: $panel;
+}
+
+.dash-root .btn {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid $border;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
   }
 
-  .dash-root td {
-    padding: 10px;
-    color: $text;
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
   }
+}
 
-  .dash-root tr {
-    border-bottom: 1px solid $border;
+.dash-root .btn-start {
+  color: $green;
+  border-color: rgba($green, 0.3);
 
-    &:hover {
-      background: #f8fafc;
-    }
+  &:hover {
+    background: rgba($green, 0.08);
   }
+}
 
-  /* ================= STATUS ================= */
+.dash-root .btn-stop {
+  color: $yellow;
+  border-color: rgba($yellow, 0.3);
 
-  .dash-root .status {
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 11px;
+  &:hover {
+    background: rgba($yellow, 0.08);
+  }
+}
+
+.dash-root .btn-end {
+  color: $red;
+  border-color: rgba($red, 0.3);
+
+  &:hover {
+    background: rgba($red, 0.08);
+  }
+}
+
+.live-indicator {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: $green;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $green;
+  animation: blink 1.2s infinite;
+}
+
+/* ================= TABLE ================= */
+
+.detect-pane {
+  border: 1px solid $border;
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+}
+
+.detect-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid $border;
+  display: flex;
+  align-items: center;
+
+  h2 {
+    font-size: 12px;
     font-weight: 600;
     text-transform: uppercase;
-
-    &.normal {
-      color: $green;
-      background: rgba($green, 0.1);
-    }
-
-    &.violation {
-      color: $red;
-      background: rgba($red, 0.1);
-    }
+    color: $muted;
   }
 
-  /* ================= SPEED ================= */
-
-  .speed-val {
+  .detect-count {
+    margin-left: auto;
+    color: $cyan;
     font-weight: 600;
+  }
+}
+
+.detect-scroll {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.dash-root table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.dash-root thead {
+  position: sticky;
+  top: 0;
+  background: #f1f5f9;
+}
+
+.dash-root th {
+  text-align: left;
+  padding: 10px;
+  font-size: 11px;
+  color: $muted;
+  text-transform: uppercase;
+}
+
+.dash-root td {
+  padding: 10px;
+  color: $text;
+}
+
+.dash-root tr {
+  border-bottom: 1px solid $border;
+
+  &:hover {
+    background: #f8fafc;
+  }
+}
+
+/* ================= STATUS ================= */
+
+.dash-root .status {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.normal {
     color: $green;
-
-    &.high {
-      color: $red;
-    }
+    background: rgba($green, 0.1);
   }
 
-  /* ================= ANIMATIONS ================= */
+  &.violation {
+    color: $red;
+    background: rgba($red, 0.1);
+  }
+}
 
-  @keyframes fadePage {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+/* ================= SPEED ================= */
+
+.speed-val {
+  font-weight: 600;
+  color: $green;
+
+  &.high {
+    color: $red;
+  }
+}
+
+/* ================= ANIMATIONS ================= */
+
+@keyframes fadePage {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ===== TOAST (same style as login custom-toast2) ===== */
+
+.dash-root .custom-toast3 {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+
+  padding: 12px 16px;
+  border-radius: 8px;
+
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+
+  animation: slideIn 0.3s ease;
+
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* SUCCESS */
+.dash-root .custom-toast3.success {
+  background: #2ecc71;
+}
+
+/* ERROR */
+.dash-root .custom-toast3.error {
+  background: #e74c3c;
+}
+
+/* WARNING (optional) */
+.dash-root .custom-toast3.warning {
+  background: #f39c12;
+}
+
+/* ICON */
+.dash-root .custom-toast3 i {
+  font-size: 16px;
+}
+
+/* ===== ANIMATION (reuse login style) ===== */
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.btn-modal-confirm {
+  background: red !important;
+}
+.btn-modal-confirm {
+  min-width: 100px;
+  min-height: 40px;
+}
+.speed-limit-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  color: #111827;
+  font-weight: 500;
+
+  transition: all 0.25s ease;
+
+  label {
+    font-size: 14px;
+    color: #374151;
   }
 
-  @keyframes blink {
-    50% {
-      opacity: 0.4;
-    }
-  }
+  select {
+    appearance: none;
+    border: 1px solid #d1d5db;
+    outline: none;
 
-  /* ===== TOAST (same style as login custom-toast2) ===== */
-
-  .dash-root .custom-toast3 {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-
-    padding: 12px 16px;
+    padding: 8px 14px;
     border-radius: 8px;
 
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    z-index: 10000;
-
-    animation: slideIn 0.3s ease;
+    background: #f9fafb;
+    color: #111827;
 
     font-size: 14px;
-    font-weight: 500;
-  }
+    cursor: pointer;
 
-  /* SUCCESS */
-  .dash-root .custom-toast3.success {
-    background: #2ecc71;
-  }
+    transition: all 0.25s ease;
 
-  /* ERROR */
-  .dash-root .custom-toast3.error {
-    background: #e74c3c;
-  }
-
-  /* WARNING (optional) */
-  .dash-root .custom-toast3.warning {
-    background: #f39c12;
-  }
-
-  /* ICON */
-  .dash-root .custom-toast3 i {
-    font-size: 16px;
-  }
-
-  /* ===== ANIMATION (reuse login style) ===== */
-
-  @keyframes slideIn {
-    from {
-      transform: translateX(100%);
-      opacity: 0;
+    &:hover {
+      background: #f3f4f6;
+      border-color: #9ca3af;
     }
-    to {
-      transform: translateX(0);
-      opacity: 1;
+
+    &:focus {
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+    }
+
+    &:active {
+      transform: scale(0.97);
     }
   }
-  .btn-modal-confirm {
-    background: red !important;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
   }
-  .btn-modal-confirm {
-    min-width: 100px;
-    min-height: 40px;
+}
+.speed-limit-box {
+  position: relative;
+
+  select {
+    padding-right: 28px;
   }
+
+  &::after {
+    content: "▾";
+    position: absolute;
+    right: 12px;
+    font-size: 12px;
+    color: #6b7280;
+    pointer-events: none;
+  }
+}

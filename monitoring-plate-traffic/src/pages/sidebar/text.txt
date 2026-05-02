@@ -33,3 +33,4 @@
   border-left: 4px solid #2f64c9;
   padding-left: 21px; /* bù lại vì có border */
 }
+

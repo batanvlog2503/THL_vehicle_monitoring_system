@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from "react"
-import "./Webcam.css"
+import "./Webcam.scss"
 
 const ZONE_COLORS = [
   "#3b82f6",
@@ -14,7 +14,7 @@ const ZONE_COLORS = [
 
 const generateId = () => Math.random().toString(36).substr(2, 9)
 
-const WS_URL = "ws://localhost:8765"
+const WS_URL = "ws://localhost:8766"
 
 // ─── Modal nhập URL ───────────────────────────────────────────────────────────
 const ConnectModal = ({ zoneIndex, onConfirm, onCancel }) => {
@@ -182,34 +182,107 @@ const CameraCell = ({ zone, onDisconnect, onReconnect }) => {
   const startWebcam = useCallback(() => {
     const cv = canvasRef.current
     if (!cv) return
+
     navigator.mediaDevices
-      .getUserMedia({ video: { width: 1280, height: 720 } })
+      .getUserMedia({ video: { width: 640, height: 360 } })
       .then((stream) => {
         webcamStreamRef.current = stream
+
         const video = document.createElement("video")
         video.srcObject = stream
         video.autoplay = true
         video.playsInline = true
         video.muted = true
-        video.onplay = () => {
-          setStatus("live")
-          fpsTimerRef.current = setInterval(() => {
-            setFps(fpsCountRef.current)
-            fpsCountRef.current = 0
-          }, 1000)
-          const draw = () => {
-            const ctx = cv.getContext("2d")
-            cv.width = video.videoWidth || 640
-            cv.height = video.videoHeight || 480
-            ctx.drawImage(video, 0, 0, cv.width, cv.height)
-            fpsCountRef.current++
-            animRef.current = requestAnimationFrame(draw)
+
+        const offscreen = document.createElement("canvas")
+        offscreen.width = 640
+        offscreen.height = 360
+
+        // Mở WS
+        const ws = new WebSocket(WS_URL)
+        ws.binaryType = "blob"
+        wsRef.current = ws
+
+        ws.onopen = () => {
+          ws.send(JSON.stringify({ action: "start_webcam", zone_id: zone.id }))
+          setStatus("connecting")
+        }
+
+        ws.onmessage = async (event) => {
+          if (typeof event.data === "string") {
+            try {
+              const d = JSON.parse(event.data)
+              if (d.status === "ready") {
+                setStatus("live")
+                return
+              }
+              if (d.status === "done") {
+                setStatus("done")
+                return
+              }
+              if (d.type === "meta") {
+                setDetections(d.detections || [])
+                return
+              }
+            } catch (_) {}
+            return
           }
-          draw()
+          // Frame annotated từ Python → vẽ lên canvas
+          try {
+            const bitmap = await createImageBitmap(event.data)
+            const ctx = cv.getContext("2d")
+            cv.width = bitmap.width
+            cv.height = bitmap.height
+            ctx.drawImage(bitmap, 0, 0)
+            bitmap.close()
+            fpsCountRef.current++
+          } catch (_) {}
+        }
+
+        ws.onerror = () => setStatus("error")
+        ws.onclose = () => {
+          if (status !== "done") setStatus("error")
+        }
+
+        fpsTimerRef.current = setInterval(() => {
+          setFps(fpsCountRef.current)
+          fpsCountRef.current = 0
+        }, 1000)
+
+        // Gửi frame lên backend
+        video.onplay = () => {
+          const sendLoop = () => {
+            if (!wsRef.current) return // đã disconnect thật sự
+
+            // WS chưa open → đợi rồi thử lại
+            if (wsRef.current.readyState !== WebSocket.OPEN) {
+              animRef.current = requestAnimationFrame(sendLoop)
+              return
+            }
+
+            if (wsRef.current.bufferedAmount > 150_000) {
+              animRef.current = requestAnimationFrame(sendLoop)
+              return
+            }
+
+            offscreen.getContext("2d").drawImage(video, 0, 0, 640, 360)
+            offscreen.toBlob(
+              (blob) => {
+                if (blob && wsRef.current?.readyState === WebSocket.OPEN) {
+                  wsRef.current.send(blob)
+                }
+                animRef.current = requestAnimationFrame(sendLoop) // ✅ luôn tiếp tục
+              },
+              "image/jpeg",
+              0.75,
+            )
+            // Xóa dòng requestAnimationFrame ở đây vì đã move vào callback
+          }
+          sendLoop()
         }
       })
       .catch(() => setStatus("error"))
-  }, [])
+  }, [zone.id, status])
 
   // Kết nối WebSocket → backend Python
   const startWebSocket = useCallback(
@@ -470,14 +543,14 @@ const Webcam = () => {
           <span className="wc-title">Camera Monitor</span>
         </div>
         <div className="wc-header-right">
-          <span className="wc-badge">{activeCount} / 8 active</span>
+          <span className="wc-badge">{activeCount} / 4 active</span>
           <span className="wc-badge muted">WS: {WS_URL}</span>
         </div>
       </header>
 
       {/* 8-cell grid */}
       <div className="wc-grid">
-        {Array.from({ length: 8 }, (_, i) =>
+        {Array.from({ length: 4 }, (_, i) =>
           zones[i] ? (
             <CameraCell
               key={zones[i].id}

@@ -11,14 +11,16 @@ const SignUp = () => {
     email: "",
     mobile: "",
   })
-  const navigate = useNavigate() // điều hướng
-
-  const { name, password, email, mobile } = user
   const [toast, setToast] = useState({
     show: false,
     message: "",
     type: "success",
   })
+
+  const navigate = useNavigate() // điều hướng
+
+  const { name, password, email, mobile } = user
+
   const showToast = (message, type = "success") => {
     setToast({ show: true, message, type })
 

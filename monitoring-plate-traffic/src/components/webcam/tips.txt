@@ -1,0 +1,132 @@
+🧠 1. Bản chất 2 chức năng của bạn
+✅ Upload video
+Gửi file → backend Python (YOLO + OCR)
+Xử lý offline (batch)
+✔ Lưu DB (vehicle, plate, speed...)
+✔ Có log, history
+
+👉 Cái này bạn đang làm đúng.
+
+⚡ Webcam realtime
+Stream liên tục từ frontend → backend
+Xử lý online (real-time)
+❓ Có lưu DB hay không?
+
+👉 Đây là chỗ bạn đang phân vân.
+
+🚨 2. Sai lầm phổ biến (cần tránh)
+
+Nếu bạn:
+
+❌ Lưu DB cho mọi frame webcam
+
+=> Toang ngay:
+
+30 FPS → 1 giây = 30 bản ghi
+1 phút = 1800 bản ghi
+DB nổ sau vài giờ 💀
+✅ 3. Cách xử lý chuẩn cho Webcam
+🔥 Option A — Realtime + chỉ hiển thị (KHÔNG lưu)
+Webcam → backend → detect → trả về kết quả
+Frontend hiển thị bounding box + plate
+
+👉 KHÔNG lưu DB
+
+✔ Ưu điểm:
+
+Nhẹ
+Nhanh
+Đúng realtime
+
+❌ Nhược:
+
+Không có history
+🔥 Option B — Realtime + lưu có chọn lọc (BEST PRACTICE)
+
+👉 Chỉ lưu khi:
+
+Có biển số hợp lệ
+Hoặc vi phạm (overspeed)
+Ví dụ logic backend:
+if plate_detected and confidence > 0.8:
+    save_to_db()
+
+if speed > limit:
+    save_violation()
+
+✔ Ưu điểm:
+
+DB sạch
+Có dữ liệu quan trọng
+Không bị spam
+
+👉 Đây là cách chuẩn production
+
+🔥 Option C — Snapshot theo interval
+1 giây / 2 giây → lưu 1 lần
+if current_time - last_save_time > 2:
+    save_to_db()
+⚙️ 4. Cách truyền dữ liệu realtime
+❌ Không nên dùng REST API liên tục
+fetch("/detect") // spam 30 lần/s 💀
+✅ Nên dùng WebSocket
+Frontend:
+const ws = new WebSocket("ws://localhost:8000/ws")
+
+ws.onopen = () => {
+  sendFrame()
+}
+
+function sendFrame() {
+  const frame = canvas.toDataURL("image/jpeg")
+  ws.send(frame)
+}
+Backend (FastAPI):
+@app.websocket("/ws")
+async def websocket_endpoint(ws: WebSocket):
+    await ws.accept()
+    while True:
+        frame = await ws.receive_text()
+        # decode frame
+        # YOLO detect
+        await ws.send_json(result)
+🧠 5. Kiến trúc chuẩn (gợi ý cho bạn)
+Webcam flow:
+Frontend (Webcam)
+   ↓ (WebSocket)
+Backend (YOLO + OCR)
+   ↓
+Realtime result (bbox + plate)
+   ↓
+Frontend render
+Khi cần lưu:
+if (plate || violation)
+   → MongoDB
+🎯 6. Gợi ý nâng cao (pro level 😎)
+🚀 Tracking (rất nên có)
+
+Dùng:
+
+DeepSORT / ByteTrack
+
+👉 để tránh:
+
+1 xe bị detect 10 lần → lưu 10 lần
+🚀 Cache biển số
+if plate not in recent_plates:
+    save()
+🚀 Cooldown lưu
+if last_seen[plate] > 10s:
+    save()
+✅ Kết luận
+
+👉 Webcam nên:
+
+❌ Không lưu tất cả
+✅ Chỉ lưu khi:
+có plate rõ
+hoặc vi phạm
+✅ Dùng WebSocket
+✅ Có tracking để tránh trùng
+
+Nếu bạn muốn, mình có thể:

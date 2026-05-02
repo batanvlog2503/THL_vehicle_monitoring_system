@@ -1,7 +1,8 @@
 import React from "react"
-import "./Sidebar.css"
+import "./Sidebar.scss"
 import { NavLink } from "react-router-dom"
 const Sidebar = () => {
+  const user = JSON.parse(localStorage.getItem("user"))
   return (
     <div className="sidebar">
       <ul className="list-feature">
@@ -9,6 +10,7 @@ const Sidebar = () => {
           <NavLink
             to="/main"
             className="link"
+            end
           >
             <i className="fa-solid fa-person-running"></i> Dashboard
           </NavLink>
@@ -54,6 +56,10 @@ const Sidebar = () => {
           </NavLink>
         </li>
       </ul>
+      <div className="sidebar-user">
+        <i className="fa-solid fa-user"></i>
+        <span>Xin chào, {user?.name || "User"}</span>
+      </div>
     </div>
   )
 }

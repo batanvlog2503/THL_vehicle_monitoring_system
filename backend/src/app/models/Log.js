@@ -10,13 +10,20 @@ const DetectionSchema = new mongoose.Schema({
   time: { type: String }, // "00:01:23" (hiển thị)
   time_ms: { type: Number }, // 83000 (logic)
   status: { type: String }, // "violation" hoặc "normal"
+  plate: { type: String }, // "29A-12345"
 })
 
 const LogSchema = new mongoose.Schema({
-  user_id: String,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Users",
+    required: true,
+  },
+
   email: String,
   videoName: String,
   createdAt: { type: Date, default: Date.now },
+  speedLimit: { type: Number, default: 60 }, // thêm dòng này
   detections: [DetectionSchema],
 })
 

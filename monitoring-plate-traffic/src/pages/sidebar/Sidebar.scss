@@ -1,0 +1,117 @@
+.sidebar {
+  height: 100vh;
+  background-color: #ffffff;
+  padding-top: 30px;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  width: 240px;
+  transition: all 0.3s ease;
+
+  .list-feature {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin: 10px 15px;
+
+      .link {
+        padding: 14px 20px;
+        font-size: 15px; // ✅ fix lỗi ở đây
+        font-weight: 500;
+        color: #2f64c9;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        border-radius: 10px;
+        transition: all 0.25s ease;
+
+        i {
+          font-size: 18px;
+          transition: transform 0.2s ease;
+        }
+
+        span {
+          transition: transform 0.2s ease;
+        }
+
+        &:hover {
+          background-color: rgba(47, 100, 201, 0.08);
+          transform: translateX(4px);
+
+          i {
+            transform: scale(1.2);
+          }
+
+          span {
+            transform: translateX(2px);
+          }
+        }
+
+        &.active {
+          background-color: #2f64c9;
+          color: #fff;
+
+          i {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* ======================
+   Responsive (Mobile)
+====================== */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 70px;
+
+    .list-feature li .link {
+      justify-content: center;
+
+      span {
+        display: none; // ẩn chữ, chỉ giữ icon
+      }
+    }
+  }
+}
+.sidebar {
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 15px 20px;
+    margin: 20px;
+
+    background: rgba(47, 100, 201, 0.08);
+    border-radius: 12px;
+
+    font-size: 14px;
+    font-weight: 500;
+    color: #2f64c9;
+
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    i {
+      font-size: 18px;
+      background: #2f64c9;
+      color: #fff;
+      padding: 8px;
+      border-radius: 50%;
+      transition: 0.25s;
+    }
+
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+  }
+}

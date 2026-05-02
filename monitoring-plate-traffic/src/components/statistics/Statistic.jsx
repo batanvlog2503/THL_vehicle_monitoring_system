@@ -37,7 +37,7 @@ const Statistic = () => {
     .flatMap((l) => l?.detections || [])
     .reduce(
       (acc, d) => {
-        if (["car", "truck", "bus"].includes(d.label)) acc.car++
+        if (["car", "truck", "bus", "ambulance"].includes(d.label)) acc.car++
         else if (d.label === "motorcycle") acc.motorcycle++
         else acc.others++
         return acc

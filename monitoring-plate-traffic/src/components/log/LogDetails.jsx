@@ -48,6 +48,8 @@ const LogDetails = () => {
       "id",
       "label",
       "conf",
+      "speed",
+      "speed_limit", // thêm cột speed_limit
       "time",
       "time_ms",
       "bbox_x1",
@@ -60,6 +62,8 @@ const LogDetails = () => {
       d.id,
       d.label,
       d.conf,
+      d.speed ?? "",
+      log.speedLimit ?? "", // thêm cột speed_limit
       d.time,
       d.time_ms,
       ...(d.bbox ?? ["", "", "", ""]),
@@ -160,6 +164,11 @@ const LogDetails = () => {
               <br />
               <h3>{Object.keys(countLabel(log)).length}</h3>
             </div> */}
+            <div className="inner-max-speed">
+              <p>Tốc độ tối đa</p>
+              <br />
+              <h3>{log?.speedLimit || 60}</h3>
+            </div>
             <div className="inner-total-violation">
               <p>Tổng vi phạm</p>
               <br />
@@ -228,7 +237,7 @@ const LogDetails = () => {
                     </div>
                     <div className="id-label">
                       <h3>Type: {detect?.label}</h3>
-                      <span>ID: {detect?.id}</span>
+                      <span>ID: {detect?.id} </span>
                       <span>
                         <i className="fa-solid fa-clock"></i> {detect?.time}
                       </span>
@@ -278,10 +287,7 @@ const LogDetails = () => {
                   </div>
                 </div>
                 <div className="frame3">
-                  <span>
-                    Bounding Box : [
-                    {detect?.bbox?.map((v) => v.toFixed(3)).join(", ")}]
-                  </span>
+                  <span>License Plate : {detect?.plate ?? "N/A"}</span>
                 </div>
               </div>
             ))}

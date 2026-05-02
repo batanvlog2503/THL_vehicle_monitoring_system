@@ -149,7 +149,7 @@
 
   .inner-summary {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
     margin-bottom: 2rem;
 
@@ -179,7 +179,38 @@
         line-height: 1;
       }
     }
+    .inner-max-speed {
+      background: var(--bg-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem 1.5rem;
+      transition: 0.25s;
+      cursor: default;
 
+      border-bottom: 2px solid #f59e0b; // vàng
+
+      p {
+        font-size: 0.75rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin: 0 0 0.5rem;
+        color: #b45309; // vàng đậm
+      }
+
+      h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+        line-height: 1;
+        color: #f59e0b; // vàng chính
+      }
+
+      &:hover {
+        border-color: #f59e0b;
+        box-shadow: 0 4px 24px rgba(245, 158, 11, 0.2);
+      }
+    }
     .inner-sum-detect {
       border-bottom: 2px solid var(--accent-cyan);
       h3 {

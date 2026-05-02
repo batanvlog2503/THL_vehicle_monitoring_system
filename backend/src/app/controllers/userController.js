@@ -73,17 +73,20 @@ class UserControllers {
 
   async createLog(req, res, next) {
     try {
-      const { detections, videoName } = req.body
+      const { detections, videoName, speedLimit } = req.body
 
       const user_id = req.user._id
       const email = req.user.email
       console.log("Detections ", detections)
       console.log("videoName ", videoName)
+      console.log("speedLimit ", speedLimit)
       const log = new Log({
-        user_id,
-        email,
+        user: req.user.id, //  ObjectId từ token
+
+        email: req.user.email,
         videoName,
         detections,
+        speedLimit, // thêm trường speedLimit vào log
       })
 
       await log.save()
@@ -138,7 +141,7 @@ class UserControllers {
   async getAllLog(req, res, next) {
     try {
       const user_id = req.user._id.toString()
-      const { date } = req.query // 👉 nhận từ query ?date=2026-04-17
+      const { date, keyword } = req.query // 👈 thêm keyword
 
       if (!user_id) {
         return res.status(400).json({
@@ -147,9 +150,9 @@ class UserControllers {
         })
       }
 
-      let filter = { user_id }
+      let filter = { user_id: user_id } // luôn filter theo user
 
-      // 👉 nếu có date thì lọc theo ngày
+      //  filter theo date
       if (date) {
         const start = new Date(date)
         start.setHours(0, 0, 0, 0)
@@ -160,6 +163,14 @@ class UserControllers {
         filter.createdAt = {
           $gte: start,
           $lte: end,
+        }
+      }
+
+      // filter theo videoName (search)
+      if (keyword) {
+        filter.videoName = {
+          $regex: keyword,
+          $options: "i", // không phân biệt hoa thường
         }
       }
 

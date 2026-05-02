@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 import "./Dashboard.scss"
 import axiosInstance from "../../utils/axiosInstance"
 import axios from "axios"
-
+import { randomPlate } from "./randomPlate"
 const Dashboard = () => {
   const [toast, setToast] = useState({
     show: false,
@@ -43,6 +43,7 @@ const Dashboard = () => {
       const payload = {
         detections: detectionsRef.current,
         videoName: videoNameRef.current || "unknown_video",
+        speedLimit: speedLimit, // thêm dòng này
       }
       console.log("🚀 SEND LOG API:", payload)
       const response = await axiosInstance.post(
@@ -109,7 +110,7 @@ const Dashboard = () => {
 
         if (data.status === "done") {
           setStatus("done")
-          // ✅ dùng flag tránh export 2 lần
+          //  dùng flag tránh export 2 lần
           if (detectionsRef.current.length > 0 && !hasExportedRef.current) {
             hasExportedRef.current = true
             exportCSV()
@@ -123,15 +124,26 @@ const Dashboard = () => {
             const updated = [...prev]
             data.detections.forEach((d) => {
               const idx = updated.findIndex((x) => x.id === d.id)
-              const newObj = {
+
+              const baseObj = {
                 ...d,
                 time: data.time,
                 speed: d.speed ?? null,
                 status:
                   d.speed && d.speed > speedLimit ? "violation" : "normal",
               }
-              if (idx === -1) updated.push(newObj)
-              else updated[idx] = newObj
+
+              if (idx === -1) {
+                updated.push({
+                  ...baseObj,
+                  plate: randomPlate(), // chỉ random 1 lần
+                })
+              } else {
+                updated[idx] = {
+                  ...updated[idx],
+                  ...baseObj,
+                }
+              }
             })
             detectionsRef.current = updated
             return updated
@@ -201,8 +213,10 @@ const Dashboard = () => {
       "id",
       "label",
       "conf",
+      "plate",
       "time",
       "speed",
+      "speed_limit",
       "status",
       "bbox_x1",
       "bbox_y1",
@@ -213,8 +227,10 @@ const Dashboard = () => {
       d.id,
       d.label,
       d.conf,
+      d.plate ?? "", //  thêm
       d.time,
       d.speed ?? "",
+      speedLimit, // thêm
       d.status ?? "",
       ...(d.bbox ?? ["", "", "", ""]),
     ])
@@ -260,7 +276,7 @@ const Dashboard = () => {
         )}
 
         <div className="speed-limit-box">
-          <label>Speed limit:</label>
+          <label>Speed limit: </label>
           <select
             value={speedLimit}
             onChange={(e) => setSpeedLimit(Number(e.target.value))}
@@ -352,6 +368,7 @@ const Dashboard = () => {
                     <th>ID</th>
                     <th>Class</th>
                     <th>Conf</th>
+                    <th>Plate</th>
                     <th>Speed</th>
                     <th>Time</th>
                     <th>Status</th>
@@ -386,6 +403,7 @@ const Dashboard = () => {
                             </span>
                           </div>
                         </td>
+                        <td>{d.plate}</td>
                         <td>
                           {d.speed ? (
                             <span className="speed-val">{d.speed} km/h</span>

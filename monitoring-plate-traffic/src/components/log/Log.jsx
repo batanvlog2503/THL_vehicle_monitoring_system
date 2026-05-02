@@ -9,6 +9,8 @@ const Log = () => {
   const hasViolation = (log) => {
     return log?.detections?.some((d) => d.status === "violation")
   }
+
+  const [keyword, setKeyword] = useState("")
   const navigate = useNavigate()
   const [logs, setLogs] = useState([])
   const [selectedDate, setSelectedDate] = useState("")
@@ -39,14 +41,18 @@ const Log = () => {
   }
   useEffect(() => {
     getAllLogs()
-  }, [])
+  }, [selectedDate, keyword])
   const getAllLogs = async () => {
     try {
-      const url = selectedDate
-        ? `${import.meta.env.VITE_APP_URL}/user/logs?date=${selectedDate}`
-        : `${import.meta.env.VITE_APP_URL}/user/logs`
-
-      const response = await axiosInstance.get(url)
+      const response = await axiosInstance.get(
+        `${import.meta.env.VITE_APP_URL}/user/logs`,
+        {
+          params: {
+            date: selectedDate || undefined,
+            keyword: keyword || undefined,
+          },
+        },
+      )
 
       if (response.data.success) {
         setLogs(response.data.logs)
@@ -63,6 +69,12 @@ const Log = () => {
           <h1>Lịch sử phát hiện </h1>
           <p>Xem tất cả các log phát hiện từ video xử lí</p>
           <div className="filter-box">
+            <input
+              type="text"
+              placeholder="Tìm theo tên video..."
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
             <input
               type="date"
               value={selectedDate}
