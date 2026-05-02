@@ -5,7 +5,7 @@ from ultralytics import YOLO
 model = YOLO("yolo11n.pt")
 
 # Mở video
-video_path = "test/testvd.mp4"
+video_path = "test/testvd3.mp4"
 cap = cv2.VideoCapture(video_path)
 
 # Các class phương tiện cần detect
