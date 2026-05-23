@@ -11,7 +11,7 @@ marked.setOptions({
   breaks: true, // xuống dòng với \n
   gfm: true, // hỗ trợ GitHub markdown
 })
-const Chatbot = () => {
+function Chatbot() {
   const [lang, setLang] = useState("vi") // ← thêm state ngôn ngữ
   const [messages, setMessages] = useState([
     {

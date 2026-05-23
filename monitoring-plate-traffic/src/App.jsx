@@ -24,7 +24,8 @@ import Vehicle from "./components/vehicles/Vehicle"
 import SignUp from "./auth/Logout/SignUp"
 import Log from "./components/log/Log"
 import LogDetails from "./components/log/LogDetails"
-import Chatbot from "./components/chatbot/Chatbot"
+import Chatbot from "./components/chatbot/Chatbot.jsx"
+import Chatbot1 from "./components/chatbot/Chatbot1.jsx"
 import Webcam from "./components/webcam/Webcam"
 import ForgotPassword from "./auth/ForgotPassword/ForgotPassword"
 import Dashboard1 from "./components/dashboard/Dashboard1"
@@ -73,7 +74,7 @@ const router = createBrowserRouter(
         ></Route>
         <Route
           path="chatbot"
-          element={<Chatbot />}
+          element={<Chatbot1 />}
         ></Route>
         <Route
           path="log"
