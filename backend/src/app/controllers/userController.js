@@ -73,6 +73,7 @@ class UserControllers {
 
   async createLog(req, res, next) {
     try {
+      console.log("REQ.USER:", req.user)
       const { detections, videoName, speedLimit } = req.body
 
       const user_id = req.user._id
@@ -81,7 +82,7 @@ class UserControllers {
       console.log("videoName ", videoName)
       console.log("speedLimit ", speedLimit)
       const log = new Log({
-        user: req.user.id, //  ObjectId từ token
+        user: req.user._id, //  ObjectId từ token
 
         email: req.user.email,
         videoName,
@@ -141,7 +142,7 @@ class UserControllers {
   async getAllLog(req, res, next) {
     try {
       const user_id = req.user._id.toString()
-      const { date, keyword } = req.query // 👈 thêm keyword
+      const { date, keyword } = req.query //  thêm keyword
 
       if (!user_id) {
         return res.status(400).json({
@@ -150,7 +151,9 @@ class UserControllers {
         })
       }
 
-      let filter = { user_id: user_id } // luôn filter theo user
+      let filter = {
+        $or: [{ user: user_id }, { user_id: user_id }],
+      } // luôn filter theo user
 
       //  filter theo date
       if (date) {
@@ -175,7 +178,7 @@ class UserControllers {
       }
 
       const logs = await Log.find(filter).sort({ createdAt: -1 })
-
+      console.log("TOTAL LOGS:", logs.length) // 🔥 debug
       return res.status(200).json({
         success: true,
         logs,

@@ -2,7 +2,7 @@
 const express = require("express")
 require("dotenv").config()
 // tạo cors
-
+const errorHandler = require("./app/middlewares/errorHandler")
 const cors = require("cors")
 // tạo đường dẫn
 
@@ -57,4 +57,6 @@ app.set("views", path.join(__dirname, "resources", "views"))
 console.log("Views path:", path.join(__dirname, "resources\\views"))
 
 route(app)
+
+app.use(errorHandler)
 app.listen(port, () => console.log(`App listening at http://localhost:${port}`))

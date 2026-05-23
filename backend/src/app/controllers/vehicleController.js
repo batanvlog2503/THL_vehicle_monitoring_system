@@ -11,7 +11,7 @@ class VehicleController {
 
       const userId = req.user?._id || req.user?.id || req?.user?.user?._id // fallback nếu cấu trúc token khác
 
-      const logs = await Log.find({ user_id: userId }).sort({
+      const logs = await Log.find({ user: userId }).sort({
         createdAt: -1,
       })
 
