@@ -53,7 +53,7 @@ const Log = () => {
           },
         },
       )
-
+      console.log("logs length:", response.data.logs.length)
       if (response.data.success) {
         setLogs(response.data.logs)
       }
@@ -66,7 +66,7 @@ const Log = () => {
       <div className="log inner-wrap">
         <div className="inner-title d-flex flex-column">
           {/* ({logs.length}) */}
-          <h1>Lịch sử phát hiện </h1>
+          <h1>Lịch sử phát hiện {logs?.length}</h1>
           <p>Xem tất cả các log phát hiện từ video xử lí</p>
           <div className="filter-box">
             <input

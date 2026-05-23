@@ -2,7 +2,7 @@ import { useState, useRef } from "react"
 import "./Dashboard.scss"
 import axiosInstance from "../../utils/axiosInstance"
 import axios from "axios"
-import { randomPlate } from "./randomPlate"
+
 const Dashboard = () => {
   const [toast, setToast] = useState({
     show: false,
@@ -110,7 +110,7 @@ const Dashboard = () => {
 
         if (data.status === "done") {
           setStatus("done")
-          //  dùng flag tránh export 2 lần
+          // ✅ dùng flag tránh export 2 lần
           if (detectionsRef.current.length > 0 && !hasExportedRef.current) {
             hasExportedRef.current = true
             exportCSV()
@@ -124,26 +124,16 @@ const Dashboard = () => {
             const updated = [...prev]
             data.detections.forEach((d) => {
               const idx = updated.findIndex((x) => x.id === d.id)
-
-              const baseObj = {
+              const newObj = {
                 ...d,
                 time: data.time,
                 speed: d.speed ?? null,
+                plate: d.plate ?? null,
                 status:
                   d.speed && d.speed > speedLimit ? "violation" : "normal",
               }
-
-              if (idx === -1) {
-                updated.push({
-                  ...baseObj,
-                  plate: randomPlate(), // chỉ random 1 lần
-                })
-              } else {
-                updated[idx] = {
-                  ...updated[idx],
-                  ...baseObj,
-                }
-              }
+              if (idx === -1) updated.push(newObj)
+              else updated[idx] = newObj
             })
             detectionsRef.current = updated
             return updated
@@ -213,11 +203,11 @@ const Dashboard = () => {
       "id",
       "label",
       "conf",
-      "plate",
       "time",
       "speed",
-      "speed_limit",
+      "plate",
       "status",
+
       "bbox_x1",
       "bbox_y1",
       "bbox_x2",
@@ -227,10 +217,9 @@ const Dashboard = () => {
       d.id,
       d.label,
       d.conf,
-      d.plate ?? "", //  thêm
       d.time,
       d.speed ?? "",
-      speedLimit, // thêm
+      d?.plate ?? "",
       d.status ?? "",
       ...(d.bbox ?? ["", "", "", ""]),
     ])
@@ -276,7 +265,7 @@ const Dashboard = () => {
         )}
 
         <div className="speed-limit-box">
-          <label>Speed limit: </label>
+          <label>Speed limit:</label>
           <select
             value={speedLimit}
             onChange={(e) => setSpeedLimit(Number(e.target.value))}
@@ -343,16 +332,6 @@ const Dashboard = () => {
                 </div>
               )}
             </div>
-
-            <div className="controls-note text-align-left">
-              <p>Lưu ý:</p>
-              <ul>
-                <li>Video chất lượng cao có thể làm giảm FPS.</li>
-                <li>Nên dùng GPU để đạt hiệu suất tốt nhất.</li>
-                <li>Không upload video quá lớn để tránh lag.</li>
-                <li>Click "End" để kết thúc và xuất dữ liệu.</li>
-              </ul>
-            </div>
           </div>
 
           <div className="detect-pane inner-wrap-right-detect">
@@ -368,8 +347,8 @@ const Dashboard = () => {
                     <th>ID</th>
                     <th>Class</th>
                     <th>Conf</th>
-                    <th>Plate</th>
                     <th>Speed</th>
+                    <th>Plate</th>
                     <th>Time</th>
                     <th>Status</th>
                   </tr>
@@ -403,7 +382,6 @@ const Dashboard = () => {
                             </span>
                           </div>
                         </td>
-                        <td>{d.plate}</td>
                         <td>
                           {d.speed ? (
                             <span className="speed-val">{d.speed} km/h</span>
@@ -411,6 +389,7 @@ const Dashboard = () => {
                             "-"
                           )}
                         </td>
+                        <td>{d?.plate}</td>
                         <td>{d.time}</td>
                         <td>
                           {d.status ? (

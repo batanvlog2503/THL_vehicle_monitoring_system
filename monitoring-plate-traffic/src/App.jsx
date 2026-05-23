@@ -27,6 +27,7 @@ import LogDetails from "./components/log/LogDetails"
 import Chatbot from "./components/chatbot/Chatbot"
 import Webcam from "./components/webcam/Webcam"
 import ForgotPassword from "./auth/ForgotPassword/ForgotPassword"
+import Dashboard1 from "./components/dashboard/Dashboard1"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -56,7 +57,7 @@ const router = createBrowserRouter(
       >
         <Route
           index
-          element={<Dashboard />}
+          element={<Dashboard1 />}
         ></Route>
         <Route
           path="webcam"

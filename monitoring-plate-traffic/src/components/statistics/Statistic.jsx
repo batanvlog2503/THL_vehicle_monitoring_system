@@ -38,7 +38,12 @@ const Statistic = () => {
     .reduce(
       (acc, d) => {
         if (["car", "truck", "bus", "ambulance"].includes(d.label)) acc.car++
-        else if (d.label === "motorcycle") acc.motorcycle++
+        else if (
+          d.label === "Motorcycle" ||
+          d.label === "motorcycle" ||
+          d.label === "motorbike"
+        )
+          acc.motorcycle++
         else acc.others++
         return acc
       },
@@ -84,8 +89,11 @@ const Statistic = () => {
           </div>
 
           <div className="inner bad">
-            <i className="fa-solid fa-triangle-exclamation"></i>
-            <h3>{totalViolations}</h3>
+            <i
+              style={{ color: "red" }}
+              className="fa-solid fa-triangle-exclamation"
+            ></i>
+            <h3 style={{ color: "red" }}>{totalViolations}</h3>
             <span>Violations</span>
           </div>
         </div>

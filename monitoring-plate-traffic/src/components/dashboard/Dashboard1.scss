@@ -1,0 +1,690 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap");
+
+// ──────────────────────────────────────────────────────────────
+// TOKENS
+// ──────────────────────────────────────────────────────────────
+$bg: #f5f7fa;
+$surface: #ffffff;
+$surface-2: #f0f4f8;
+$border: #dde3ec;
+$border-soft: #edf0f5;
+$text: #111827;
+$text-mid: #374151;
+$text-muted: #6b7280;
+
+$blue: #2563eb;
+$blue-light: #eff6ff;
+$green: #16a34a;
+$green-light: #f0fdf4;
+$red: #dc2626;
+$red-light: #fef2f2;
+$yellow: #d97706;
+$yellow-light: #fffbeb;
+$cyan: #0891b2;
+$cyan-light: #ecfeff;
+
+$radius: 10px;
+$radius-sm: 6px;
+$radius-lg: 16px;
+$shadow:
+  0 1px 3px rgba(0, 0, 0, 0.08),
+  0 4px 12px rgba(0, 0, 0, 0.04);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+
+// ──────────────────────────────────────────────────────────────
+// ROOT
+// ──────────────────────────────────────────────────────────────
+.dash-root {
+  min-height: 100vh;
+  padding: 32px 36px;
+  gap: 24px;
+  display: flex;
+  flex-direction: column;
+
+  background: $bg;
+  color: $text;
+  font-family: "DM Sans", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+
+  animation: dash-fadein 0.4s ease;
+
+  // ── Header ──────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid $border;
+
+    h1 {
+      font-family: "DM Mono", monospace;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: $text;
+      margin: 0;
+    }
+  }
+
+  &__logo-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $blue;
+    box-shadow: 0 0 0 3px rgba($blue, 0.15);
+    flex-shrink: 0;
+  }
+
+  // ── Status badge ─────────────────────────────────────────
+  &__status-badge {
+    margin-left: auto;
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: $radius-sm;
+    border: 1px solid $border;
+    background: $surface-2;
+    color: $text-muted;
+
+    &--uploading {
+      color: $blue;
+      border-color: rgba($blue, 0.3);
+      background: $blue-light;
+    }
+    &--processing {
+      color: $yellow;
+      border-color: rgba($yellow, 0.3);
+      background: $yellow-light;
+    }
+    &--done {
+      color: $green;
+      border-color: rgba($green, 0.3);
+      background: $green-light;
+    }
+    &--error {
+      color: $red;
+      border-color: rgba($red, 0.3);
+      background: $red-light;
+    }
+  }
+
+  // ── Toast ────────────────────────────────────────────────
+  &__toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    border-radius: $radius;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    box-shadow: $shadow-md;
+    animation: dash-slideIn 0.3s ease;
+
+    &--success {
+      background: #22c55e;
+    }
+    &--error {
+      background: $red;
+    }
+    &--warning {
+      background: $yellow;
+    }
+
+    i {
+      font-size: 16px;
+    }
+  }
+
+  // ── Upload panel ─────────────────────────────────────────
+  &__upload-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    min-height: 380px;
+  }
+
+  &__upload-inner {
+    background: $surface;
+    border: 2px dashed $border;
+    border-radius: $radius-lg;
+    padding: 48px 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: $shadow;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: $blue;
+    }
+  }
+
+  &__upload-icon {
+    font-size: 48px;
+    line-height: 1;
+    filter: grayscale(0.2);
+  }
+
+  &__upload-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: $text;
+    margin: 0;
+  }
+
+  &__upload-hint {
+    font-size: 12px;
+    color: $text-muted;
+    margin: 0;
+  }
+
+  &__file-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: $radius-sm;
+    border: 1px solid $border;
+    background: $surface-2;
+    color: $text-mid;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background: $border-soft;
+      border-color: #bcc4d0;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+  }
+
+  &__file-name {
+    color: $blue;
+    font-weight: 500;
+    max-width: 280px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // ── Speed row ────────────────────────────────────────────
+  &__speed-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: $radius-sm;
+    border: 1px solid $border;
+    background: $surface-2;
+
+    label {
+      font-size: 13px;
+      color: $text-mid;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    select {
+      appearance: none;
+      border: 1px solid $border;
+      border-radius: $radius-sm;
+      padding: 6px 28px 6px 10px;
+      background: $surface
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
+        no-repeat right 8px center;
+      background-size: 10px;
+      color: $text;
+      font-size: 13px;
+      cursor: pointer;
+      outline: none;
+      transition: 0.2s;
+
+      &:focus {
+        border-color: $blue;
+        box-shadow: 0 0 0 2px rgba($blue, 0.15);
+      }
+      &:hover {
+        border-color: #9ca3af;
+      }
+    }
+  }
+
+  // ── Buttons ──────────────────────────────────────────────
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 18px;
+    border-radius: $radius-sm;
+    font-family: "DM Mono", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &--primary {
+      background: $blue;
+      color: #fff;
+      border-color: $blue;
+    }
+
+    &--outline {
+      background: $surface;
+      color: $text-mid;
+      border-color: $border;
+      &:hover {
+        background: $surface-2;
+        border-color: #bcc4d0;
+      }
+    }
+
+    &--cyan {
+      background: $cyan-light;
+      color: $cyan;
+      border-color: rgba($cyan, 0.3);
+    }
+
+    &--ghost {
+      background: transparent;
+      color: $text-muted;
+      border-color: $border;
+      &:hover {
+        background: $surface-2;
+      }
+    }
+  }
+
+  // ── Processing panel ─────────────────────────────────────
+  &__processing-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    min-height: 380px;
+  }
+
+  &__processing-inner {
+    background: $surface;
+    border-radius: $radius-lg;
+    border: 1px solid $border;
+    padding: 56px 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 480px;
+    box-shadow: $shadow;
+  }
+
+  &__spinner {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 3px solid $border;
+    border-top-color: $blue;
+    animation: dash-spin 0.8s linear infinite;
+  }
+
+  &__processing-label {
+    font-size: 15px;
+    font-weight: 600;
+    color: $text;
+    margin: 0;
+  }
+
+  &__processing-hint {
+    font-size: 12px;
+    color: $text-muted;
+    text-align: center;
+    max-width: 300px;
+    margin: 0;
+  }
+
+  &__progress-track {
+    width: 100%;
+    height: 6px;
+    background: $surface-2;
+    border-radius: 99px;
+    overflow: hidden;
+    border: 1px solid $border-soft;
+  }
+
+  &__progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, $blue, $cyan);
+    border-radius: 99px;
+    transition: width 0.5s ease;
+  }
+
+  // ── Result section ───────────────────────────────────────
+  &__result {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__stat-card {
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: $radius;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: $shadow;
+
+    &--red {
+      border-left: 3px solid $red;
+      background: $red-light;
+    }
+    &--green {
+      border-left: 3px solid $green;
+      background: $green-light;
+    }
+  }
+
+  &__stat-num {
+    font-family: "DM Mono", monospace;
+    font-size: 28px;
+    font-weight: 500;
+    color: $text;
+    line-height: 1;
+  }
+
+  &__stat-label {
+    font-size: 12px;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  &__result-body {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 20px;
+    align-items: start;
+
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // ── Video ────────────────────────────────────────────────
+  &__video-wrap {
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: $radius;
+    overflow: hidden;
+    box-shadow: $shadow;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__section-title {
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $text-muted;
+    border-bottom: 1px solid $border;
+    margin: 0;
+  }
+
+  &__video {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: #000;
+    max-height: 480px;
+    object-fit: contain;
+  }
+
+  &__video-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    border-top: 1px solid $border;
+    background: $surface-2;
+  }
+
+  // ── Table ────────────────────────────────────────────────
+  &__table-wrap {
+    background: $surface;
+    border: 1px solid $border;
+    border-radius: $radius;
+    overflow: hidden;
+    box-shadow: $shadow;
+  }
+
+  &__table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid $border;
+
+    .dash-root__section-title {
+      border: none;
+      padding: 0;
+    }
+  }
+
+  &__detect-count {
+    font-family: "DM Mono", monospace;
+    font-size: 13px;
+    font-weight: 500;
+    color: $cyan;
+    background: $cyan-light;
+    padding: 2px 8px;
+    border-radius: 99px;
+  }
+
+  &__table-scroll {
+    max-height: 460px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $surface-2;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $border;
+      border-radius: 99px;
+    }
+  }
+
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: $surface-2;
+      z-index: 1;
+    }
+
+    th {
+      text-align: left;
+      padding: 9px 12px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: $text-muted;
+      border-bottom: 1px solid $border;
+    }
+
+    td {
+      padding: 9px 12px;
+      color: $text-mid;
+      border-bottom: 1px solid $border-soft;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tbody tr:hover {
+      background: $surface-2;
+    }
+  }
+
+  &__empty-row td {
+    text-align: center;
+    color: $text-muted;
+    padding: 32px;
+    font-style: italic;
+  }
+
+  // ── Table sub-components ─────────────────────────────────
+  &__id-badge {
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    background: $surface-2;
+    border: 1px solid $border;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: $text-mid;
+  }
+
+  &__label-text {
+    font-weight: 500;
+    color: $text;
+  }
+
+  &__conf-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__conf-bg {
+    width: 52px;
+    height: 5px;
+    background: $border;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  &__conf-fill {
+    height: 100%;
+    background: $text-muted;
+    border-radius: 99px;
+
+    &--high {
+      background: $green;
+    }
+  }
+
+  &__conf-val {
+    font-family: "DM Mono", monospace;
+    font-size: 11px;
+    color: $text-muted;
+  }
+
+  &__speed-val {
+    font-family: "DM Mono", monospace;
+    font-weight: 500;
+    color: $green;
+
+    &--over {
+      color: $red;
+    }
+  }
+
+  &__status-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    &--normal {
+      color: $green;
+      background: $green-light;
+    }
+    &--violation {
+      color: $red;
+      background: $red-light;
+    }
+  }
+}
+
+// ──────────────────────────────────────────────────────────────
+// KEYFRAMES (global, outside .dash-root to avoid scoping issues)
+// ──────────────────────────────────────────────────────────────
+@keyframes dash-fadein {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dash-slideIn {
+  from {
+    transform: translateX(110%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes dash-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

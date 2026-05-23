@@ -4,20 +4,7 @@ import axiosInstance from "../../utils/axiosInstance"
 
 const NavbarDetails = () => {
   const [modal, setModal] = useState(false)
-  const [toast, setToast] = useState({
-    show: false,
-    message: "",
-    type: "success",
-  })
-  const showToast = (message, type = "success") => {
-    setToast({ show: true, message, type })
 
-    setTimeout(() => {
-      setToast({ show: false, message: "", type: "success" })
-    }, 3000)
-  }
-
-  const user = JSON.parse(localStorage.getItem("user"))
   const handleLogout = async () => {
     try {
       const refreshToken = localStorage.getItem("refreshToken")
@@ -31,12 +18,10 @@ const NavbarDetails = () => {
         localStorage.removeItem("refreshToken")
         localStorage.removeItem("user")
 
-        showToast("Đăng xuất thành công", "success")
-        setTimeout(() => {
-          window.location.href = "/login"
-        }, 1500)
+        alert("Logout Successfully !!!")
+        window.location.href = "/login"
       } else {
-        showToast(error.response?.data?.message || "Có lỗi xảy ra", "error")
+        alert("Logout Failed")
       }
     } catch (error) {
       console.error(error.message)
@@ -56,7 +41,6 @@ const NavbarDetails = () => {
         </div>
 
         <div className="inner-user col-lg-2 col-4 text-end">
-          
           <button
             className="logout"
             onClick={() => setModal(true)}
@@ -65,18 +49,7 @@ const NavbarDetails = () => {
           </button>
         </div>
       </div>
-      {toast.show && (
-        <div className={`custom-toast2 ${toast.type}`}>
-          <i
-            className={`fa-solid ${
-              toast.type === "success"
-                ? "fa-circle-check"
-                : "fa-circle-exclamation"
-            }`}
-          ></i>
-          <span>{toast.message}</span>
-        </div>
-      )}
+
       {modal && (
         <div className="modal show d-block">
           <div className="modal-dialog">
