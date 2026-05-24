@@ -15,19 +15,15 @@ router.post(
   authorize("user", "admin"),
   UserControllers.createLog,
 )
-router.get(
-  "/me/logs",
-  auth,
-  authorize("user", "admin"),
-  UserControllers.getAllLogsMe,
-)
+router.get("/me/logs", auth, authorize("user"), UserControllers.getAllLogsMe)
+
 router.get(
   "/logs/:id",
   auth,
   authorize("user", "admin"),
   UserControllers.getLogDetails,
 )
-router.get("/logs", auth, authorize("user", "admin"), UserControllers.getAllLog)
+router.get("/logs", auth, authorize("admin"), UserControllers.getAllLog)
 
 router.get(
   "/vehicles",

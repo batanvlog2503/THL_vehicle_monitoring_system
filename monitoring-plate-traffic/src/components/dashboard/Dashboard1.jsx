@@ -9,6 +9,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 const Dashboard1 = () => {
   // ── toast ─────────────────────────────────────────────────
+
   const [toast, setToast] = useState({
     show: false,
     message: "",
@@ -27,6 +28,8 @@ const Dashboard1 = () => {
   const detectionsRef = useRef([])
   const videoNameRef = useRef("")
   const hasExportedRef = useRef(false)
+  const originalNameRef = useRef("")
+  const resultVideoUrlRef = useRef("")
 
   // ── state ─────────────────────────────────────────────────
   const [speedLimit, setSpeedLimit] = useState(60)
@@ -116,6 +119,9 @@ const Dashboard1 = () => {
         {
           detections: detectionsRef.current,
           videoName: videoNameRef.current,
+          originalName: originalNameRef.current, //  dùng ref
+          resultVideoUrl: resultVideoUrlRef.current,
+
           speedLimit,
         },
       )
@@ -140,6 +146,7 @@ const Dashboard1 = () => {
       now.toLocaleString("en-US", { timeZone: "Asia/Ho_Chi_Minh" }),
     )
     const pad = (n) => String(n).padStart(2, "0")
+    originalNameRef.current = file.name // 👈 lưu vào ref
     videoNameRef.current = `ket-qua-yolo-${pad(vnTime.getDate())}-${pad(vnTime.getMonth() + 1)}-${vnTime.getFullYear()}_${pad(vnTime.getHours())}:${pad(vnTime.getMinutes())}:${pad(vnTime.getSeconds())}.csv`
     hasExportedRef.current = false
 
@@ -163,6 +170,7 @@ const Dashboard1 = () => {
       if (!res.ok) throw new Error("Upload failed")
       const data = await res.json()
       setJobId(data.job_id)
+
       setPhase("processing")
       pollStatus(data.job_id)
     } catch (err) {
@@ -186,6 +194,10 @@ const Dashboard1 = () => {
         } else if (data.status === "done") {
           setProgress(100)
           setPhase("done")
+
+          const videoUrl = `${BACKEND}${data.video_url}` // 👈 đổi lại chỗ này
+          setResultVideo(videoUrl)
+          resultVideoUrlRef.current = videoUrl
           setResultVideo(`${BACKEND}${data.video_url}`)
           setResultJson(`${BACKEND}${data.result_url}`)
           setSummary({
@@ -251,6 +263,7 @@ const Dashboard1 = () => {
     setDetections([])
     setSelectedFile(null)
     detectionsRef.current = []
+    resultVideoUrlRef.current = ""
     videoNameRef.current = ""
     hasExportedRef.current = false
     if (fileInputRef.current) fileInputRef.current.value = ""

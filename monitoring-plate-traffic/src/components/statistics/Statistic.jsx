@@ -5,16 +5,19 @@ import { Line, Bar, Pie } from "react-chartjs-2"
 
 const Statistic = () => {
   const [logs, setLogs] = useState([])
-
+  const user = JSON.parse(localStorage.getItem("user"))
   useEffect(() => {
     getAllLogs()
   }, [])
 
   const getAllLogs = async () => {
     try {
-      const res = await axiosInstance.get(
-        `${import.meta.env.VITE_APP_URL}/user/me/logs`,
-      )
+      const url =
+        user.role === "admin"
+          ? `${import.meta.env.VITE_APP_URL}/user/logs`
+          : `${import.meta.env.VITE_APP_URL}/user/me/logs`
+
+      const res = await axiosInstance.get(url)
       if (res.data.success) {
         setLogs(res.data.logs)
       }

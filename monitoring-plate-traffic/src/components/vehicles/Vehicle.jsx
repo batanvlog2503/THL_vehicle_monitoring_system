@@ -19,7 +19,7 @@ const Vehicle = () => {
       )
 
       const data = response.data
-      console.log("API:", data) // 👈 DEBUG
+      console.log("API:", data) //  DEBUG
 
       setVehicles(Array.isArray(data.data) ? data.data : [])
       setTotalPages(data.totalPages || 1)

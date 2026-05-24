@@ -141,9 +141,16 @@ const LogDetails = () => {
           <h2>
             <i className="fa-solid fa-video"></i> {log?.videoName}
           </h2>
+
           <div className="inner-info">
-            <span>{log?.email}</span>
-            <span>{formatDate(log?.createdAt)}</span>
+            <span>Email: {log?.email}</span>
+            <br />
+            <span>Created At: {formatDate(log?.createdAt)}</span>
+            <br />
+
+            <span>Original Name: {log?.originalName}</span>
+            <br />
+            <span>{log?.resultVideoUrl}</span>
           </div>
         </div>
         <div className="inner-overview">

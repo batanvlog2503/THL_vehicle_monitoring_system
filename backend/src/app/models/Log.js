@@ -16,12 +16,14 @@ const DetectionSchema = new mongoose.Schema({
 const LogSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Users",
+    ref: "User",
     required: true,
   },
 
   email: String,
   videoName: String,
+  originalName: String,
+  resultVideoUrl: String, // URL video kết quả YOLO
   createdAt: { type: Date, default: Date.now },
   speedLimit: { type: Number, default: 60 }, // thêm dòng này
   detections: [DetectionSchema],

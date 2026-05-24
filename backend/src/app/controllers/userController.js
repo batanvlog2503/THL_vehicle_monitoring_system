@@ -74,19 +74,31 @@ class UserControllers {
   async createLog(req, res, next) {
     try {
       console.log("REQ.USER:", req.user)
-      const { detections, videoName, speedLimit } = req.body
+      const {
+        detections,
+        videoName,
+        originalName,
+        speedLimit,
+        resultVideoUrl,
+      } = req.body
 
       const user_id = req.user._id
       const email = req.user.email
       console.log("Detections ", detections)
       console.log("videoName ", videoName)
       console.log("speedLimit ", speedLimit)
+      console.log("Original Name ", originalName)
+      console.log("Result Video URL ", resultVideoUrl)
+
       const log = new Log({
         user: req.user._id, //  ObjectId từ token
 
         email: req.user.email,
         videoName,
         detections,
+        resultVideoUrl,
+
+        originalName,
         speedLimit, // thêm trường speedLimit vào log
       })
 
