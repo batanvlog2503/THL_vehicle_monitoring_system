@@ -1,163 +1,443 @@
+// controllers/statController.js
+const mongoose = require("mongoose")
 const Log = require("../models/Log")
-const { buildStats } = require("../../routes/utils/buildStats")
 
-function normalize(str) {
-  return (str || "").toLowerCase().trim()
-}
 class StatController {
-  async chatbotTest(req, res) {
-    return res.json({
-      reply: "Test thành công!",
-    })
+  static INTENT_KEYWORDS = [
+    {
+      intent: "speedViolations",
+      keywords: ["vi phạm tốc độ", "tốc độ vi phạm", "vượt tốc"],
+    },
+    {
+      intent: "violationsByDay",
+      keywords: ["vi phạm theo ngày", "vi phạm từng ngày", "ngày vi phạm"],
+    },
+    {
+      intent: "violationPlates",
+      keywords: [
+        "biển số vi phạm",
+        "biển số xe vi phạm",
+        "phương tiện vi phạm",
+      ],
+    },
+    {
+      intent: "topViolationVideos",
+      keywords: ["video nhiều vi phạm", "top video vi phạm"],
+    },
+    {
+      intent: "fastestVehicle",
+      keywords: ["xe nhanh nhất", "xe nhanh nhất toàn bộ", "nhanh nhất"],
+    },
+    {
+      intent: "top5Speed",
+      keywords: ["top 5 tốc độ", "top 5 nhanh", "5 xe nhanh"],
+    },
+    {
+      intent: "vehicleTypes",
+      keywords: ["loại xe", "loại phương tiện", "thống kê loại"],
+    },
+    {
+      intent: "videoList",
+      keywords: ["danh sách video", "tất cả video", "các video"],
+    },
+    {
+      intent: "plates",
+      keywords: ["biển số", "biển số phát hiện", "thống kê biển số"],
+    },
+    {
+      intent: "overview",
+      keywords: ["tổng quan", "tổng hợp", "overview", "thống kê chung"],
+    },
+    {
+      intent: "topVideos",
+      keywords: [
+        "top video nhiều phát hiện",
+        "video nhiều phát hiện",
+        "video nhiều nhất",
+      ],
+    },
+    { intent: "violations", keywords: ["vi phạm"] },
+  ]
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // PRIVATE HELPERS
+  // ─────────────────────────────────────────────────────────────────────────
+
+  #toObjectId(userId) {
+    return typeof userId === "string"
+      ? new mongoose.Types.ObjectId(userId)
+      : userId
   }
 
-  async chatbotQuery(req, res) {
+  #detectIntent(question) {
+    const q = question.toLowerCase()
+    for (const { intent, keywords } of StatController.INTENT_KEYWORDS) {
+      if (keywords.some((kw) => q.includes(kw))) return intent
+    }
+    return "general"
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // AGGREGATION PIPELINES
+  // ─────────────────────────────────────────────────────────────────────────
+
+  async #getOverview(uid) {
+    const [result] = await Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      {
+        $group: {
+          _id: null,
+          tongSoVideo: { $addToSet: "$_id" },
+          tongSoPhatHien: { $sum: 1 },
+          tongSoViPham: {
+            $sum: {
+              $cond: [{ $eq: ["$detections.status", "violation"] }, 1, 0],
+            },
+          },
+          tongSoBinhThuong: {
+            $sum: { $cond: [{ $eq: ["$detections.status", "normal"] }, 1, 0] },
+          },
+        },
+      },
+      {
+        $project: {
+          tongSoVideo: { $size: "$tongSoVideo" },
+          tongSoPhatHien: 1,
+          tongSoViPham: 1,
+          tongSoBinhThuong: 1,
+        },
+      },
+    ])
+    return result || {}
+  }
+
+  async #getTopVideos(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      {
+        $project: {
+          videoName: 1,
+          createdAt: 1,
+          tongSoPhatHien: { $size: { $ifNull: ["$detections", []] } },
+        },
+      },
+      { $sort: { tongSoPhatHien: -1 } },
+      { $limit: 5 },
+    ])
+  }
+
+  async #getSpeedViolations(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      {
+        $match: {
+          $or: [
+            { "detections.status": "violation" },
+            {
+              $expr: {
+                $and: [
+                  { $ne: ["$detections.speed", null] },
+                  { $gt: ["$detections.speed", "$speedLimit"] },
+                ],
+              },
+            },
+          ],
+        },
+      },
+      {
+        $group: {
+          _id: "$videoName",
+          soViPham: { $sum: 1 },
+          tocDoCaoNhat: { $max: "$detections.speed" },
+          tocDoTrungBinh: { $avg: "$detections.speed" },
+        },
+      },
+      { $sort: { soViPham: -1 } },
+      { $limit: 10 },
+    ])
+  }
+
+  async #getViolationsByDay(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      { $match: { "detections.status": "violation" } },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+          soViPham: { $sum: 1 },
+          soVideo: { $addToSet: "$_id" },
+        },
+      },
+      {
+        $project: {
+          ngay: "$_id",
+          soViPham: 1,
+          soVideo: { $size: "$soVideo" },
+        },
+      },
+      { $sort: { ngay: -1 } },
+      { $limit: 14 },
+    ])
+  }
+
+  async #getViolationPlates(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      {
+        $match: {
+          "detections.status": "violation",
+          "detections.plate": { $ne: null, $ne: "" },
+        },
+      },
+      {
+        $group: {
+          _id: "$detections.plate",
+          soLanViPham: { $sum: 1 },
+          tocDoCaoNhat: { $max: "$detections.speed" },
+          videoNames: { $addToSet: "$videoName" },
+        },
+      },
+      { $sort: { soLanViPham: -1 } },
+      { $limit: 10 },
+    ])
+  }
+
+  async #getTopViolationVideos(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      {
+        $project: {
+          videoName: 1,
+          createdAt: 1,
+          soViPham: {
+            $size: {
+              $filter: {
+                input: { $ifNull: ["$detections", []] },
+                as: "d",
+                cond: { $eq: ["$$d.status", "violation"] },
+              },
+            },
+          },
+        },
+      },
+      { $sort: { soViPham: -1 } },
+      { $limit: 5 },
+    ])
+  }
+
+  async #getFastestVehicle(uid) {
+    const [result] = await Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      { $match: { "detections.speed": { $gt: 0 } } },
+      { $sort: { "detections.speed": -1 } },
+      { $limit: 1 },
+      {
+        $project: {
+          videoName: 1,
+          speed: "$detections.speed",
+          plate: "$detections.plate",
+          label: "$detections.label",
+          time: "$detections.time",
+          status: "$detections.status",
+        },
+      },
+    ])
+    return result || null
+  }
+
+  async #getTop5Speed(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      { $match: { "detections.speed": { $gt: 0 } } },
+      { $sort: { "detections.speed": -1 } },
+      { $limit: 5 },
+      {
+        $project: {
+          videoName: 1,
+          speed: "$detections.speed",
+          plate: "$detections.plate",
+          label: "$detections.label",
+          time: "$detections.time",
+          status: "$detections.status",
+        },
+      },
+    ])
+  }
+
+  async #getVehicleTypes(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      {
+        $group: {
+          _id: "$detections.label",
+          soLan: { $sum: 1 },
+          soViPham: {
+            $sum: {
+              $cond: [{ $eq: ["$detections.status", "violation"] }, 1, 0],
+            },
+          },
+        },
+      },
+      { $sort: { soLan: -1 } },
+    ])
+  }
+
+  async #getVideoList(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      {
+        $project: {
+          videoName: 1,
+          createdAt: 1,
+          speedLimit: 1,
+          tongSoPhatHien: { $size: { $ifNull: ["$detections", []] } },
+          soViPham: {
+            $size: {
+              $filter: {
+                input: { $ifNull: ["$detections", []] },
+                as: "d",
+                cond: { $eq: ["$$d.status", "violation"] },
+              },
+            },
+          },
+          cacNhan: {
+            $setUnion: {
+              $map: {
+                input: { $ifNull: ["$detections", []] },
+                as: "d",
+                in: "$$d.label",
+              },
+            },
+          },
+        },
+      },
+      { $sort: { createdAt: -1 } },
+    ])
+  }
+
+  async #getPlates(uid) {
+    return Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      {
+        $match: {
+          "detections.plate": { $exists: true, $ne: null, $ne: "" },
+        },
+      },
+      {
+        $group: {
+          _id: "$detections.plate",
+          soLanXuatHien: { $sum: 1 },
+          soViPham: {
+            $sum: {
+              $cond: [{ $eq: ["$detections.status", "violation"] }, 1, 0],
+            },
+          },
+          tocDoCaoNhat: { $max: "$detections.speed" },
+          videoNames: { $addToSet: "$videoName" },
+        },
+      },
+      { $sort: { soLanXuatHien: -1 } },
+      { $limit: 20 },
+    ])
+  }
+
+  async #getViolations(uid) {
+    const [summary] = await Log.aggregate([
+      { $match: { user: uid } },
+      { $unwind: "$detections" },
+      { $match: { "detections.status": "violation" } },
+      {
+        $group: {
+          _id: null,
+          tongViPham: { $sum: 1 },
+          tocDoCaoNhat: { $max: "$detections.speed" },
+          tocDoTB: { $avg: "$detections.speed" },
+          soVideo: { $addToSet: "$_id" },
+        },
+      },
+      {
+        $project: {
+          tongViPham: 1,
+          tocDoCaoNhat: 1,
+          tocDoTB: { $round: ["$tocDoTB", 1] },
+          soVideo: { $size: "$soVideo" },
+        },
+      },
+    ])
+    return summary || {}
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // DISPATCH
+  // ─────────────────────────────────────────────────────────────────────────
+
+  async #fetchData(intent, uid) {
+    switch (intent) {
+      case "overview":
+        return { overview: await this.#getOverview(uid) }
+      case "topVideos":
+        return { topVideos: await this.#getTopVideos(uid) }
+      case "speedViolations":
+        return { speedViolations: await this.#getSpeedViolations(uid) }
+      case "violationsByDay":
+        return { violationsByDay: await this.#getViolationsByDay(uid) }
+      case "violationPlates":
+        return { violationPlates: await this.#getViolationPlates(uid) }
+      case "topViolationVideos":
+        return { topViolationVideos: await this.#getTopViolationVideos(uid) }
+      case "fastestVehicle":
+        return { fastestVehicle: await this.#getFastestVehicle(uid) }
+      case "top5Speed":
+        return { top5Speed: await this.#getTop5Speed(uid) }
+      case "vehicleTypes":
+        return { vehicleTypes: await this.#getVehicleTypes(uid) }
+      case "videoList":
+        return { videoList: await this.#getVideoList(uid) }
+      case "plates":
+        return { plates: await this.#getPlates(uid) }
+      case "violations":
+        return { violations: await this.#getViolations(uid) }
+      default: {
+        const [overview, topVideos] = await Promise.all([
+          this.#getOverview(uid),
+          this.#getTopVideos(uid),
+        ])
+        return { overview, topVideos }
+      }
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // PUBLIC ROUTE HANDLERS
+  // ─────────────────────────────────────────────────────────────────────────
+
+  chatbotQuery = async (req, res) => {
     try {
       const { question, userId } = req.body
+      if (!question || !userId)
+        return res.status(400).json({ error: "Thiếu question hoặc userId" })
 
-      const logs = await Log.find({
-        user: userId,
-      }).sort({ createdAt: -1 })
-      console.log("TOTAL LOGS:", logs.length)
-      const stats = buildStats(logs)
+      const uid = this.#toObjectId(userId)
+      const intent = this.#detectIntent(question)
+      const data = await this.#fetchData(intent, uid)
 
-      const q = normalize(question)
-
-      // ─────────────────────────────────────
-      // TỔNG QUAN
-      // ─────────────────────────────────────
-      if (
-        q.includes("tổng quan") ||
-        q.includes("thống kê") ||
-        q.includes("bao nhiêu")
-      ) {
-        return res.json({
-          reply:
-            `📊 TỔNG QUAN HỆ THỐNG\n\n` +
-            `- Tổng video: ${stats.tongSoVideo}\n` +
-            `- Tổng phát hiện: ${stats.tongSoPhatHien}\n` +
-            `- Tổng vi phạm: ${stats.tongSoViPham}\n` +
-            `- Tổng biển số: ${stats.tongSoBienSoPhatHien}`,
-        })
-      }
-
-      // ─────────────────────────────────────
-      // TOP VIDEO
-      // ─────────────────────────────────────
-      if (q.includes("top video") || q.includes("nhiều phát hiện")) {
-        const text = stats.topVideoNhieuPhatHien
-          .map(
-            (v, i) =>
-              `${i + 1}. ${v.videoName} — ${v.tongSoPhatHien} phát hiện`,
-          )
-          .join("\n")
-
-        return res.json({
-          reply: `🎥 TOP VIDEO NHIỀU PHÁT HIỆN\n\n${text}`,
-        })
-      }
-
-      // ─────────────────────────────────────
-      // VI PHẠM
-      // ─────────────────────────────────────
-      if (q.includes("vi phạm") || q.includes("vượt tốc")) {
-        const text = stats.topVideoNhieuViPham
-          .map((v, i) => `${i + 1}. ${v.videoName} — ${v.soViPham} vi phạm`)
-          .join("\n")
-
-        return res.json({
-          reply:
-            `🚨 THỐNG KÊ VI PHẠM\n\n` +
-            `Tổng vi phạm: ${stats.tongSoViPham}\n\n` +
-            text,
-        })
-      }
-
-      // ─────────────────────────────────────
-      // XE NHANH NHẤT
-      // ─────────────────────────────────────
-      if (q.includes("nhanh nhất") || q.includes("tốc độ cao nhất")) {
-        const xe = stats.xeChayNhanhNhat
-
-        if (!xe) {
-          return res.json({
-            reply: "Không có dữ liệu tốc độ.",
-          })
-        }
-
-        return res.json({
-          reply:
-            `🏎️ XE NHANH NHẤT\n\n` +
-            `- Biển số: ${xe.bienSo}\n` +
-            `- Tốc độ: ${xe.tocDo} km/h\n` +
-            `- Video: ${xe.videoName}\n` +
-            `- Thời điểm: ${xe.thoiDiem || "Không rõ"}`,
-        })
-      }
-
-      // ─────────────────────────────────────
-      // LOẠI XE
-      // ─────────────────────────────────────
-      if (q.includes("loại xe") || q.includes("xe nhiều nhất")) {
-        const text = stats.nhanPhoThong
-          .slice(0, 10)
-          .map((n, i) => `${i + 1}. ${n.label} — ${n.soLan} lần`)
-          .join("\n")
-
-        return res.json({
-          reply: `🚗 THỐNG KÊ LOẠI XE\n\n` + text,
-        })
-      }
-
-      // ─────────────────────────────────────
-      // DANH SÁCH VIDEO
-      // ─────────────────────────────────────
-      if (q.includes("danh sách video") || q.includes("video")) {
-        const text = stats.danhSachVideo
-          .slice(0, 10)
-          .map(
-            (v, i) =>
-              `${i + 1}. ${v.videoName}\n` +
-              `   - Phát hiện: ${v.tongSoPhatHien}\n` +
-              `   - Vi phạm: ${v.soViPham}`,
-          )
-          .join("\n\n")
-
-        return res.json({
-          reply: `🎬 DANH SÁCH VIDEO\n\n${text}`,
-        })
-      }
-
-      // ─────────────────────────────────────
-      // BIỂN SỐ
-      // ─────────────────────────────────────
-      if (q.includes("biển số")) {
-        const plates = stats.bienSoDuyNhat.slice(0, 10).join("\n- ")
-
-        return res.json({
-          reply: `🔍 BIỂN SỐ ĐÃ PHÁT HIỆN\n\n- ${plates}`,
-        })
-      }
-
-      // ─────────────────────────────────────
-      // DEFAULT
-      // ─────────────────────────────────────
-      return res.json({
-        reply:
-          `Tôi có thể hỗ trợ:\n\n` +
-          `- Tổng quan\n` +
-          `- Vi phạm\n` +
-          `- Loại xe\n` +
-          `- Xe nhanh nhất\n` +
-          `- Danh sách video\n` +
-          `- Biển số`,
-      })
+      res.json({ intent, data })
     } catch (err) {
-      console.error(err)
-      res.status(500).json({
-        reply: "Lỗi server",
-      })
+      console.error("[chatbotQuery]", err)
+      res.status(500).json({ error: "Lỗi server", detail: err.message })
     }
+  }
+
+  chatbotTest = async (_req, res) => {
+    res.json({ status: "ok", time: new Date() })
   }
 }
 

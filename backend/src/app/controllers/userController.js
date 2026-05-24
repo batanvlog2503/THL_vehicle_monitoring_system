@@ -142,6 +142,7 @@ class UserControllers {
   async getAllLog(req, res, next) {
     try {
       const user_id = req.user._id.toString()
+      console.log("USER ID: ", user_id)
       const { date, keyword } = req.query //  thêm keyword
 
       if (!user_id) {
@@ -179,6 +180,22 @@ class UserControllers {
 
       const logs = await Log.find(filter).sort({ createdAt: -1 })
       console.log("TOTAL LOGS:", logs.length) // 🔥 debug
+      return res.status(200).json({
+        success: true,
+        logs,
+      })
+    } catch (error) {
+      return res.status(400).json({
+        success: false,
+        error: error.message,
+      })
+    }
+  }
+  async getAllLogsMe(req, res, next) {
+    try {
+      const user_id = req.user._id.toString()
+      const logs = await Log.find({ user: user_id }).sort({ createdAt: -1 })
+      console.log("Total Logs: ", logs)
       return res.status(200).json({
         success: true,
         logs,

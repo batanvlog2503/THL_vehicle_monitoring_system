@@ -13,7 +13,7 @@ const Statistic = () => {
   const getAllLogs = async () => {
     try {
       const res = await axiosInstance.get(
-        `${import.meta.env.VITE_APP_URL}/user/logs`,
+        `${import.meta.env.VITE_APP_URL}/user/me/logs`,
       )
       if (res.data.success) {
         setLogs(res.data.logs)
@@ -31,17 +31,50 @@ const Statistic = () => {
     (t, log) => t + (log.detections?.length || 0),
     0,
   )
+  useEffect(() => {
+    if (!logs.length) return
 
+    const allLabels = logs
+      .flatMap((log) => log?.detections || [])
+      .map((d) => d.label)
+      .filter(Boolean)
+
+    // unique labels
+    const uniqueLabels = [...new Set(allLabels)]
+
+    console.log("ALL LABELS:", uniqueLabels)
+
+    // nếu muốn xem số lượng từng label
+    const counts = allLabels.reduce((acc, label) => {
+      acc[label] = (acc[label] || 0) + 1
+      return acc
+    }, {})
+
+    console.log("LABEL COUNTS:", counts)
+  }, [logs])
   // nhóm dữ liệu
   const groupedData = logs
     .flatMap((l) => l?.detections || [])
     .reduce(
       (acc, d) => {
-        if (["car", "truck", "bus", "ambulance"].includes(d.label)) acc.car++
+        if (
+          [
+            "car",
+            "truck",
+            "bus",
+            "ambulance",
+            "Car",
+            "Truck",
+            "Bus",
+            "Ambulance",
+          ].includes(d.label)
+        )
+          acc.car++
         else if (
           d.label === "Motorcycle" ||
           d.label === "motorcycle" ||
-          d.label === "motorbike"
+          d.label === "motorbike" ||
+          d.label === "Motorbike"
         )
           acc.motorcycle++
         else acc.others++
