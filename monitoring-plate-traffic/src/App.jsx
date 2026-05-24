@@ -29,6 +29,8 @@ import Chatbot1 from "./components/chatbot/Chatbot1.jsx"
 import Webcam from "./components/webcam/Webcam"
 import ForgotPassword from "./auth/ForgotPassword/ForgotPassword"
 import Dashboard1 from "./components/dashboard/Dashboard1"
+import ReviewAdmin from "./components/review/ReviewAdmin.jsx"
+import Review from "./components/review/Review.jsx"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -84,6 +86,10 @@ const router = createBrowserRouter(
           path="log/:id"
           element={<LogDetails />}
         />
+        <Route
+          path="review"
+          element={<ReviewAdmin />}
+        ></Route>
       </Route>
     </Route>,
   ),

@@ -1,0 +1,430 @@
+/* ─── ReviewAdmin.css ─────────────────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+.ra-page {
+  padding: 1.5rem 0;
+  font-family: inherit;
+}
+
+/* Header */
+.ra-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  gap: 12px;
+}
+.ra-header h2 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 3px;
+}
+.ra-header__sub {
+  font-size: 13px;
+  color: #999;
+}
+
+.ra-btn-refresh {
+  font-size: 13px;
+  padding: 7px 14px;
+  border: 0.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.ra-btn-refresh:hover {
+  background: #f5f5f4;
+}
+
+/* Metrics */
+.ra-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+.ra-metric {
+  background: #f5f5f4;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+.ra-metric__label {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 5px;
+}
+.ra-metric__value {
+  font-size: 20px;
+  font-weight: 500;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+.ra-metric__star {
+  font-size: 14px;
+  color: #ef9f27;
+}
+.ra-metric__sub {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 3px;
+}
+
+/* Section label */
+.ra-section-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+/* 2-col grid */
+.ra-grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px;
+  margin-bottom: 1.25rem;
+}
+
+/* Card */
+.ra-card {
+  background: #fff;
+  border: 0.5px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ra-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.07);
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+.ra-card__icon {
+  font-size: 15px;
+}
+.ra-card__body {
+  padding: 12px 16px;
+}
+
+/* Bar rows */
+.ra-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-size: 13px;
+}
+.ra-bar-label {
+  width: 140px;
+  color: #666;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ra-bar-stars {
+  font-size: 11px;
+  color: #ef9f27;
+  margin-left: 6px;
+}
+.ra-bar-track {
+  flex: 1;
+  height: 6px;
+  background: #f0f0ee;
+  border-radius: 99px;
+  overflow: hidden;
+}
+.ra-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+.ra-bar-val {
+  font-size: 12px;
+  color: #aaa;
+  width: 30px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Stars */
+.ra-stars {
+  display: flex;
+  gap: 2px;
+}
+.ra-star {
+  font-size: 12px;
+  color: #ddd;
+}
+.ra-star--on {
+  color: #ef9f27;
+}
+
+/* Badges */
+.ra-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.ra-badge--blue {
+  background: #e6f1fb;
+  color: #185fa5;
+}
+.ra-badge--teal {
+  background: #e1f5ee;
+  color: #0f6e56;
+}
+.ra-badge--amber {
+  background: #faeeda;
+  color: #854f0b;
+}
+.ra-badge--gray {
+  background: #f0f0ee;
+  color: #666;
+}
+.ra-badge--red {
+  background: #fcebeb;
+  color: #a32d2d;
+}
+
+/* Table */
+.ra-tbl-wrap {
+  overflow-x: auto;
+}
+.ra-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.ra-tbl th {
+  text-align: left;
+  padding: 9px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #aaa;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.08);
+  white-space: nowrap;
+}
+.ra-tbl td {
+  padding: 10px 12px;
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.06);
+  color: #555;
+  vertical-align: middle;
+}
+.ra-tbl tr:last-child td {
+  border-bottom: none;
+}
+.ra-tbl tr:hover td {
+  background: #fafaf9;
+}
+
+/* User cell */
+.ra-user-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ra-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e6f1fb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 500;
+  color: #185fa5;
+  flex-shrink: 0;
+}
+.ra-user-name {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #1a1a1a;
+}
+.ra-user-email {
+  display: block;
+  font-size: 11px;
+  color: #aaa;
+}
+
+.ra-rating-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ra-rating-text {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.ra-comment-cell {
+  max-width: 180px;
+  color: #666;
+}
+.ra-no-comment {
+  color: #ccc;
+}
+.ra-date-cell {
+  white-space: nowrap;
+  color: #aaa;
+}
+
+/* Pagination */
+.ra-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-top: 0.5px solid rgba(0, 0, 0, 0.07);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ra-pg-info {
+  font-size: 13px;
+  color: #aaa;
+}
+.ra-pg-btns {
+  display: flex;
+  gap: 4px;
+}
+.ra-pg-btn {
+  font-size: 13px;
+  padding: 5px 10px;
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  background: transparent;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.ra-pg-btn:hover:not(:disabled) {
+  background: #f5f5f4;
+}
+.ra-pg-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.ra-pg-btn--active {
+  background: #1a1a1a;
+  color: #fff;
+  border-color: #1a1a1a;
+}
+
+/* Empty / error states */
+.ra-empty {
+  font-size: 13px;
+  color: #bbb;
+  font-style: italic;
+}
+.ra-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 3rem 1rem;
+  color: #aaa;
+  font-size: 14px;
+}
+.ra-state__icon {
+  font-size: 32px;
+}
+.ra-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e5e5e5;
+  border-top-color: #378add;
+  border-radius: 50%;
+  animation: ra-spin 0.7s linear infinite;
+}
+@keyframes ra-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .ra-header h2 {
+    color: #f0f0ee;
+  }
+  .ra-btn-refresh {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+  }
+  .ra-btn-refresh:hover {
+    background: #2a2a28;
+  }
+  .ra-metric {
+    background: #2a2a28;
+  }
+  .ra-metric__value {
+    color: #f0f0ee;
+  }
+  .ra-card {
+    background: #1e1e1c;
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+  .ra-card__header {
+    border-color: rgba(255, 255, 255, 0.06);
+    color: #f0f0ee;
+  }
+  .ra-bar-track {
+    background: #2a2a28;
+  }
+  .ra-tbl th {
+    color: #666;
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+  .ra-tbl td {
+    border-color: rgba(255, 255, 255, 0.05);
+    color: #aaa;
+  }
+  .ra-tbl tr:hover td {
+    background: #252523;
+  }
+  .ra-user-name {
+    color: #f0f0ee;
+  }
+  .ra-avatar {
+    background: #1a2a3a;
+    color: #85b7eb;
+  }
+  .ra-pagination {
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+  .ra-pg-btn {
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #aaa;
+  }
+  .ra-pg-btn:hover:not(:disabled) {
+    background: #2a2a28;
+  }
+  .ra-pg-btn--active {
+    background: #f0f0ee;
+    color: #1a1a1a;
+    border-color: #f0f0ee;
+  }
+  .ra-badge--gray {
+    background: #2a2a28;
+    color: #aaa;
+  }
+}

@@ -55,6 +55,16 @@ const Sidebar = () => {
             <i className="fa-solid fa-clock-rotate-left"></i> History
           </NavLink>
         </li>
+        {user.role === "admin" && (
+          <li>
+            <NavLink
+              to="/main/review"
+              className="link"
+            >
+              <i class="fa-brands fa-wpforms"></i> Review
+            </NavLink>
+          </li>
+        )}
       </ul>
       <div className="sidebar-user">
         <i className="fa-solid fa-user"></i>

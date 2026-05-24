@@ -1,9 +1,12 @@
+// NavbarDetails.jsx — tích hợp SurveyModal sau logout
 import React, { useState } from "react"
 import "./NavbarDetails.css"
 import axiosInstance from "../../utils/axiosInstance"
+import SurveyModal from "../survey/SurveyModal"
 
 const NavbarDetails = () => {
-  const [modal, setModal] = useState(false)
+  const [modal, setModal] = useState(false) // confirm logout
+  const [showSurvey, setShowSurvey] = useState(false) // survey sau logout
 
   const handleLogout = async () => {
     try {
@@ -14,12 +17,10 @@ const NavbarDetails = () => {
       )
 
       if (response.data.success) {
-        localStorage.removeItem("accessToken")
-        localStorage.removeItem("refreshToken")
-        localStorage.removeItem("user")
-
-        alert("Logout Successfully !!!")
-        window.location.href = "/login"
+        // Giữ token lại — survey cần userId từ token khi submit
+        // Token sẽ bị xóa trong handleSurveyClose
+        setModal(false)
+        setShowSurvey(true)
       } else {
         alert("Logout Failed")
       }
@@ -27,6 +28,16 @@ const NavbarDetails = () => {
       console.error(error.message)
     }
   }
+
+  const handleSurveyClose = () => {
+    // Xóa token ở đây — sau khi survey submit xong hoặc bỏ qua
+    localStorage.removeItem("accessToken")
+    localStorage.removeItem("refreshToken")
+    localStorage.removeItem("user")
+    setShowSurvey(false)
+    window.location.href = "/login"
+  }
+
   return (
     <div className="container-fluid navbar-details">
       <div className="inner-wrap row">
@@ -50,6 +61,7 @@ const NavbarDetails = () => {
         </div>
       </div>
 
+      {/* Modal xác nhận logout */}
       {modal && (
         <div className="modal show d-block">
           <div className="modal-dialog">
@@ -59,13 +71,11 @@ const NavbarDetails = () => {
                 <button
                   className="btn-close"
                   onClick={() => setModal(false)}
-                ></button>
+                />
               </div>
-
               <div className="modal-body">
                 <p>Bạn có chắc muốn đăng xuất không?</p>
               </div>
-
               <div className="modal-footer">
                 <button
                   className="btn btn-secondary"
@@ -73,7 +83,6 @@ const NavbarDetails = () => {
                 >
                   Close
                 </button>
-
                 <button
                   className="btn btn-primary"
                   onClick={handleLogout}
@@ -85,6 +94,9 @@ const NavbarDetails = () => {
           </div>
         </div>
       )}
+
+      {/* Survey modal sau khi logout thành công */}
+      {showSurvey && <SurveyModal onClose={handleSurveyClose} />}
     </div>
   )
 }
