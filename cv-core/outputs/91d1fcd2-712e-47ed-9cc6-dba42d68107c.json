@@ -1,0 +1,806 @@
+{
+  "detections_all": [
+    {
+      "frame": 63,
+      "time": "00:00:02",
+      "id": 1,
+      "label": "Motorcycle",
+      "conf": 0.57,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        76,
+        106,
+        477,
+        516
+      ]
+    },
+    {
+      "frame": 154,
+      "time": "00:00:05",
+      "id": 2,
+      "label": "Motorcycle",
+      "conf": 0.534,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        61,
+        94,
+        479,
+        535
+      ]
+    },
+    {
+      "frame": 215,
+      "time": "00:00:07",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.551,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        81,
+        101,
+        437,
+        537
+      ]
+    },
+    {
+      "frame": 218,
+      "time": "00:00:07",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.593,
+      "speed": 17.4,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        44,
+        95,
+        449,
+        531
+      ]
+    },
+    {
+      "frame": 219,
+      "time": "00:00:07",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.66,
+      "speed": 17.4,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        49,
+        94,
+        446,
+        529
+      ]
+    },
+    {
+      "frame": 248,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.615,
+      "speed": 14.2,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        25,
+        81,
+        415,
+        515
+      ]
+    },
+    {
+      "frame": 253,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.588,
+      "speed": 12.3,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        37,
+        85,
+        432,
+        506
+      ]
+    },
+    {
+      "frame": 254,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.57,
+      "speed": 12.3,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        38,
+        93,
+        426,
+        508
+      ]
+    },
+    {
+      "frame": 255,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.704,
+      "speed": 12.3,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        40,
+        98,
+        410,
+        508
+      ]
+    },
+    {
+      "frame": 256,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.703,
+      "speed": 13.0,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        42,
+        103,
+        402,
+        510
+      ]
+    },
+    {
+      "frame": 257,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.585,
+      "speed": 13.0,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        46,
+        104,
+        411,
+        514
+      ]
+    },
+    {
+      "frame": 263,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.623,
+      "speed": 13.1,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        53,
+        100,
+        445,
+        522
+      ]
+    },
+    {
+      "frame": 264,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.524,
+      "speed": 13.1,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        53,
+        99,
+        456,
+        523
+      ]
+    },
+    {
+      "frame": 269,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.573,
+      "speed": 12.3,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        48,
+        101,
+        448,
+        526
+      ]
+    },
+    {
+      "frame": 270,
+      "time": "00:00:08",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.591,
+      "speed": 12.3,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        45,
+        101,
+        444,
+        522
+      ]
+    },
+    {
+      "frame": 271,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.568,
+      "speed": 12.3,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        44,
+        87,
+        446,
+        515
+      ]
+    },
+    {
+      "frame": 272,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.659,
+      "speed": 12.3,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        40,
+        94,
+        443,
+        515
+      ]
+    },
+    {
+      "frame": 276,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.584,
+      "speed": 12.4,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        29,
+        82,
+        425,
+        511
+      ]
+    },
+    {
+      "frame": 277,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.616,
+      "speed": 12.4,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        23,
+        81,
+        416,
+        512
+      ]
+    },
+    {
+      "frame": 278,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.594,
+      "speed": 12.4,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        18,
+        78,
+        410,
+        509
+      ]
+    },
+    {
+      "frame": 279,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.581,
+      "speed": 15.1,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        28,
+        49,
+        442,
+        480
+      ]
+    },
+    {
+      "frame": 281,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.528,
+      "speed": 15.1,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        19,
+        20,
+        447,
+        458
+      ]
+    },
+    {
+      "frame": 282,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.517,
+      "speed": 18.3,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        6,
+        28,
+        417,
+        460
+      ]
+    },
+    {
+      "frame": 283,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.547,
+      "speed": 18.3,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        11,
+        15,
+        433,
+        447
+      ]
+    },
+    {
+      "frame": 284,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.593,
+      "speed": 18.3,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        12,
+        11,
+        437,
+        435
+      ]
+    },
+    {
+      "frame": 285,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.551,
+      "speed": 23.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        13,
+        4,
+        440,
+        419
+      ]
+    },
+    {
+      "frame": 286,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.507,
+      "speed": 23.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        4,
+        20,
+        405,
+        441
+      ]
+    },
+    {
+      "frame": 287,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.564,
+      "speed": 23.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        0,
+        26,
+        397,
+        451
+      ]
+    },
+    {
+      "frame": 290,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.613,
+      "speed": 29.9,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        0,
+        32,
+        381,
+        465
+      ]
+    },
+    {
+      "frame": 291,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.601,
+      "speed": 29.9,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        0,
+        34,
+        391,
+        472
+      ]
+    },
+    {
+      "frame": 293,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.603,
+      "speed": 40.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        54,
+        94,
+        458,
+        532
+      ]
+    },
+    {
+      "frame": 294,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.674,
+      "speed": 40.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        67,
+        106,
+        474,
+        539
+      ]
+    },
+    {
+      "frame": 295,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.614,
+      "speed": 40.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        70,
+        113,
+        480,
+        554
+      ]
+    },
+    {
+      "frame": 296,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.654,
+      "speed": 48.8,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        64,
+        114,
+        480,
+        557
+      ]
+    },
+    {
+      "frame": 297,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.594,
+      "speed": 48.8,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        64,
+        114,
+        480,
+        558
+      ]
+    },
+    {
+      "frame": 297,
+      "time": "00:00:09",
+      "id": 4,
+      "label": "Motorcycle",
+      "conf": 0.508,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        0,
+        0,
+        390,
+        408
+      ]
+    },
+    {
+      "frame": 298,
+      "time": "00:00:09",
+      "id": 4,
+      "label": "Motorcycle",
+      "conf": 0.54,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        0,
+        0,
+        392,
+        407
+      ]
+    },
+    {
+      "frame": 299,
+      "time": "00:00:09",
+      "id": 4,
+      "label": "Motorcycle",
+      "conf": 0.524,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        0,
+        0,
+        400,
+        405
+      ]
+    },
+    {
+      "frame": 299,
+      "time": "00:00:09",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.559,
+      "speed": 55.0,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        64,
+        101,
+        480,
+        537
+      ]
+    },
+    {
+      "frame": 301,
+      "time": "00:00:10",
+      "id": 4,
+      "label": "Motorcycle",
+      "conf": 0.546,
+      "speed": 6.5,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        0,
+        0,
+        402,
+        411
+      ]
+    },
+    {
+      "frame": 305,
+      "time": "00:00:10",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.546,
+      "speed": 59.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        80,
+        82,
+        474,
+        521
+      ]
+    },
+    {
+      "frame": 307,
+      "time": "00:00:10",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.606,
+      "speed": 59.6,
+      "plate": "29L-739.56",
+      "status": "normal",
+      "bbox": [
+        55,
+        81,
+        463,
+        514
+      ]
+    },
+    {
+      "frame": 308,
+      "time": "00:00:10",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.707,
+      "speed": 62.4,
+      "plate": "29L-739.56",
+      "status": "violation",
+      "bbox": [
+        56,
+        85,
+        456,
+        509
+      ]
+    },
+    {
+      "frame": 309,
+      "time": "00:00:10",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.706,
+      "speed": 62.4,
+      "plate": "29L-739.56",
+      "status": "violation",
+      "bbox": [
+        39,
+        83,
+        448,
+        507
+      ]
+    },
+    {
+      "frame": 310,
+      "time": "00:00:10",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.644,
+      "speed": 62.4,
+      "plate": "29L-739.56",
+      "status": "violation",
+      "bbox": [
+        43,
+        80,
+        446,
+        503
+      ]
+    },
+    {
+      "frame": 311,
+      "time": "00:00:10",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.559,
+      "speed": 63.8,
+      "plate": "29L-739.56",
+      "status": "violation",
+      "bbox": [
+        50,
+        79,
+        437,
+        505
+      ]
+    }
+  ],
+  "summary": [
+    {
+      "frame": 63,
+      "time": "00:00:02",
+      "id": 1,
+      "label": "Motorcycle",
+      "conf": 0.57,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        76,
+        106,
+        477,
+        516
+      ]
+    },
+    {
+      "frame": 154,
+      "time": "00:00:05",
+      "id": 2,
+      "label": "Motorcycle",
+      "conf": 0.534,
+      "speed": null,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        61,
+        94,
+        479,
+        535
+      ]
+    },
+    {
+      "frame": 215,
+      "time": "00:00:07",
+      "id": 3,
+      "label": "Motorcycle",
+      "conf": 0.551,
+      "speed": 63.8,
+      "plate": "29L-739.56",
+      "status": "violation",
+      "bbox": [
+        81,
+        101,
+        437,
+        537
+      ]
+    },
+    {
+      "frame": 297,
+      "time": "00:00:09",
+      "id": 4,
+      "label": "Motorcycle",
+      "conf": 0.508,
+      "speed": 6.5,
+      "plate": null,
+      "status": "normal",
+      "bbox": [
+        0,
+        0,
+        390,
+        408
+      ]
+    }
+  ]
+}

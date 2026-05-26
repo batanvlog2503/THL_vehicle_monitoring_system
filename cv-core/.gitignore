@@ -1,0 +1,7 @@
+venv_gpu/
+trains/
+test/
+dataset/
+*.mp4
+*.jpg
+*.png

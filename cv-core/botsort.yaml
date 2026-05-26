@@ -1,0 +1,30 @@
+# ===== BOT SORT FULL CONFIG (NO MORE ERRORS) =====
+
+tracker_type: botsort
+
+# ===== Threshold =====
+track_high_thresh: 0.5
+track_low_thresh: 0.1
+new_track_thresh: 0.6
+
+# ===== Matching =====
+
+proximity_thresh: 0.5
+appearance_thresh: 0.15
+match_thresh: 0.8
+fuse_score: True
+
+# ===== Track lifecycle =====
+track_buffer: 30
+max_age: 30
+n_init: 3
+
+# ===== ReID =====
+with_reid: True
+model: auto
+
+# ===== GMC =====
+gmc_method: none   # hoặc sparseOptFlow
+
+# ===== Misc =====
+frame_rate: 30
