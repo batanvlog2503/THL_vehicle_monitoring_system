@@ -1,0 +1,2 @@
+vehicle_model_v3: C:\Users\Admin\THL_vehicle_monitoring_system\runs\detect\runs\train\vehicle_model_v3\weights\best.pt
+vehicle_model_v23: C:\Users\Admin\THL_vehicle_monitoring_system\runs\detect\runs\train\vehicle_model_v23\weights\best.pt

@@ -6,7 +6,7 @@ import numpy as np
 # ===== LOAD MODEL =====
 model = YOLO(r"C:\Users\Admin\THL_vehicle_monitoring_system\runs\detect\runs\train\vehicle_model_v23\weights\best.pt")
 
-cap = cv2.VideoCapture(r"test/testvd9.mp4")
+cap = cv2.VideoCapture(r"C:\Users\Admin\THL_vehicle_monitoring_system\test\result_video7733209278881.mp4")
 fps = cap.get(cv2.CAP_PROP_FPS)
 
 # ===== CONFIG =====
@@ -53,7 +53,7 @@ while cap.isOpened():
     if not ret:
         break
 
-    frame = cv2.resize(frame, (800,800))
+    frame = cv2.resize(frame, (360, 640))
 
     results = model.track(
         frame,
