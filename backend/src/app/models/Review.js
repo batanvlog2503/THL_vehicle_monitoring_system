@@ -8,7 +8,6 @@ const ReviewSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-
     // Đánh giá sao tổng thể (1-5)
     overallRating: {
       type: Number,
@@ -16,7 +15,6 @@ const ReviewSchema = new mongoose.Schema(
       min: 1,
       max: 5,
     },
-
     // Đánh giá sao từng khía cạnh
     aspectRatings: {
       easeOfUse: { type: Number, min: 1, max: 5 }, // Dễ sử dụng

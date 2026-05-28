@@ -26,9 +26,9 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 # ─────────────────────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────────────────────
-VEHICLE_MODEL_PATH  = r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\backup\vehicle_model_v23\weights\best.pt"
-PLATE_MODEL_PATH    = r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\best.pt"
-TRACKER_CONFIG      = r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\botsort.yaml"
+VEHICLE_MODEL_PATH  = r"D:\cv-core\backup\vehicle_model_v23\weights\best.pt"
+PLATE_MODEL_PATH    = r"D:\THL_vehicle_monitoring_system\runs\plate_only_train\weights\best.pt"
+TRACKER_CONFIG      = r"D:\cv-core\botsort.yaml"
 
 UPLOAD_DIR  = "uploads"
 OUTPUT_DIR  = "outputs"
@@ -1126,9 +1126,21 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                     # ── VẼ OVERLAY ────────────────────────────
                     is_violation = speed is not None and speed > speed_limit
                     color = (0, 0, 255) if is_violation else (0, 220, 0)
+
+                    label_name = vehicle_model.names[int(cls)]
                     cv2.rectangle(frame_out, (x1, y1), (x2, y2), color, 2)
-                    cv2.putText(frame_out, f"ID:{tid}", (x1, max(y1 - 25, 15)),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+                    # cv2.putText(frame_out, f"ID:{tid}", (x1, max(y1 - 25, 15)),
+                    #             cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+                    # LABEL + ID
+                    cv2.putText(
+                        frame_out,
+                        f"{label_name}|ID:{tid}",
+                        (x1, max(y1 - 25, 15)),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        0.6,
+                        color,
+                        2
+                    )
                     if speed is not None:
                         spd_txt = f"{speed} km/h {'!' if is_violation else ''}"
                         cv2.putText(frame_out, spd_txt,
@@ -1403,6 +1415,18 @@ async def start_process(
         "-pix_fmt", "yuv420p",
         clean_input
     ])
+    # subprocess.run([
+    #     FFMPEG_PATH,
+    #     "-y",
+    #     "-i", save_path,
+    #     "-c:v", "h264_nvenc",
+    #     "-preset", "p5",
+    #     "-cq", "18",
+    #     "-b:v", "0",
+    #     "-pix_fmt", "yuv420p",
+    #     "-movflags", "+faststart",
+    #     clean_input
+    # ], check=True)
 
     os.remove(save_path)
     save_path = clean_input

@@ -227,31 +227,42 @@ const Dashboard1 = () => {
   }
 
   // ── FETCH DETECTIONS ──────────────────────────────────────
+  // const fetchDetections = async (url) => {
+  //   try {
+  //     const res = await fetch(url)
+  //     const data = await res.json()
+  //     const all = data.detections_all ?? data.summary ?? []
+  //     const map = {}
+  //     for (const d of all) {
+  //       if (!map[d.id]) {
+  //         map[d.id] = { ...d }
+  //       } else {
+  //         if (d.plate && !map[d.id].plate) map[d.id].plate = d.plate
+  //         if (d.speed && (!map[d.id].speed || d.speed > map[d.id].speed)) {
+  //           map[d.id].speed = d.speed
+  //           map[d.id].status = d.status
+  //         }
+  //       }
+  //     }
+  //     const list = Object.values(map).sort((a, b) => a.id - b.id)
+  //     setDetections(list)
+  //     detectionsRef.current = list
+  //   } catch (err) {
+  //     console.error(err)
+  //   }
+  // }
+  // SAU — thay bằng cái này
   const fetchDetections = async (url) => {
     try {
       const res = await fetch(url)
       const data = await res.json()
-      const all = data.detections_all ?? data.summary ?? []
-      const map = {}
-      for (const d of all) {
-        if (!map[d.id]) {
-          map[d.id] = { ...d }
-        } else {
-          if (d.plate && !map[d.id].plate) map[d.id].plate = d.plate
-          if (d.speed && (!map[d.id].speed || d.speed > map[d.id].speed)) {
-            map[d.id].speed = d.speed
-            map[d.id].status = d.status
-          }
-        }
-      }
-      const list = Object.values(map).sort((a, b) => a.id - b.id)
+      const list = (data.summary ?? []).sort((a, b) => a.id - b.id)
       setDetections(list)
       detectionsRef.current = list
     } catch (err) {
       console.error(err)
     }
   }
-
   // ── RESET ─────────────────────────────────────────────────
   const reset = () => {
     setPhase("idle")

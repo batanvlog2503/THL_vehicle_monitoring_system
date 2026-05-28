@@ -5,13 +5,9 @@ const Schema = mongoose.Schema
 const passwordResetSchema = new Schema(
   {
     user_id: {
-      type: String,
-      required: true,
-      ref: "User",
+      type: String,required: true, ref: "User",
     },
-    token: {
-      type: String,
-      required: true,
+    token: { type: String,required: true,
     },
   },
   {
