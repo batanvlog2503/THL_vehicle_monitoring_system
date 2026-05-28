@@ -51,7 +51,7 @@ const Login = () => {
           ;(setMessage(""), navigate("/main"))
         }, 2000)
       } else {
-        showToast(response.data.message, "Error")
+        showToast(error?.response.data.message, "error")
       }
     } catch (error) {
       showToast(error.response?.data?.message || "Có lỗi xảy ra", "error")
