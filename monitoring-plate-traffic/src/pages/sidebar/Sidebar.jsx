@@ -15,14 +15,14 @@ const Sidebar = () => {
             <i className="fa-solid fa-person-running"></i> Dashboard
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink
             to="/main/webcam"
             className="link"
           >
             <i className="fa-solid fa-camera"></i> Webcam
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink
             to="/main/vehicle"
@@ -58,10 +58,20 @@ const Sidebar = () => {
         {user.role === "admin" && (
           <li>
             <NavLink
+              to="/main/user"
+              className="link"
+            >
+              <i className="fa-solid fa-user"></i> Users
+            </NavLink>
+          </li>
+        )}
+        {user.role === "admin" && (
+          <li>
+            <NavLink
               to="/main/review"
               className="link"
             >
-              <i class="fa-brands fa-wpforms"></i> Review
+              <i className="fa-brands fa-wpforms"></i> Review
             </NavLink>
           </li>
         )}

@@ -10,6 +10,55 @@ const generateRefreshToken = async (user) => {
   return jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, { expiresIn: "1d" })
 }
 class UserControllers {
+  // Lấy tất cả user, loại bỏ trường password
+  async getAllUsers(req, res, next) {
+    try {
+      // Lấy tất cả user, loại bỏ trường password
+      const users = await User.find({}, { password: 0 })
+        .sort({ createdAt: -1 })
+        .lean()
+
+      return res.status(200).json({
+        success: true,
+        message: "Get All Users Successfully !!!",
+        total: users.length,
+        users,
+      })
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      })
+    }
+  }
+  // [GET] /user/admin/users/:id  — lấy chi tiết 1 user (admin)
+  async getUserById(req, res, next) {
+    try {
+      const { id } = req.params
+
+      if (!id) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Missing user id" })
+      }
+
+      const user = await User.findById(id, { password: 0 }).lean()
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" })
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Get User Successfully !!!",
+        user,
+      })
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message })
+    }
+  }
   //[POST] /user/refresh-token
 
   async refreshToken(req, res, next) {

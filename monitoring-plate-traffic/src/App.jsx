@@ -31,6 +31,7 @@ import ForgotPassword from "./auth/ForgotPassword/ForgotPassword"
 import Dashboard1 from "./components/dashboard/Dashboard1"
 import ReviewAdmin from "./components/review/ReviewAdmin.jsx"
 import Review from "./components/review/Review.jsx"
+import User from "./components/user/User.jsx"
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
@@ -69,6 +70,10 @@ const router = createBrowserRouter(
         <Route
           path="vehicle"
           element={<Vehicle />}
+        ></Route>
+        <Route
+          path="user"
+          element={<User />}
         ></Route>
         <Route
           path="statistic"

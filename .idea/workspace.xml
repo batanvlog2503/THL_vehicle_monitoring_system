@@ -5,9 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="029db060-9927-4644-bd39-e26e9cbfac43" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/config/db/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/config/db/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/helpers/mailer.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/helpers/mailer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/app/controllers/userController.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/app/controllers/userController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/routes/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring-plate-traffic/src/App.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring-plate-traffic/src/App.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/monitoring-plate-traffic/src/pages/sidebar/Sidebar.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/monitoring-plate-traffic/src/pages/sidebar/Sidebar.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,17 +26,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;origin-project&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Admin/OneDrive - ptit.edu.vn/Desktop/THL_vehicle_monitor/THL_vehicle_monitoring_system&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "last_opened_file_path": "C:/Users/Admin/OneDrive - ptit.edu.vn/Desktop/THL_vehicle_monitor/THL_vehicle_monitoring_system",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

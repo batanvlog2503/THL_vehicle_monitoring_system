@@ -29,7 +29,18 @@ router.get(
   UserControllers.getLogDetails,
 )
 router.get("/logs", auth, authorize("admin", "user"), UserControllers.getAllLog)
-
+router.get(
+  "/admin/users",
+  auth,
+  authorize("admin"),
+  UserControllers.getAllUsers,
+)
+router.get(
+  "/admin/users/:id",
+  auth,
+  authorize("admin"),
+  UserControllers.getUserById,
+)
 router.get(
   "/vehicles",
   auth,
