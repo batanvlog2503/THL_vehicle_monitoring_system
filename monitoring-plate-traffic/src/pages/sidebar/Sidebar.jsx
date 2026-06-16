@@ -44,7 +44,7 @@ const Sidebar = () => {
             to="/main/chatbot"
             className="link"
           >
-            <i className="fa-regular fa-message"></i> AI Chatbot
+            <i className="fa-regular fa-message"></i> Chatbot
           </NavLink>
         </li>
         <li>
