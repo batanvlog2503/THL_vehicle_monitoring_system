@@ -11,8 +11,14 @@ marked.setOptions({ breaks: true, gfm: true })
 // MENU
 // ─────────────────────────────────────────────────────────────────────────────
 const MENU = [
+  // Tổng quam
   { label: "Tổng quan", question: "Tổng quan dữ liệu giao thông" },
-  { label: "Top video", question: "Top video nhiều phát hiện" },
+  // Top video
+  {
+    label: "Top video nhiều phát hiện nhất",
+    question: "Top video nhiều phát hiện",
+  },
+  // Vi phạm
   {
     label: "Vi phạm ›",
     children: [
@@ -35,6 +41,7 @@ const MENU = [
       },
     ],
   },
+  //Tốc độ
   {
     label: "Tốc độ ›",
     children: [
@@ -45,8 +52,11 @@ const MENU = [
       { label: "Top 5 tốc độ cao nhất", question: "Top 5 tốc độ cao nhất" },
     ],
   },
+  // loại xe
   { label: "Loại xe", question: "Thống kê loại phương tiện phát hiện được" },
-  { label: "Danh sách video", question: "Danh sách tất cả video đã phân tích" },
+  // danh sách video
+  { label: "Danh sách video gần nhất", question: "Danh sách tất cả video đã phân tích" },
+  // biển số
   {
     label: "Biển số ›",
     children: [

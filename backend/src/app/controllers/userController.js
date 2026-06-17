@@ -199,7 +199,8 @@ class UserControllers {
   //     })
   //   }
   // }
-
+  // get aall log Admin
+  // user/logs
   async getAllLog(req, res, next) {
     try {
       const user_id = req.user._id.toString()
@@ -207,7 +208,7 @@ class UserControllers {
       const { date, keyword } = req.query //  thêm keyword
 
       if (!user_id) {
-        return res.status(400).json({
+        return res.status(400).json({ 
           success: false,
           message: "Please login",
         })
@@ -252,6 +253,7 @@ class UserControllers {
       })
     }
   }
+  // /user/me/logs - chỉ lấy log của user hiện tại
   async getAllLogsMe(req, res, next) {
     try {
       const user_id = req.user._id.toString()

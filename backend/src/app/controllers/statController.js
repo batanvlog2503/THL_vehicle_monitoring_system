@@ -81,6 +81,7 @@ class StatController {
   // AGGREGATION PIPELINES
   // ─────────────────────────────────────────────────────────────────────────
 
+  // Tổng quan dữ liệu: số video, số phát hiện, số vi phạm, số bình thường
   async #getOverview(uid) {
     const [result] = await Log.aggregate([
       { $match: { user: uid } },
@@ -111,7 +112,7 @@ class StatController {
     ])
     return result || {}
   }
-
+  // Top video phát hiện nhiều nhất
   async #getTopVideos(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -123,7 +124,7 @@ class StatController {
         },
       },
       { $sort: { tongSoPhatHien: -1 } },
-      { $limit: 5 },
+      { $limit: 10 },
     ])
   }
 
@@ -158,7 +159,7 @@ class StatController {
       { $limit: 10 },
     ])
   }
-
+  // Vi phạm theo ngầy
   async #getViolationsByDay(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -182,7 +183,7 @@ class StatController {
       { $limit: 14 },
     ])
   }
-
+  // biển số vi phạm 10 biển số vi phạm nhiều nhất
   async #getViolationPlates(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -199,13 +200,14 @@ class StatController {
           soLanViPham: { $sum: 1 },
           tocDoCaoNhat: { $max: "$detections.speed" },
           videoNames: { $addToSet: "$videoName" },
+          latestAt: { $max: "$createdAt" },
         },
       },
-      { $sort: { soLanViPham: -1 } },
+      { $sort: { soLanViPham: -1, latestAt: -1 } },
       { $limit: 10 },
     ])
   }
-
+  // Video nhiều vi phạm
   async #getTopViolationVideos(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -225,10 +227,10 @@ class StatController {
         },
       },
       { $sort: { soViPham: -1 } },
-      { $limit: 5 },
+      { $limit: 10 },
     ])
   }
-
+  // xe nhanh nhất toàn bộ
   async #getFastestVehicle(uid) {
     const [result] = await Log.aggregate([
       { $match: { user: uid } },
@@ -249,7 +251,7 @@ class StatController {
     ])
     return result || null
   }
-
+  // top 5 speed
   async #getTop5Speed(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -269,7 +271,7 @@ class StatController {
       },
     ])
   }
-
+  // loai xe
   async #getVehicleTypes(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -288,7 +290,7 @@ class StatController {
       { $sort: { soLan: -1 } },
     ])
   }
-
+  // danh sách video gần nhất
   async #getVideoList(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -321,7 +323,7 @@ class StatController {
       { $sort: { createdAt: -1 } },
     ])
   }
-
+  // biển số -> Tất cả bieern số
   async #getPlates(uid) {
     return Log.aggregate([
       { $match: { user: uid } },
@@ -342,13 +344,14 @@ class StatController {
           },
           tocDoCaoNhat: { $max: "$detections.speed" },
           videoNames: { $addToSet: "$videoName" },
+          latestAt: { $max: "$createdAt" },
         },
       },
-      { $sort: { soLanXuatHien: -1 } },
+      { $sort: { latestAt: -1 } },
       { $limit: 20 },
     ])
   }
-
+  // Tổng hợp vi phạm
   async #getViolations(uid) {
     const [summary] = await Log.aggregate([
       { $match: { user: uid } },

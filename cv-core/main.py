@@ -1019,6 +1019,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                     x1, y1, x2, y2 = map(int, bbox)
                     # lưu bb xe vào vehicle_boxes
                     vehicle_boxes[int(tid)] = (x1, y1, x2, y2)
+                    # cx, cy tâm của xe
 
                     cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
                     wx, wy = pixel_to_world(cx, cy)
@@ -1134,8 +1135,13 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
 
                         for tid, (vx1, vy1, vx2, vy2) in vehicle_boxes.items():
                             # tâm biển số nằm trong khung xe
-                            if vx1 <= pcx <= vx2 and vy1 <= pcy <= vy2:
+                            # pcx, pcy tâm của biển số
+                            # giả sử tâm biển = (305, 310) cùng trong xe A và xe B
 
+                            # Tâm xe A: (200, 300)
+                            # tâm xe B: (500, 275)
+                            if vx1 <= pcx <= vx2 and vy1 <= pcy <= vy2:
+                                # tâm của xe
                                 cx = (vx1 + vx2) // 2
                                 cy = (vy1 + vy2) // 2
 
