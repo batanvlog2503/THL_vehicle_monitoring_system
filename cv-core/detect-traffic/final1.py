@@ -8,17 +8,17 @@ import json
 # LOAD MODEL
 # ============================================================
 model = YOLO(
-    r"C:\Users\Admin\THL_vehicle_monitoring_system\runs\detect\runs\train\vehicle_model_v23\weights\best.pt"
+   r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\runs\detect\train\weights\best.pt"
 )
 
-cap = cv2.VideoCapture(r"test/testvd3.mp4")
+cap = cv2.VideoCapture(r"C:\Users\Admin\Videos\Captures\YTSave.com_YouTube_computer-vision-traffic-video-2_Media_RmZQR9NiYWM_001_720p.mp4")
 
 fps = cap.get(cv2.CAP_PROP_FPS)
 
 # ============================================================
 # CONFIG
 # ============================================================
-TRACKER_CONFIG = "botsort.yaml"
+TRACKER_CONFIG = r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\botsort.yaml"
 
 SMOOTH = 7
 

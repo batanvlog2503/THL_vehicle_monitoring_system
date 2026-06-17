@@ -3,9 +3,9 @@ import os
 # ============================================================
 # CONFIG
 # ============================================================
-MODEL_PATH        = r"E:\LPR_ttcs\runs\plate_only_train\weights\best.pt"
-VIDEO_PATH        = r"E:\LPR_ttcs\test_images\7733209278881.mp4"
-OUTPUT_DIR        = r"E:\LPR_ttcs\Predict\video_pipeline"
+MODEL_PATH        = r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\detect-plate\best.pt"
+VIDEO_PATH        = r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\detect-plate\main\7733209278881.mp4"
+OUTPUT_DIR        = r"C:\Users\Admin\OneDrive - ptit.edu.vn\Desktop\THL_vehicle_monitor\THL_vehicle_monitoring_system\cv-core\predict\video_pipeline"
 RAW_CSV_PATH      = os.path.join(OUTPUT_DIR, "raw_ocr_results.csv")
 FILLED_CSV_PATH   = os.path.join(OUTPUT_DIR, "filled_ocr_results.csv")
 OUTPUT_VIDEO_PATH = os.path.join(OUTPUT_DIR, "result_video7733209278881_2.mp4")
