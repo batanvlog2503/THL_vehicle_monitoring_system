@@ -17,7 +17,6 @@ An end-to-end AI traffic monitoring platform that detects vehicles, tracks them 
 - [Frontend Setup](#frontend-setup)
 - [Backend Setup](#backend-setup)
 - [CV Core Setup](#cv-core-setup)
-- [Docker Setup](#docker-setup)
 - [Environment Variables](#environment-variables)
 - [API Endpoints](#api-endpoints)
 - [Folder Structure](#folder-structure)
@@ -34,17 +33,18 @@ The **THL Vehicle Monitoring System** processes traffic video (uploaded files or
 
 The system is designed as three cooperating services:
 
-| Service | Role | Default Port |
-|---------|------|--------------|
-| **cv-core** | Vehicle detection, tracking, speed, plate OCR | `8000` (HTTP), `8765`/`8766` (WebSocket) |
-| **backend** | Auth, logs, vehicles, stats, reviews | `3000` |
-| **monitoring-plate-traffic** | React SPA dashboard | `5173` (Vite dev) |
+| Service                      | Role                                          | Default Port                             |
+| ---------------------------- | --------------------------------------------- | ---------------------------------------- |
+| **cv-core**                  | Vehicle detection, tracking, speed, plate OCR | `8000` (HTTP), `8765`/`8766` (WebSocket) |
+| **backend**                  | Auth, logs, vehicles, stats, reviews          | `3000`                                   |
+| **monitoring-plate-traffic** | React SPA dashboard                           | `5173` (Vite dev)                        |
 
 ---
 
 ## Main Features
 
 ### Computer Vision
+
 - **Vehicle detection** — YOLOv8 (Ultralytics) for Car, Motorcycle, Bus, Truck
 - **Multi-object tracking** — BoT-SORT with ReID (`botsort.yaml`)
 - **Speed estimation** — Homography pixel-to-meter mapping + Kalman filtering + rolling average
@@ -53,6 +53,7 @@ The system is designed as three cooperating services:
 - **Batch & streaming modes** — Upload/process API and optional WebSocket live preview
 
 ### Web Application
+
 - **User authentication** — Register, login, email verification, password reset (JWT + refresh tokens)
 - **Video upload dashboard** — Upload video, set speed limit, poll job progress, view annotated output
 - **Detection history** — Browse, filter, and inspect past analysis logs
@@ -67,37 +68,40 @@ The system is designed as three cooperating services:
 ## Tech Stack
 
 ### CV / AI (`cv-core`)
-| Layer | Technology |
-|-------|------------|
-| Language | Python 3.10+ |
-| Detection & tracking | [Ultralytics YOLOv8](https://docs.ultralytics.com/), BoT-SORT |
-| OCR | [EasyOCR](https://github.com/JaidedAI/EasyOCR) (beam search decoder) |
-| Video / geometry | OpenCV, NumPy |
-| Deep learning runtime | PyTorch (CUDA optional) |
-| API server | FastAPI, Uvicorn |
-| Streaming | WebSockets (`websockets`) |
-| Transcoding | FFmpeg (H.264) |
+
+| Layer                 | Technology                                                           |
+| --------------------- | -------------------------------------------------------------------- |
+| Language              | Python 3.10+                                                         |
+| Detection & tracking  | [Ultralytics YOLOv8](https://docs.ultralytics.com/), BoT-SORT        |
+| OCR                   | [EasyOCR](https://github.com/JaidedAI/EasyOCR) (beam search decoder) |
+| Video / geometry      | OpenCV, NumPy                                                        |
+| Deep learning runtime | PyTorch (CUDA optional)                                              |
+| API server            | FastAPI, Uvicorn                                                     |
+| Streaming             | WebSockets (`websockets`)                                            |
+| Transcoding           | FFmpeg (H.264)                                                       |
 
 ### Backend (`backend`)
-| Layer | Technology |
-|-------|------------|
-| Runtime | Node.js |
-| Framework | Express 5 |
-| Database | MongoDB + Mongoose |
-| Auth | JWT, bcrypt, refresh tokens |
-| Email | Nodemailer (SMTP) |
-| Templates | Express Handlebars |
+
+| Layer     | Technology                  |
+| --------- | --------------------------- |
+| Runtime   | Node.js                     |
+| Framework | Express 5                   |
+| Database  | MongoDB + Mongoose          |
+| Auth      | JWT, bcrypt, refresh tokens |
+| Email     | Nodemailer (SMTP)           |
+| Templates | Express Handlebars          |
 
 ### Frontend (`monitoring-plate-traffic`)
-| Layer | Technology |
-|-------|------------|
-| Framework | React 19 |
-| Build tool | Vite 8 |
-| Routing | React Router 7 |
+
+| Layer       | Technology                             |
+| ----------- | -------------------------------------- |
+| Framework   | React 19                               |
+| Build tool  | Vite 8                                 |
+| Routing     | React Router 7                         |
 | HTTP client | Axios (with token refresh interceptor) |
-| UI | Bootstrap 5, SCSS |
-| Charts | Chart.js, react-chartjs-2 |
-| Markdown | marked |
+| UI          | Bootstrap 5, SCSS                      |
+| Charts      | Chart.js, react-chartjs-2              |
+| Markdown    | marked                                 |
 
 ---
 
@@ -179,11 +183,11 @@ Vehicle YOLO + BoT-SORT  ──►  track_id, bbox, label
 
 Three-pass batch processing for plate-only analysis:
 
-| Pass | Description | Output |
-|------|-------------|--------|
-| **Pass 1** | Plate YOLO + custom IoU tracker + periodic OCR | `raw_ocr_results.csv` |
-| **Pass 2** | Majority vote per track, bbox interpolation | `filled_ocr_results.csv` |
-| **Pass 3** | Render annotated video | `result_video*.mp4` |
+| Pass       | Description                                    | Output                   |
+| ---------- | ---------------------------------------------- | ------------------------ |
+| **Pass 1** | Plate YOLO + custom IoU tracker + periodic OCR | `raw_ocr_results.csv`    |
+| **Pass 2** | Majority vote per track, bbox interpolation    | `filled_ocr_results.csv` |
+| **Pass 3** | Render annotated video                         | `result_video*.mp4`      |
 
 Key modules: `detect-plate/main/pipeline.py`, `ocr_engine.py`, `detector.py`, `tracker.py`.
 
@@ -216,11 +220,11 @@ Client                    cv-core (FastAPI)                Worker Thread
 
 For horizontal scaling or decoupled microservices, a typical extension would be:
 
-| Topic | Producer | Consumer | Payload |
-|-------|----------|----------|---------|
-| `video.jobs` | Backend or Frontend | cv-core worker | `{ job_id, video_path, speed_limit }` |
-| `video.progress` | cv-core worker | Frontend (SSE/WebSocket gateway) | `{ job_id, progress, status }` |
-| `video.results` | cv-core worker | Backend | `{ job_id, detections, summary, urls }` |
+| Topic            | Producer            | Consumer                         | Payload                                 |
+| ---------------- | ------------------- | -------------------------------- | --------------------------------------- |
+| `video.jobs`     | Backend or Frontend | cv-core worker                   | `{ job_id, video_path, speed_limit }`   |
+| `video.progress` | cv-core worker      | Frontend (SSE/WebSocket gateway) | `{ job_id, progress, status }`          |
+| `video.results`  | cv-core worker      | Backend                          | `{ job_id, detections, summary, urls }` |
 
 This is **not implemented** in the current codebase.
 
@@ -229,6 +233,7 @@ This is **not implemented** in the current codebase.
 ## Frontend Setup
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 
@@ -262,24 +267,25 @@ npm run preview
 
 ### Key routes
 
-| Path | Page |
-|------|------|
-| `/` | Landing page |
-| `/login`, `/signup`, `/forgot-password` | Authentication |
-| `/main` | Video upload & analysis dashboard |
-| `/main/statistic` | Charts and KPIs |
-| `/main/chatbot` | AI statistics assistant |
-| `/main/log`, `/main/log/:id` | Detection history |
-| `/main/vehicle` | Vehicle/plate table |
-| `/main/user` | Admin user management |
-| `/main/review` | Admin review dashboard |
-| `/main/webcam` | Live WebSocket stream (optional) |
+| Path                                    | Page                              |
+| --------------------------------------- | --------------------------------- |
+| `/`                                     | Landing page                      |
+| `/login`, `/signup`, `/forgot-password` | Authentication                    |
+| `/main`                                 | Video upload & analysis dashboard |
+| `/main/statistic`                       | Charts and KPIs                   |
+| `/main/chatbot`                         | AI statistics assistant           |
+| `/main/log`, `/main/log/:id`            | Detection history                 |
+| `/main/vehicle`                         | Vehicle/plate table               |
+| `/main/user`                            | Admin user management             |
+| `/main/review`                          | Admin review dashboard            |
+| `/main/webcam`                          | Live WebSocket stream (optional)  |
 
 ---
 
 ## Backend Setup
 
 ### Prerequisites
+
 - Node.js 18+
 - MongoDB 6+ (local or Atlas)
 
@@ -305,6 +311,7 @@ The API listens on **http://localhost:3000**.
 ## CV Core Setup
 
 ### Prerequisites
+
 - Python 3.10+
 - CUDA-capable GPU (recommended for real-time processing)
 - FFmpeg installed and on PATH
@@ -354,19 +361,15 @@ Expected response:
 
 ### Alternative entry points
 
-| Script | Purpose |
-|--------|---------|
-| `main.py` | **Primary** — full pipeline (detect + track + speed + OCR) |
-| `streamspeedocr.py` | Same API, different OCR scheduling strategy |
-| `main/main1.py` | Upload + WebSocket tracking (no full LPR) |
-| `main/streamspeed.py` | WebSocket with speed overlay |
-| `detect-plate/main/main.py` | Offline plate-only CLI pipeline |
+| Script                      | Purpose                                                    |
+| --------------------------- | ---------------------------------------------------------- |
+| `main.py`                   | **Primary** — full pipeline (detect + track + speed + OCR) |
+| `streamspeedocr.py`         | Same API, different OCR scheduling strategy                |
+| `main/main1.py`             | Upload + WebSocket tracking (no full LPR)                  |
+| `main/streamspeed.py`       | WebSocket with speed overlay                               |
+| `detect-plate/main/main.py` | Offline plate-only CLI pipeline                            |
 
 ---
-
-## Docker Setup
-
-There is **no Docker Compose file** for the full stack in this repository. Services are intended to run locally during development.
 
 ### Manual multi-service startup
 
@@ -386,64 +389,27 @@ cd cv-core && python main.py
 cd monitoring-plate-traffic && npm run dev
 ```
 
-### Optional Docker Compose (reference)
-
-You can containerize the stack yourself. Example skeleton:
-
-```yaml
-# docker-compose.yml (not included — create at project root if needed)
-services:
-  mongodb:
-    image: mongo:7
-    ports: ["27017:27017"]
-    volumes: ["mongo_data:/data/db"]
-
-  backend:
-    build: ./backend
-    ports: ["3000:3000"]
-    env_file: ./backend/.env
-    depends_on: [mongodb]
-
-  cv-core:
-    build: ./cv-core
-    ports: ["8000:8000"]
-    # GPU: deploy.resources.reservations.devices for NVIDIA runtime
-
-  frontend:
-    build: ./monitoring-plate-traffic
-    ports: ["5173:5173"]
-    environment:
-      VITE_APP_URL: http://localhost:3000
-
-volumes:
-  mongo_data:
-```
-
-> Dockerfiles for `backend`, `cv-core`, and `frontend` are not provided. The only Docker artifact in the repo is `cv-core/GitNexus/gitnexus/Dockerfile.test`, which belongs to an unrelated GitNexus subproject.
-
----
-
 ## Environment Variables
 
 ### Backend (`backend/.env`)
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `MONGO_URL` | Yes | MongoDB connection string (e.g. `mongodb://localhost:27017/AI_traffic`) |
-| `ACCESS_TOKEN_SECRET` | Yes | Secret for signing JWT access tokens |
-| `REFRESH_TOKEN_SECRET` | Yes | Secret for signing JWT refresh tokens |
-| `APP_URL` | Yes | Public URL for email verification/reset links |
-| `SMTP_HOST` | Yes | SMTP server hostname |
-| `SMTP_PORT` | Yes | SMTP port (e.g. `587`) |
-| `SMTP_MAIL` | Yes | SMTP username / sender address |
-| `SMTP_PASSWORD` | Yes | SMTP password |
-| `NODE_ENV` | No | Set to `development` to include stack traces in errors |
+| Variable               | Required | Description                                                             |
+| ---------------------- | -------- | ----------------------------------------------------------------------- |
+| `MONGO_URL`            | Yes      | MongoDB connection string (e.g. `mongodb://localhost:27017/AI_traffic`) |
+| `ACCESS_TOKEN_SECRET`  | Yes      | Secret for signing JWT access tokens                                    |
+| `REFRESH_TOKEN_SECRET` | Yes      | Secret for signing JWT refresh tokens                                   |
+| `APP_URL`              | Yes      | Public URL for email verification/reset links                           |
+| `SMTP_HOST`            | Yes      | SMTP server hostname                                                    |
+| `SMTP_PORT`            | Yes      | SMTP port (e.g. `587`)                                                  |
+| `SMTP_MAIL`            | Yes      | SMTP username / sender address                                          |
+| `SMTP_PASSWORD`        | Yes      | SMTP password                                                           |
+| `NODE_ENV`             | No       | Set to `development` to include stack traces in errors                  |
 
 ### Frontend (`monitoring-plate-traffic/.env`)
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `VITE_APP_URL` | Yes | Backend API base URL (e.g. `http://localhost:3000`) |
+| Variable       | Required | Description                                         |
+| -------------- | -------- | --------------------------------------------------- |
+| `VITE_APP_URL` | Yes      | Backend API base URL (e.g. `http://localhost:3000`) |
 
 > The CV service URL (`http://localhost:8000`) is currently hardcoded in `Dashboard1.jsx`. Consider moving it to `VITE_CV_URL` for easier deployment.
 
@@ -451,14 +417,14 @@ volumes:
 
 Configuration is code-based (not env-file driven):
 
-| Setting | Default | Description |
-|---------|---------|-------------|
-| `VEHICLE_MODEL_PATH` | — | Path to vehicle YOLO weights |
-| `PLATE_MODEL_PATH` | — | Path to plate YOLO weights |
-| `TRACKER_CONFIG` | `botsort.yaml` | BoT-SORT tracker config |
-| `OCR_EVERY_N` | `5` | Run OCR every N frames per vehicle |
-| `SPEED_LIMIT_DEFAULT` | `60` | Default speed limit (km/h) |
-| `MIN_SCORE_ACCEPT` | `3.5` | Minimum OCR confidence score |
+| Setting               | Default        | Description                        |
+| --------------------- | -------------- | ---------------------------------- |
+| `VEHICLE_MODEL_PATH`  | —              | Path to vehicle YOLO weights       |
+| `PLATE_MODEL_PATH`    | —              | Path to plate YOLO weights         |
+| `TRACKER_CONFIG`      | `botsort.yaml` | BoT-SORT tracker config            |
+| `OCR_EVERY_N`         | `5`            | Run OCR every N frames per vehicle |
+| `SPEED_LIMIT_DEFAULT` | `60`           | Default speed limit (km/h)         |
+| `MIN_SCORE_ACCEPT`    | `3.5`          | Minimum OCR confidence score       |
 
 ---
 
@@ -466,14 +432,14 @@ Configuration is code-based (not env-file driven):
 
 ### CV Core — `http://localhost:8000`
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/process` | Upload video (`file`) + optional `speed_limit`; returns `{ job_id }` |
-| `GET` | `/status/{job_id}` | Job status, progress, video/result URLs |
-| `DELETE` | `/job/{job_id}` | Delete job and output files |
-| `GET` | `/health` | Service health, device, OCR engine info |
-| `GET` | `/outputs/{job_id}.mp4` | Annotated result video (static) |
-| `GET` | `/outputs/{job_id}.json` | Detection JSON (static) |
+| Method   | Endpoint                 | Description                                                          |
+| -------- | ------------------------ | -------------------------------------------------------------------- |
+| `POST`   | `/process`               | Upload video (`file`) + optional `speed_limit`; returns `{ job_id }` |
+| `GET`    | `/status/{job_id}`       | Job status, progress, video/result URLs                              |
+| `DELETE` | `/job/{job_id}`          | Delete job and output files                                          |
+| `GET`    | `/health`                | Service health, device, OCR engine info                              |
+| `GET`    | `/outputs/{job_id}.mp4`  | Annotated result video (static)                                      |
+| `GET`    | `/outputs/{job_id}.json` | Detection JSON (static)                                              |
 
 **Detection JSON structure:**
 
@@ -502,47 +468,47 @@ Configuration is code-based (not env-file driven):
 
 #### Authentication (`/auth`)
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `POST` | `/auth/login` | No | Login, returns tokens |
-| `POST` | `/auth/register` | No | Register new user |
-| `GET` | `/auth/mail-verification` | No | Verify email (`?id=`) |
-| `POST` | `/auth/send-mail-verification` | No | Resend verification email |
-| `POST` | `/auth/forgot-password` | No | Request password reset |
-| `GET` | `/auth/reset-password` | No | Render reset form (`?token=`) |
-| `POST` | `/auth/update-password` | No | Update password |
+| Method | Endpoint                       | Auth | Description                   |
+| ------ | ------------------------------ | ---- | ----------------------------- |
+| `POST` | `/auth/login`                  | No   | Login, returns tokens         |
+| `POST` | `/auth/register`               | No   | Register new user             |
+| `GET`  | `/auth/mail-verification`      | No   | Verify email (`?id=`)         |
+| `POST` | `/auth/send-mail-verification` | No   | Resend verification email     |
+| `POST` | `/auth/forgot-password`        | No   | Request password reset        |
+| `GET`  | `/auth/reset-password`         | No   | Render reset form (`?token=`) |
+| `POST` | `/auth/update-password`        | No   | Update password               |
 
 #### Users & Logs (`/user`)
 
-| Method | Endpoint | Auth | Roles | Description |
-|--------|----------|------|-------|-------------|
-| `POST` | `/user/refresh-token` | No | — | Refresh access token |
-| `POST` | `/user/logout` | Yes | user, admin | Invalidate refresh token |
-| `POST` | `/user/save-log` | Yes | user, admin | Save CV detection results |
-| `GET` | `/user/me/logs` | Yes | user, admin | Current user's logs |
-| `GET` | `/user/logs/:id` | Yes | user, admin | Single log detail |
-| `GET` | `/user/logs` | Yes | user, admin | Filter logs (`?date=`, `?keyword=`) |
-| `GET` | `/user/admin/users` | Yes | admin | List all users |
-| `GET` | `/user/admin/users/:id` | Yes | admin | Get user by ID |
-| `GET` | `/user/vehicles` | Yes | user, admin | Paginated detections (`?page=`, `?limit=`, `?plate=`, `?overspeed=`) |
+| Method | Endpoint                | Auth | Roles       | Description                                                          |
+| ------ | ----------------------- | ---- | ----------- | -------------------------------------------------------------------- |
+| `POST` | `/user/refresh-token`   | No   | —           | Refresh access token                                                 |
+| `POST` | `/user/logout`          | Yes  | user, admin | Invalidate refresh token                                             |
+| `POST` | `/user/save-log`        | Yes  | user, admin | Save CV detection results                                            |
+| `GET`  | `/user/me/logs`         | Yes  | user, admin | Current user's logs                                                  |
+| `GET`  | `/user/logs/:id`        | Yes  | user, admin | Single log detail                                                    |
+| `GET`  | `/user/logs`            | Yes  | user, admin | Filter logs (`?date=`, `?keyword=`)                                  |
+| `GET`  | `/user/admin/users`     | Yes  | admin       | List all users                                                       |
+| `GET`  | `/user/admin/users/:id` | Yes  | admin       | Get user by ID                                                       |
+| `GET`  | `/user/vehicles`        | Yes  | user, admin | Paginated detections (`?page=`, `?limit=`, `?plate=`, `?overspeed=`) |
 
 #### Chatbot (`/chat`, `/stats`)
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `POST` | `/chat/query` | No | Rule-based chatbot (legacy, keyword matching) |
-| `POST` | `/stats/chatbot/query` | Yes | Intent-based chatbot with MongoDB aggregations |
-| `GET` | `/stats/chatbot/test` | Yes | Chatbot health check |
+| Method | Endpoint               | Auth | Description                                    |
+| ------ | ---------------------- | ---- | ---------------------------------------------- |
+| `POST` | `/chat/query`          | No   | Rule-based chatbot (legacy, keyword matching)  |
+| `POST` | `/stats/chatbot/query` | Yes  | Intent-based chatbot with MongoDB aggregations |
+| `GET`  | `/stats/chatbot/test`  | Yes  | Chatbot health check                           |
 
 #### Reviews (`/reviews`)
 
-| Method | Endpoint | Auth | Description |
-|--------|----------|------|-------------|
-| `POST` | `/reviews` | Yes | Submit user review/survey |
-| `PUT` | `/reviews/:id` | Yes | Update own review |
-| `GET` | `/reviews/me` | Yes | Get own review |
-| `GET` | `/reviews` | Yes | List all reviews (paginated) |
-| `GET` | `/reviews/stats` | Yes | Aggregate review statistics |
+| Method | Endpoint         | Auth | Description                  |
+| ------ | ---------------- | ---- | ---------------------------- |
+| `POST` | `/reviews`       | Yes  | Submit user review/survey    |
+| `PUT`  | `/reviews/:id`   | Yes  | Update own review            |
+| `GET`  | `/reviews/me`    | Yes  | Get own review               |
+| `GET`  | `/reviews`       | Yes  | List all reviews (paginated) |
+| `GET`  | `/reviews/stats` | Yes  | Aggregate review statistics  |
 
 ---
 
@@ -630,7 +596,7 @@ THL_vehicle_monitoring_system/
 
 ### 1. Start all services
 
-Ensure MongoDB is running, then start backend, cv-core, and frontend (see [Docker Setup](#docker-setup) for the terminal commands).
+Ensure MongoDB is running, then start backend, cv-core, and frontend (see setup for the terminal commands).
 
 ### 2. Register and log in
 
@@ -651,12 +617,12 @@ Ensure MongoDB is running, then start backend, cv-core, and frontend (see [Docke
 
 ### 4. Explore results
 
-| Action | Where |
-|--------|-------|
-| View charts | **Statistics** (`/main/statistic`) |
-| Ask questions | **AI Chatbot** (`/main/chatbot`) — e.g. *"Có bao nhiêu xe vượt tốc?"* |
-| Browse history | **History** (`/main/log`) |
-| Filter by plate | **Vehicle Analysis** (`/main/vehicle`) |
+| Action          | Where                                                                 |
+| --------------- | --------------------------------------------------------------------- |
+| View charts     | **Statistics** (`/main/statistic`)                                    |
+| Ask questions   | **AI Chatbot** (`/main/chatbot`) — e.g. _"Có bao nhiêu xe vượt tốc?"_ |
+| Browse history  | **History** (`/main/log`)                                             |
+| Filter by plate | **Vehicle Analysis** (`/main/vehicle`)                                |
 
 ### 5. Admin tasks
 
@@ -668,14 +634,14 @@ Log in as an **admin** user to access **Users** and **Review** pages in the side
 
 > Place screenshots in a `docs/screenshots/` folder and update the paths below.
 
-| Screenshot | Description |
-|------------|-------------|
-| `docs/screenshots/dashboard.png` | Video upload and live processing dashboard |
+| Screenshot                          | Description                                             |
+| ----------------------------------- | ------------------------------------------------------- |
+| `docs/screenshots/dashboard.png`    | Video upload and live processing dashboard              |
 | `docs/screenshots/result-video.png` | Annotated output with bounding boxes, speed, and plates |
-| `docs/screenshots/statistics.png` | Charts — vehicle types, violations, trends |
-| `docs/screenshots/chatbot.png` | AI chatbot answering traffic statistics questions |
-| `docs/screenshots/log-history.png` | Detection history with filters |
-| `docs/screenshots/landing.png` | Landing page |
+| `docs/screenshots/statistics.png`   | Charts — vehicle types, violations, trends              |
+| `docs/screenshots/chatbot.png`      | AI chatbot answering traffic statistics questions       |
+| `docs/screenshots/log-history.png`  | Detection history with filters                          |
+| `docs/screenshots/landing.png`      | Landing page                                            |
 
 **Placeholder** — add your own captures after running the system locally.
 
@@ -685,49 +651,49 @@ Log in as an **admin** user to access **Users** and **Review** pages in the side
 
 ### CV Core
 
-| Problem | Likely Cause | Fix |
-|---------|--------------|-----|
-| `FileNotFoundError` for model weights | Hardcoded Windows paths in `main.py` | Update `VEHICLE_MODEL_PATH`, `PLATE_MODEL_PATH`, `TRACKER_CONFIG` |
-| FFmpeg not found | Hardcoded FFmpeg path | Install FFmpeg and update `FFMPEG_PATH` in `main.py`, or add FFmpeg to system PATH |
-| Slow processing | CPU-only inference | Install CUDA + GPU PyTorch; verify `/health` reports `"device": "cuda"` |
-| Empty plate readings | OCR interval too sparse or low plate confidence | Lower `OCR_EVERY_N`, check plate model quality, ensure plate is visible in frame |
-| Job stuck at 0% | Thread crash during processing | Check cv-core terminal logs; verify video codec compatibility |
+| Problem                               | Likely Cause                                    | Fix                                                                                |
+| ------------------------------------- | ----------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `FileNotFoundError` for model weights | Hardcoded Windows paths in `main.py`            | Update `VEHICLE_MODEL_PATH`, `PLATE_MODEL_PATH`, `TRACKER_CONFIG`                  |
+| FFmpeg not found                      | Hardcoded FFmpeg path                           | Install FFmpeg and update `FFMPEG_PATH` in `main.py`, or add FFmpeg to system PATH |
+| Slow processing                       | CPU-only inference                              | Install CUDA + GPU PyTorch; verify `/health` reports `"device": "cuda"`            |
+| Empty plate readings                  | OCR interval too sparse or low plate confidence | Lower `OCR_EVERY_N`, check plate model quality, ensure plate is visible in frame   |
+| Job stuck at 0%                       | Thread crash during processing                  | Check cv-core terminal logs; verify video codec compatibility                      |
 
 ### Backend
 
-| Problem | Likely Cause | Fix |
-|---------|--------------|-----|
-| `Cannot connect to MongoDB` | MongoDB not running or wrong URL | Start MongoDB; verify `MONGO_URL` in `.env` |
-| Email verification fails | SMTP misconfigured | Check `SMTP_*` variables; use a test SMTP service (e.g. Mailtrap) |
-| `401 Unauthorized` on API calls | Expired or missing token | Log in again; check axios refresh-token flow |
-| Server crash on startup | Missing `helpers.js` import | Create `backend/src/helpers/helpers.js` or remove the import in `index.js` |
+| Problem                         | Likely Cause                     | Fix                                                                        |
+| ------------------------------- | -------------------------------- | -------------------------------------------------------------------------- |
+| `Cannot connect to MongoDB`     | MongoDB not running or wrong URL | Start MongoDB; verify `MONGO_URL` in `.env`                                |
+| Email verification fails        | SMTP misconfigured               | Check `SMTP_*` variables; use a test SMTP service (e.g. Mailtrap)          |
+| `401 Unauthorized` on API calls | Expired or missing token         | Log in again; check axios refresh-token flow                               |
+| Server crash on startup         | Missing `helpers.js` import      | Create `backend/src/helpers/helpers.js` or remove the import in `index.js` |
 
 ### Frontend
 
-| Problem | Likely Cause | Fix |
-|---------|--------------|-----|
-| API calls fail | Backend not running | Start backend on port 3000; verify `VITE_APP_URL` |
-| Upload fails | cv-core not running | Start `python main.py` on port 8000 |
-| CORS errors | Cross-origin mismatch | cv-core enables CORS for all origins; ensure URLs match |
-| Blank charts | No saved logs | Run at least one video analysis and save the log |
+| Problem        | Likely Cause          | Fix                                                     |
+| -------------- | --------------------- | ------------------------------------------------------- |
+| API calls fail | Backend not running   | Start backend on port 3000; verify `VITE_APP_URL`       |
+| Upload fails   | cv-core not running   | Start `python main.py` on port 8000                     |
+| CORS errors    | Cross-origin mismatch | cv-core enables CORS for all origins; ensure URLs match |
+| Blank charts   | No saved logs         | Run at least one video analysis and save the log        |
 
 ### General
 
-| Problem | Likely Cause | Fix |
-|---------|--------------|-----|
-| Port already in use | Another process on 3000/8000/5173 | Stop conflicting process or change the port |
-| Webcam stream not working | WebSocket server not started | Run `main/main1.py` or `webcam.py`; check ports 8765/8766 |
-| Chatbot returns empty data | No logs for current user | Analyze and save at least one video while logged in |
+| Problem                    | Likely Cause                      | Fix                                                       |
+| -------------------------- | --------------------------------- | --------------------------------------------------------- |
+| Port already in use        | Another process on 3000/8000/5173 | Stop conflicting process or change the port               |
+| Webcam stream not working  | WebSocket server not started      | Run `main/main1.py` or `webcam.py`; check ports 8765/8766 |
+| Chatbot returns empty data | No logs for current user          | Analyze and save at least one video while logged in       |
 
 ---
 
 ## Team & Roadmap
 
-| Member | Responsibility |
-|--------|----------------|
-| **Đỗ Quang Huân** | CV Core — YOLO detection, BoT-SORT tracking, speed calculation |
-| **Phạm Ngọc Linh** | License plate detection, OCR pipeline, violation logic |
-| **Phạm Thanh Tân** | Web frontend, Node.js backend, dashboard, chatbot |
+| Member             | Responsibility                                                 |
+| ------------------ | -------------------------------------------------------------- |
+| **Đỗ Quang Huân**  | CV Core — YOLO detection, BoT-SORT tracking, speed calculation |
+| **Phạm Ngọc Linh** | License plate detection, OCR pipeline, violation logic         |
+| **Phạm Thanh Tân** | Web frontend, Node.js backend, dashboard, chatbot              |
 
 See [`roadmap.txt`](roadmap.txt) for the full weekly progress timeline (Weeks 1–8).
 
