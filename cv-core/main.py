@@ -21,10 +21,8 @@ from ultralytics import YOLO
 import easyocr
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
-
-
 # ─────────────────────────────────────────────────────────────
-# CONFIG
+# CONFIG (Import và cấu hình)
 # ─────────────────────────────────────────────────────────────
 VEHICLE_MODEL_PATH  = r"D:\cv-core\backup\vehicle_model_v23\weights\best.pt"
 PLATE_MODEL_PATH    = r"D:\THL_vehicle_monitoring_system\runs\plate_only_train\weights\best.pt"
@@ -48,7 +46,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # ─────────────────────────────────────────────────────────────
-# INIT MODELS
+# INIT MODELS (Khởi tạo model)
 # ─────────────────────────────────────────────────────────────
 device = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"[Init] Device: {device}")
@@ -68,9 +66,8 @@ ocr_executor = ThreadPoolExecutor(max_workers=3)
 # Job store
 jobs: dict = {}
 
-
 # ─────────────────────────────────────────────────────────────
-# KALMAN SPEED FILTER
+# KALMAN SPEED FILTER (Lọc tốc độ)
 # ─────────────────────────────────────────────────────────────
 class KalmanSpeed:
     def __init__(self):
@@ -90,7 +87,6 @@ class KalmanSpeed:
         out = self.kf.correct(np.array([[raw]], np.float32))
         return max(0.0, float(out.squeeze()[0]))
 
-
 # ─────────────────────────────────────────────────────────────
 # HOMOGRAPHY
 # ─────────────────────────────────────────────────────────────
@@ -103,6 +99,8 @@ def pixel_to_world(px: int, py: int):
     out = cv2.perspectiveTransform(pt, H_MAT)
     return float(out[0][0][0]), float(out[0][0][1])
 
+# hàm format_time chuyển miliseconds ể chuyển thnfh chuỗi HH:MM:SS để hieern thị môc thời gian xe xuất hienj
+# trong video
 def format_time(ms: float) -> str:
     s = int(ms / 1000)
     return f"{s // 3600:02}:{(s % 3600) // 60:02}:{s % 60:02}"
@@ -111,9 +109,7 @@ def format_time(ms: float) -> str:
 # ─────────────────────────────────────────────────────────────
 # PLATE OCR  (LPR v2 - đầy đủ)
 # ─────────────────────────────────────────────────────────────
-# ─────────────────────────────────────────────────────────────
-# PLATE OCR  (LPR v2 - giống hệt code trên)
-# ─────────────────────────────────────────────────────────────
+
 class PlateOCR:
     """
     Nhận dạng biển số xe Việt Nam với tiền xử lý đa tầng và multi-variant OCR.
@@ -126,9 +122,10 @@ class PlateOCR:
 
     # ── Helpers ──────────────────────────────────────────────
     @staticmethod
+    # loaij mọi ký tự không phri chữ số - dấu chấm - gạch ngang, viết hoa hết, xóa khoảng trawngs
     def clean(text: str) -> str:
         return re.sub(r"[^A-Z0-9.\-]", "", text.upper().replace(" ", ""))
-
+    #
     @staticmethod
     def alnum(text: str) -> str:
         return re.sub(r"[^A-Z0-9]", "", text.upper())
@@ -154,22 +151,11 @@ class PlateOCR:
             "4": "A"
         }.get(ch, ch)
 
-    @staticmethod
-    def _fix_chars(raw: str,
-                   digit_positions: set,
-                   letter_positions: set) -> str:
-        chars = list(raw)
-
-        for i, ch in enumerate(chars):
-            if i in digit_positions:
-                chars[i] = PlateOCR.l2d(ch)
-            elif i in letter_positions:
-                if ch.isdigit():
-                    chars[i] = PlateOCR.d2l(ch)
-
-        return "".join(chars)
-
     # ── Image preprocessing ───────────────────────────────────
+    # phóng to ảnh biển số theo chiều cao mục tiêu, giữ đúng tỉ lệ
+    # khung hình dùng inter_lanczos4 để phóng to tốt nhât cho OpenCV
+    # quan trọng vì biển số ở xa thường rt nhỏ , phóng to nhỏ sẽ mờ nhiều hơn
+
     @staticmethod
     def _upscale(img: np.ndarray,
                  target_h: int = UPSCALE_TARGET_H) -> np.ndarray:
@@ -186,7 +172,9 @@ class PlateOCR:
             (new_w, target_h),
             interpolation=cv2.INTER_LANCZOS4
         )
-
+    #hàm clahe cân bằng sáng tối theo từng vùng nhỏ ( 8 * 8) của ảnh thay vì
+    # cân bằng ảnh, giúp bin bị chói nắng 1 phàn hoặc tối một phần
+    # vẫn lên chữ rõ
     @staticmethod
     def _clahe(gray: np.ndarray,
                clip: float = 3.0) -> np.ndarray:
@@ -195,7 +183,8 @@ class PlateOCR:
             tileGridSize=(8, 8)
         )
         return c.apply(gray)
-
+    # bilateralFilter llafm mượt ảnh (Giảm nhiễu) nhưng vẫn giữ ược biên cạnh rõ - Khác
+    # với Gaussian blur thường làm mờ luôn cả biên chữ.
     @staticmethod
     def _bilateral(gray: np.ndarray) -> np.ndarray:
         return cv2.bilateralFilter(
@@ -204,7 +193,7 @@ class PlateOCR:
             sigmaColor=75,
             sigmaSpace=75
         )
-
+    # sharpen là kỹ thuật unsshar cổ điền lý ảnh gốc trừ đi barn mờ của nó
     @staticmethod
     def _sharpen(gray: np.ndarray,
                  strength: float = 1.5) -> np.ndarray:
@@ -217,7 +206,8 @@ class PlateOCR:
             -strength,
             0
         )
-
+    # kỹ thuaajat nhị phna hóa ảnh( Chỉ còn đen trắng) để OCR dễ nhận chữ hơn.
+    # Otsu tự tìm ngưỡng sáng tối ưu cho toàn ảnh dựa trên histogram
     @staticmethod
     def _otsu(gray: np.ndarray,
               invert: bool = False) -> np.ndarray:
@@ -232,7 +222,8 @@ class PlateOCR:
         )
 
         return th
-
+    # tính ngưỡng riêng cho từng vùng nhỏ (block cửa số) -> phù hợp khi biển số
+    # sáng tối không đều
     @staticmethod
     def _adaptive(gray: np.ndarray,
                   block: int = 31,
@@ -245,7 +236,7 @@ class PlateOCR:
             block,
             c
         )
-
+    # dùng để lắp các lõ nhỏ / đứt nét trong ảnh nhị phân
     @staticmethod
     def _morph_close(img: np.ndarray,
                      ksize: int = 2) -> np.ndarray:
@@ -272,6 +263,7 @@ class PlateOCR:
         return cv2.dilate(img, k, iterations=1)
 
     # ── Deskew ───────────────────────────────────────────────
+    # chỉnh nghiêng
     def deskew(self, plate_bgr: np.ndarray) -> np.ndarray:
         gray = cv2.cvtColor(
             plate_bgr,
@@ -289,12 +281,7 @@ class PlateOCR:
 
         angle = 0.0
 
-        lines = cv2.HoughLines(
-            edges,
-            1,
-            np.pi / 180,
-            threshold=40
-        )
+        lines = cv2.HoughLines(edges,  1,  np.pi / 180,  threshold=40)
 
         if lines is not None:
             angles = []
@@ -351,6 +338,9 @@ class PlateOCR:
         )
 
     # ── Refine ROI ───────────────────────────────────────────
+    # cắt bớt viền ngòi 1 - 2 % rồi tìm các contour sau khi nhị phan hóa -
+    # mỗi contour là một vùng nghi ng có thể là khối chữ trên biển họacj
+    # khung biển
     def refine_roi(self,
                    plate_bgr: np.ndarray) -> np.ndarray:
         gray = cv2.cvtColor(
@@ -370,24 +360,13 @@ class PlateOCR:
 
         clahe = self._clahe(gray)
 
-        blur = cv2.GaussianBlur(
-            clahe,
-            (3, 3),
-            0
-        )
+        blur = cv2.GaussianBlur( clahe,(3, 3),0)
 
         th = self._otsu(blur)
 
-        k = cv2.getStructuringElement(
-            cv2.MORPH_RECT,
-            (2, 2)
-        )
+        k = cv2.getStructuringElement( cv2.MORPH_RECT,(2, 2) )
 
-        th = cv2.morphologyEx(
-            th,
-            cv2.MORPH_CLOSE,
-            k
-        )
+        th = cv2.morphologyEx( th, cv2.MORPH_CLOSE, k)
 
         cnts, _ = cv2.findContours(
             th,
@@ -442,10 +421,7 @@ class PlateOCR:
             roi = gray[yy1:yy2, xx1:xx2]
 
             if roi.size > 0:
-                return cv2.cvtColor(
-                    roi,
-                    cv2.COLOR_GRAY2BGR
-                )
+                return cv2.cvtColor(roi, cv2.COLOR_GRAY2BGR)
 
         return cv2.cvtColor(
             gray,
@@ -453,67 +429,26 @@ class PlateOCR:
         )
 
     # ── Build variants ────────────────────────────────────────
+    # hàm này hỉ gọi là các hàm tiền xử lý ở trên theo nhều tổ hợp thâm số khác
+    # nhau, tọ r danh sách 9 ảnh biến thể từ cùng 1 ảnh gốc. Mục đích: Không biển được trước
+    # biến thể nào sẽ giúp EasyOCR đọc đúng nhất với điều kiện ánh sáng cụ theer,
+    # nên thử các 9 cái rồi scroring sau
     def build_variants(self,
                        gray: np.ndarray) -> list:
 
         clahe = self._clahe(gray, clip=2.5)
-
         bilat = self._bilateral(clahe)
-
-        sharp1 = self._sharpen(
-            clahe,
-            strength=1.2
-        )
-
-        sharp2 = self._sharpen(
-            bilat,
-            strength=1.8
-        )
-
+        sharp1 = self._sharpen(clahe, strength=1.2)
+        sharp2 = self._sharpen(bilat,strength=1.8)
         otsu1 = self._otsu(bilat)
-
-        otsu2 = self._otsu(
-            bilat,
-            invert=True
-        )
-
-        adap1 = self._adaptive(
-            clahe,
-            block=31,
-            c=8
-        )
-
-        adap2 = self._adaptive(
-            bilat,
-            block=21,
-            c=6
-        )
-
-        mclose = self._morph_close(
-            otsu1,
-            ksize=2
-        )
-
-        # return [
-        #     clahe,
-        #     bilat,
-        #     sharp1,
-        #     sharp2,
-        #     otsu1,
-        #     otsu2,
-        #     adap1,
-        #     adap2,
-        #     mclose
-        # ]
-        # return [
-        #     clahe,
-        #     sharp1,
-        #     otsu1,
-        #     adap1
-        # ]
+        otsu2 = self._otsu( bilat, invert=True)
+        adap1 = self._adaptive(  clahe,  block=31,c=8)
+        adap2 = self._adaptive( bilat,block=21,  c=6  )
+        mclose = self._morph_close( otsu1,ksize=2)
 
         return [clahe, bilat, sharp1, sharp2, otsu1, otsu2, adap1, adap2, mclose]
     # ── Split 2 lines ────────────────────────────────────────
+    # Tác bieern 2 dòng
     def split_lines(self, gray: np.ndarray):
         h, w = gray.shape[:2]
 
@@ -556,6 +491,8 @@ class PlateOCR:
         return top, bot
 
     # ── OCR ──────────────────────────────────────────────────
+
+    # bọc lại lời gọi EasyOCR
     def _ocr(self,
              img: np.ndarray,
              allowlist: str) -> list:
@@ -564,7 +501,7 @@ class PlateOCR:
             img,
             detail=1,
             paragraph=False,
-            decoder="beamsearch",
+            decoder="beamsearch", # là chế độ decode chính xác
             allowlist=allowlist
         )
 
@@ -580,15 +517,17 @@ class PlateOCR:
         return out
 
     # ── Normalize ────────────────────────────────────────────
+    # khớp định dạng biển VN
+    # biển số VN có dạgn 51A-12345
     def norm_car_1line(self, text: str) -> str:
         raw = self.alnum(text)
 
-        if len(raw) < 7:
+        if len(raw) < 7: # dộ dài text nhỏ hơn 7 thì loaaij
             return ""
 
         chars = list(raw)
 
-        chars[0] = self.l2d(chars[0])
+        chars[0] = self.l2d(chars[0]) # vị trí 0, 1 phải là số
         chars[1] = self.l2d(chars[1])
 
         if len(chars) > 2 and chars[2].isdigit():
@@ -611,7 +550,7 @@ class PlateOCR:
             return f"{m.group(1)}{m.group(2)}-{m.group(3)}"
 
         return ""
-
+    # biển số xe có danjg 18-K1 30605
     def norm_bike_1line(self, text: str) -> str:
         raw = self.alnum(text)
 
@@ -652,7 +591,7 @@ class PlateOCR:
             return f"{m.group(1)}-{m.group(2)}{m.group(3)} {m.group(4)}"
 
         return ""
-
+    # chuẩn hóa cho biển số ô to 2 dòng
     def norm_car_top(self, text: str) -> str:
         raw = self.alnum(text)
 
@@ -720,10 +659,9 @@ class PlateOCR:
             return f"{d5[:3]}.{d5[3:]}"
 
         return ""
-
+    # sau khi có kết quả chuaarn hóa các dòng thì ráp lại
     @staticmethod
-    def assemble_car_2line(top: str,
-                           bot: str) -> str:
+    def assemble_car_2line(top: str,bot: str) -> str:
 
         if re.fullmatch(r"\d{2}[A-Z]", top):
             if re.fullmatch(r"\d{3}\.\d{2}", bot) or \
@@ -733,8 +671,7 @@ class PlateOCR:
         return ""
 
     @staticmethod
-    def assemble_bike_2line(top: str,
-                            bot: str) -> str:
+    def assemble_bike_2line(top: str,bot: str) -> str:
 
         if re.fullmatch(r"\d{2}-[A-Z]\d", top):
             if re.fullmatch(r"\d{3}\.\d{2}", bot) or \
@@ -744,10 +681,10 @@ class PlateOCR:
         return ""
 
     # ── Scoring ──────────────────────────────────────────────
-    def _conv_penalty(self,
-                      raw: str,
-                      norm: str) -> int:
-
+    # đo khoảng cách giữa chuỗi OCR đọc ra thôn và chuỗi sau khi đã chuẩn hóa
+    # đếm số ký tự khác nhau ở từng vị trí cộng với chênh lệch đồ dai
+    # nếu sửa quá nhiều ký tự để epps về đúng format thì độ tin cạy giảm
+    def _conv_penalty(self,raw: str,norm: str) -> int:
         r = self.alnum(raw)
         n = self.alnum(norm)
 
@@ -759,7 +696,7 @@ class PlateOCR:
         )
 
         return diff + abs(len(r) - len(n))
-
+    # công thức tổng điểm cho ột ứng viên OCR
     def score(self, cand: dict) -> float:
         text = cand["text"]
         typ = cand["type"]
@@ -804,7 +741,7 @@ class PlateOCR:
         cand["score"] = s
 
         return s
-
+    # chọn loại tốt nhất trong tòn bộ danh sách
     def best_candidate(self,
                        candidates: list) -> dict | None:
 
@@ -814,8 +751,10 @@ class PlateOCR:
         return max(candidates, key=self.score)
 
     # ── MAIN ─────────────────────────────────────────────────
-    def read_plate(self,
-                   plate_bgr: np.ndarray) -> dict:
+    # tiền xử lý bin số theo đúng th tự
+    # cắt sát -> chỉnh nghiêng -> grayscale-Clhe-> khử nhiễu hạt
+    # tính chiều cao mục tiêu ->
+    def read_plate(self,plate_bgr: np.ndarray) -> dict:
 
         refined = self.refine_roi(plate_bgr)
 
@@ -836,10 +775,7 @@ class PlateOCR:
             if h < MIN_PLATE_H \
             else max(UPSCALE_TARGET_H, h)
 
-        gray_big = self._upscale(
-            gray,
-            target_h=target_h
-        )
+        gray_big = self._upscale(gray,target_h=target_h)
 
         candidates = []
 
@@ -889,16 +825,12 @@ class PlateOCR:
                 ct = self.norm_car_top(txt)
 
                 if ct:
-                    top_cands.append(
-                        (ct, "car", conf, txt)
-                    )
+                    top_cands.append( (ct, "car", conf, txt))
 
                 bt = self.norm_bike_top(txt)
 
                 if bt:
-                    top_cands.append(
-                        (bt, "motorbike", conf, txt)
-                    )
+                    top_cands.append((bt, "motorbike", conf, txt))
 
         for var in self.build_variants(bot_gray):
 
@@ -906,13 +838,9 @@ class PlateOCR:
                 var,
                 allowlist_num
             ):
-
                 nb = self.norm_bottom(txt)
-
                 if nb:
-                    bot_cands.append(
-                        (nb, conf, txt)
-                    )
+                    bot_cands.append( (nb, conf, txt))
 
         for top_txt, top_typ, top_conf, top_raw in top_cands:
 
@@ -944,32 +872,10 @@ class PlateOCR:
                 "raw": "",
                 "score": 0.0
             }
-
         return best
 
 # Khởi tạo PlateOCR dùng reader đã load sẵn
 plate_ocr = PlateOCR(reader=ocr_reader)
-
-def iou(boxA, boxB):
-    xA = max(boxA[0], boxB[0])
-    yA = max(boxA[1], boxB[1])
-    xB = min(boxA[2], boxB[2])
-    yB = min(boxA[3], boxB[3])
-
-    interW = max(0, xB - xA)
-    interH = max(0, yB - yA)
-
-    inter = interW * interH
-
-    if inter <= 0:
-        return 0.0
-
-    areaA = (boxA[2]-boxA[0]) * (boxA[3]-boxA[1])
-    areaB = (boxB[2]-boxB[0]) * (boxB[3]-boxB[1])
-
-    union = areaA + areaB - inter
-
-    return inter / (union + 1e-6)
 # ─────────────────────────────────────────────────────────────
 # PLATE CACHE - Majority vote (LPR v2 style)
 # ─────────────────────────────────────────────────────────────
@@ -978,6 +884,10 @@ class PlateCache:
     Lưu lịch sử OCR theo track_id, chọn biển bằng majority vote + score.
     Tương đương _best_plate_for_track() trong LPR v2.
     """
+    # _history lf dict ánh xạ track_id danh sách mọi lần đọc biển được
+    # add () chỉ đơn giản append một bản ghi mới vào lịch sử của track đó
+    # mỗi khi kết quả OCR đạt ngưỡng
+
     def __init__(self):
         self._history: dict[int, list[dict]] = defaultdict(list)
 
@@ -985,6 +895,10 @@ class PlateCache:
         self._history[tid].append({"text": text, "score": score, "conf": conf})
 
     # PlateCache.best() — thay logic max hiện tại
+    # lấy toàn bộ lịch sử track đó , gom nhớm theo từng chuỗi biển số khác nhau
+    # đã từng đọc ra (agg theo dict theo text). với mỗi chuoix txt riêng bao gồm
+    # số lần xuất hiện( count ), tổng điểm các lần dọc r nó (score_sum)
+    # điểm cao nhất từng đạt được best_score, conf cao nhất (best_conf)
     def best(self, tid: int) -> dict | None:
         entries = [e for e in self._history.get(tid, []) if e["text"]]
         if not entries:
@@ -1004,13 +918,13 @@ class PlateCache:
         best_text, data = max(
             agg.items(),
             key=lambda kv: (
-                    kv[1]["score_sum"] * 2.0  # ← score_sum quan trọng hơn
-                    + kv[1]["count"] * 0.5  # ← count chỉ là tiebreaker
-                    + kv[1]["best_score"]  # ← bonus nếu có lần nào rất chắc
+                    kv[1]["score_sum"] * 2.0  #  score_sum quan trọng hơn
+                    + kv[1]["count"] * 0.5  #  count chỉ là tiebreaker
+                    + kv[1]["best_score"]  #  bonus nếu có lần nào rất chắc
             )
         )
         return {"text": best_text, "score": data["best_score"], "conf": data["best_conf"]}
-
+    # xóa lịch sử cũ
     def clear(self, tid: int):
         self._history.pop(tid, None)
 
@@ -1018,6 +932,7 @@ class PlateCache:
 # ─────────────────────────────────────────────────────────────
 # HELPERS
 # ─────────────────────────────────────────────────────────────
+# reencode video để chay trên web vẫn ok
 def reencode_h264(input_path: str, output_path: str) -> bool:
     try:
         FFMPEG_PATH = r"C:\Users\Admin\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-8.1.1-full_build\bin\ffmpeg.exe"
@@ -1033,8 +948,8 @@ def reencode_h264(input_path: str, output_path: str) -> bool:
     except (subprocess.CalledProcessError, FileNotFoundError):
         os.replace(input_path, output_path)
         return False
-
-
+# cắt vùng biển số từ frame gốc, nới rộng thêm padding theo tỉ lệ kịch thước
+# 15% NGANG, 20% DỌC
 def crop_plate(frame: np.ndarray, x1: int, y1: int, x2: int, y2: int) -> np.ndarray:
     H, W = frame.shape[:2]
     w, h = x2 - x1, y2 - y1
@@ -1044,11 +959,11 @@ def crop_plate(frame: np.ndarray, x1: int, y1: int, x2: int, y2: int) -> np.ndar
         max(0, y1 - py): min(H, y2 + py),
         max(0, x1 - px): min(W, x2 + px)
     ]
-
-
 # ─────────────────────────────────────────────────────────────
-# PROCESS VIDEO
+# PROCESS VIDEO ( Hàm  chính, phần khởi tạo
 # ─────────────────────────────────────────────────────────────
+# đọc các thông số video )
+# khỏi tạo các cấu trúc dữ liệu trnjg thái video này
 def process_video(job_id: str, input_path: str, speed_limit: int):
     try:
         jobs[job_id]["status"] = "processing"
@@ -1062,7 +977,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
         raw_out_path   = os.path.join(OUTPUT_DIR, f"{job_id}_raw.mp4")
         final_out_path = os.path.join(OUTPUT_DIR, f"{job_id}.mp4")
 
-        out = cv2.VideoWriter(
+        out = cv2.VideoWriter( # đọc file
             raw_out_path,
             # cv2.VideoWriter_fourcc(*"H264ư"),
             cv2.VideoWriter_fourcc(*"mp4v"),
@@ -1076,7 +991,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
 
         detections_all: list[dict] = []
         frame_idx = 0
-
+        # vòng lặp chính tracking xe + tính tốc độ
         while True:
             ret, frame = cap.read()
             if not ret:
@@ -1102,12 +1017,17 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
 
                 for tid, bbox, cls, conf in zip(ids, bboxes, clss, confs):
                     x1, y1, x2, y2 = map(int, bbox)
+                    # lưu bb xe vào vehicle_boxes
                     vehicle_boxes[int(tid)] = (x1, y1, x2, y2)
 
                     cx, cy = (x1 + x2) // 2, (y1 + y2) // 2
                     wx, wy = pixel_to_world(cx, cy)
 
                     # ── TỐC ĐỘ ───────────────────────────────
+                    # tính speed
+                    # tốc độ hiển thị lần cuối cùng là trung bình của tối đa 10
+                    # giá trị gần nhất trong speed_hisst thêm một lớp làm mượt
+                    # nữa trên cả kết quả Kalman
                     speed = None
                     if tid in prev_world:
                         pwx, pwy, pf = prev_world[tid]
@@ -1129,18 +1049,15 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                         speed = round(sum(speed_hist[tid]) / len(speed_hist[tid]), 1)
 
                     # ── PLATE TỪ CACHE (majority vote) ───────
+                    # lấy biển số từ cache và vẽ Overlay
                     best_plate = plate_cache.best(int(tid))
                     plate_text = best_plate["text"] if best_plate else None
 
                     # ── VẼ OVERLAY ────────────────────────────
                     is_violation = speed is not None and speed > speed_limit
                     color = (0, 0, 255) if is_violation else (0, 220, 0)
-
                     label_name = vehicle_model.names[int(cls)]
                     cv2.rectangle(frame_out, (x1, y1), (x2, y2), color, 2)
-                    # cv2.putText(frame_out, f"ID:{tid}", (x1, max(y1 - 25, 15)),
-                    #             cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
-                    # LABEL + ID
                     cv2.putText(
                         frame_out,
                         f"{label_name}|ID:{tid}",
@@ -1155,6 +1072,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                         cv2.putText(frame_out, spd_txt,
                                     (x1, min(y2 + 22, height - 5)),
                                     cv2.FONT_HERSHEY_SIMPLEX, 0.55, color, 2)
+                    #vẽ bieern số
                     if plate_text:
                         font_p = cv2.FONT_HERSHEY_SIMPLEX
                         scale_p = 0.9
@@ -1162,15 +1080,12 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                         pad_p = 5
 
                         (pw, ph), _ = cv2.getTextSize(plate_text, font_p, scale_p, thick_p)
-
                         # Góc trên bên phải bbox MIN_SCORE_ACCEPT  = 4.5xe
                         px_tl = x2 - pw - pad_p * 2
                         py_tl = y1 - ph - pad_p * 2 - 4
-
                         # Clamp không ra ngoài frame
                         px_tl = max(0, px_tl)
                         py_tl = max(0, py_tl)
-
                         # Nền vàng
                         cv2.rectangle(frame_out,
                                       (px_tl, py_tl),
@@ -1192,42 +1107,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                         "status": "violation" if is_violation else "normal",
                         "bbox":   [x1, y1, x2, y2],
                     })
-
-            # ── PLATE DETECTION + OCR (mỗi OCR_EVERY_N frame) ──
-            # if frame_idx % OCR_EVERY_N == 0 and vehicle_boxes:
-            #
-            #
-            #
-            #     plate_results = plate_model.predict(
-            #         frame, conf=0.3, device=device, verbose=False,imgsz=1280
-            #     )
-            #     pr = plate_results[0]
-            #     if pr.boxes is not None and len(pr.boxes) > 0:
-            #         for pbox in pr.boxes.xyxy.cpu().numpy():
-            #             px1, py1, px2, py2 = map(int, pbox)
-            #             pcx = (px1 + px2) // 2
-            #             pcy = (py1 + py2) // 2
-            #
-            #             # Tìm xe chứa biển
-            #             best_tid, best_dist = None, float("inf")
-            #             for tid, (vx1, vy1, vx2, vy2) in vehicle_boxes.items():
-            #                 if vx1 <= pcx <= vx2 and vy1 <= pcy <= vy2:
-            #                     cx = (vx1 + vx2) // 2
-            #                     cy = (vy1 + vy2) // 2
-            #                     d  = ((pcx - cx) ** 2 + (pcy - cy) ** 2) ** 0.5
-            #                     if d < best_dist:
-            #                         best_dist, best_tid = d, tid
-            #
-            #             if best_tid is not None:
-            #                 crop = crop_plate(frame, px1, py1, px2, py2)
-            #                 if crop.size > 0:
-            #                     result = plate_ocr.read_plate(crop)
-            #                     text   = result.get("text", "")
-            #                     conf   = result.get("conf", 0.0)
-            #                     score  = result.get("score", 0.0)
-            #                     if text and score >= MIN_SCORE_ACCEPT:
-            #                         # Thêm vào history → majority vote tự xử lý
-            #                         plate_cache.add(int(best_tid), text, score, conf)
+            # detect biển số + OCR mỗi N frame
             if frame_idx % OCR_EVERY_N == 0 and vehicle_boxes:
 
                 plate_results = plate_model.predict(
@@ -1239,7 +1119,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                 )
 
                 pr = plate_results[0]
-
+                # ghéo biển số với xe
                 if pr.boxes is not None and len(pr.boxes) > 0:
 
                     for pbox in pr.boxes.xyxy.cpu().numpy():
@@ -1253,7 +1133,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                         best_dist = float("inf")
 
                         for tid, (vx1, vy1, vx2, vy2) in vehicle_boxes.items():
-
+                            # tâm biển số nằm trong khung xe
                             if vx1 <= pcx <= vx2 and vy1 <= pcy <= vy2:
 
                                 cx = (vx1 + vx2) // 2
@@ -1280,6 +1160,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                         score = result.get("score", 0.0)
 
                         if text and score >= MIN_SCORE_ACCEPT:
+                            # ghi kết quả ển số có độ ngưỡng mới được ghi nhanaj
                             plate_cache.add(
                                 int(best_tid),
                                 text,
@@ -1312,23 +1193,8 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
             wait_count += 1
             if wait_count > 20:
                 raise Exception("Encoded video not found")
-
-        # ── Tổng hợp kết quả (LPR v2 style) ──────────────────
-        # summary: dict[int, dict] = {}
-        # for d in detections_all:
-        #     tid = d["id"]
-        #     if tid not in summary:
-        #         summary[tid] = dict(d)
-        #     else:
-        #         if d["plate"] and not summary[tid].get("plate"):
-        #             summary[tid] = dict(d)
-        #         if d["speed"] and (not summary[tid].get("speed") or
-        #                             d["speed"] > summary[tid]["speed"]):
-        #             summary[tid]["speed"] = d["speed"]
-
-        # Thay đoạn summary build cuối process_video
         summary: dict[int, dict] = {}
-
+        # gộp detections_all thành summary_ mỗi track_iud chỉ còn 1 dòng duy nhất
         for d in detections_all:
             tid = d["id"]
 
@@ -1346,6 +1212,8 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
 
             else:
                 current = summary[tid]
+                # các lần sâu gặp cùng một tid thì cập nht
+                # tốc độ lớn nhaatas
                 if d.get("speed") is not None:
                     if current.get("speed") is None or d["speed"] > current["speed"]:
                         current["speed"] = d["speed"]
@@ -1353,6 +1221,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
                     current["conf"] = d["conf"]
                     current["time"] = d["time"]
                     current["bbox"] = d.get("bbox")
+                    # đánh dấu vi phạm
                 if d.get("status") == "violation":
                     current["status"] = "violation"
                 # ← THÊM: update plate khi chưa có hoặc score tốt hơn
@@ -1365,6 +1234,7 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
 
         result_json_path = os.path.join(OUTPUT_DIR, f"{job_id}.json")
         with open(result_json_path, "w", encoding="utf-8") as f:
+            # gửi dữ liệu
             json.dump({
                 "detections_all": detections_all,
                 "summary": list(summary.values()),
@@ -1397,7 +1267,6 @@ def process_video(job_id: str, input_path: str, speed_limit: int):
         except Exception:
             pass
 
-
 # ─────────────────────────────────────────────────────────────
 # FASTAPI APP
 # ─────────────────────────────────────────────────────────────
@@ -1410,7 +1279,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+# gắn một ứng dụng con cho frontend sử dụng'
+# request tới Uvicorn, FastApi xem path bằng /outputs khớp với phần mount
+# Cụ thể chuỗi sự kiện khi frontend gọi GET http://localhost:8000/outputs/abc123.json:
 app.mount("/outputs", StaticFiles(directory=OUTPUT_DIR), name="outputs")
 
 
@@ -1436,24 +1307,13 @@ async def start_process(
         "-pix_fmt", "yuv420p",
         clean_input
     ])
-    # subprocess.run([
-    #     FFMPEG_PATH,
-    #     "-y",
-    #     "-i", save_path,
-    #     "-c:v", "h264_nvenc",
-    #     "-preset", "p5",
-    #     "-cq", "18",
-    #     "-b:v", "0",
-    #     "-pix_fmt", "yuv420p",
-    #     "-movflags", "+faststart",
-    #     clean_input
-    # ], check=True)
-
     os.remove(save_path)
     save_path = clean_input
     jobs[job_id] = {"status": "queued", "progress": 0,
                     "video_url": None, "result_url": None}
-
+    # khi gọi Api này thì code tạo ra 1 object Thread truyweenf vào tham s
+    # cunngf với các tham số args, process_video chỉ thực sự chạy
+    # khi gọi thread.start
     thread = threading.Thread(
         target=process_video,
         args=(job_id, save_path, speed_limit),
@@ -1462,7 +1322,6 @@ async def start_process(
     thread.start()
 
     return {"job_id": job_id}
-
 
 @app.get("/status/{job_id}")
 def get_status(job_id: str):

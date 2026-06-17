@@ -150,7 +150,13 @@ const LogDetails = () => {
 
             <span>Original Name: {log?.originalName}</span>
             <br />
-            <span>{log?.resultVideoUrl}</span>
+            <a
+              target="_blank"
+              href={log?.resultVideoUrl}
+              rel="noopener noreferrer"
+            >
+              {log?.resultVideoUrl}
+            </a>
           </div>
         </div>
         <div className="inner-overview">

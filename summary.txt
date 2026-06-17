@@ -1,0 +1,124 @@
+================================================================================
+  THL VEHICLE MONITORING SYSTEM — TÓM TẮT DỰ ÁN
+================================================================================
+
+TÊN DỰ ÁN    : Hệ thống giám sát giao thông thông minh và nhận diện biển số xe
+LOẠI         : Đồ án tốt nghiệp (TTCS1)
+KIẾN TRÚC    : Client–Server 3 tầng
+
+--------------------------------------------------------------------------------
+1. MỤC TIÊU
+--------------------------------------------------------------------------------
+  - Phát hiện phương tiện (Car, Motorcycle, Bus, Truck) bằng YOLOv8
+  - Tracking đa đối tượng (BoT-SORT + ReID), gán ID ổn định
+  - Tính vận tốc (km/h) qua homography + Kalman Filter
+  - Nhận diện biển số Việt Nam (Plate YOLO + EasyOCR)
+  - Phát hiện vi phạm vượt tốc độ
+  - Dashboard web: upload video, thống kê, chatbot, lịch sử
+
+--------------------------------------------------------------------------------
+2. CẤU TRÚC HỆ THỐNG
+--------------------------------------------------------------------------------
+
+  [React Frontend :5173]  monitoring-plate-traffic
+         |                          |
+         | JWT REST                 | Upload / Poll
+         v                          v
+  [Node.js Backend :3000]    [Python FastAPI :8000]  cv-core/main.py
+         |                          |
+         v                          v
+  [MongoDB]                  [uploads/, outputs/]
+
+--------------------------------------------------------------------------------
+3. LUỒNG XỬ LÝ CHÍNH
+--------------------------------------------------------------------------------
+
+  Upload video → FFmpeg chuẩn hóa H.264
+       → Vòng lặp từng frame:
+            Vehicle YOLO + BoT-SORT track
+            → Tính tốc độ (homography + Kalman)
+            → Mỗi 5 frame: Plate YOLO → crop → EasyOCR → PlateCache
+            → Vẽ overlay (bbox, ID, speed, plate)
+       → Ghi MP4 + JSON
+       → Frontend poll status → export CSV → lưu MongoDB
+
+--------------------------------------------------------------------------------
+4. OCR BIỂN SỐ (PlateOCR LPR v2)
+--------------------------------------------------------------------------------
+
+  crop → refine_roi → deskew → CLAHE → upscale
+       → 9 biến thể ảnh → EasyOCR beamsearch
+       → Chuẩn hóa format VN (51A-123.45, 51-A1 123.45, ...)
+       → Scoring (MIN_SCORE_ACCEPT = 3.5)
+       → PlateCache majority vote theo track_id
+
+--------------------------------------------------------------------------------
+5. CÔNG NGHỆ
+--------------------------------------------------------------------------------
+
+  CV/AI     : Python, PyTorch, Ultralytics YOLOv8, EasyOCR, OpenCV, BoT-SORT
+  API       : FastAPI + Uvicorn (:8000), FFmpeg
+  Backend   : Node.js, Express 5, Mongoose, JWT, MongoDB (:3000)
+  Frontend  : React 19, Vite, Axios, Chart.js, Bootstrap 5 (:5173)
+
+--------------------------------------------------------------------------------
+6. API CHÍNH
+--------------------------------------------------------------------------------
+
+  cv-core (8000):
+    POST   /process          Upload video + speed_limit → job_id
+    GET    /status/{job_id}  Tiến độ + URLs kết quả
+    GET    /health           Trạng thái service
+    GET    /outputs/*.mp4    Video đã chú thích
+    GET    /outputs/*.json   Dữ liệu detections
+
+  backend (3000):
+    POST   /auth/login, /auth/register
+    POST   /user/save-log    Lưu kết quả phân tích
+    GET    /user/logs        Lịch sử
+    GET    /user/vehicles    Danh sách phương tiện
+    POST   /stats/chatbot/query   Chatbot thống kê
+
+--------------------------------------------------------------------------------
+7. FILE QUAN TRỌNG
+--------------------------------------------------------------------------------
+
+  cv-core/main.py                    Pipeline AI + FastAPI (file trung tâm)
+  cv-core/botsort.yaml               Cấu hình tracker
+  cv-core/detect-plate/main/         Pipeline LPR offline (3-pass)
+  backend/src/app/models/Log.js      Schema MongoDB
+  backend/src/app/controllers/       Auth, logs, stats, vehicles
+  monitoring-plate-traffic/
+    src/components/dashboard/Dashboard1.jsx   Upload + poll + save log
+    src/utils/axiosInstance.js                JWT + auto refresh
+
+--------------------------------------------------------------------------------
+8. KHỞI CHẠY
+--------------------------------------------------------------------------------
+
+  1. mongod
+  2. cd backend && npm start          → http://localhost:3000
+  3. cd cv-core && python main.py     → http://localhost:8000
+  4. cd monitoring-plate-traffic && npm run dev  → http://localhost:5173
+
+  Cấu hình: backend/.env (MONGO_URL, JWT, SMTP)
+            monitoring-plate-traffic/.env (VITE_APP_URL=http://localhost:3000)
+            cv-core/main.py (đường dẫn model YOLO, FFmpeg)
+
+--------------------------------------------------------------------------------
+9. TÀI LIỆU CHI TIẾT
+--------------------------------------------------------------------------------
+
+  README.md              Hướng dẫn cài đặt và sử dụng (tiếng Anh)
+  docs/BAO_CAO_DO_AN.md  Báo cáo đồ án đầy đủ 17 chương (Word/PDF-ready)
+  roadmap.txt            Tiến độ phát triển theo tuần
+
+--------------------------------------------------------------------------------
+10. NHÓM PHÁT TRIỂN
+--------------------------------------------------------------------------------
+
+  Đỗ Quang Huân   — CV Core: YOLO, BoT-SORT, tính vận tốc
+  Phạm Ngọc Linh  — License Plate: detect, OCR, vi phạm
+  Phạm Thanh Tân  — Web: React, Node.js, dashboard, chatbot
+
+================================================================================

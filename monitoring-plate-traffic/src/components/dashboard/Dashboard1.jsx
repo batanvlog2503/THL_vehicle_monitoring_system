@@ -9,7 +9,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 const Dashboard1 = () => {
   // ── toast ─────────────────────────────────────────────────
-
+ // phần thông báo
   const [toast, setToast] = useState({
     show: false,
     message: "",
@@ -163,6 +163,7 @@ const Dashboard1 = () => {
     formData.append("speed_limit", speedLimit)
 
     try {
+      // xử lý process_video
       const res = await fetch(`${BACKEND}/process`, {
         method: "POST",
         body: formData,
@@ -170,7 +171,6 @@ const Dashboard1 = () => {
       if (!res.ok) throw new Error("Upload failed")
       const data = await res.json()
       setJobId(data.job_id)
-
       setPhase("processing")
       pollStatus(data.job_id)
     } catch (err) {
@@ -190,7 +190,7 @@ const Dashboard1 = () => {
         if (data.status === "processing" || data.status === "queued") {
           setProgress(data.progress ?? 0)
         } else if (data.status === "encoding") {
-          setProgress(95)
+          setProgress(99)
         } else if (data.status === "done") {
           setProgress(100)
           setPhase("done")
@@ -226,32 +226,7 @@ const Dashboard1 = () => {
     }
   }
 
-  // ── FETCH DETECTIONS ──────────────────────────────────────
-  // const fetchDetections = async (url) => {
-  //   try {
-  //     const res = await fetch(url)
-  //     const data = await res.json()
-  //     const all = data.detections_all ?? data.summary ?? []
-  //     const map = {}
-  //     for (const d of all) {
-  //       if (!map[d.id]) {
-  //         map[d.id] = { ...d }
-  //       } else {
-  //         if (d.plate && !map[d.id].plate) map[d.id].plate = d.plate
-  //         if (d.speed && (!map[d.id].speed || d.speed > map[d.id].speed)) {
-  //           map[d.id].speed = d.speed
-  //           map[d.id].status = d.status
-  //         }
-  //       }
-  //     }
-  //     const list = Object.values(map).sort((a, b) => a.id - b.id)
-  //     setDetections(list)
-  //     detectionsRef.current = list
-  //   } catch (err) {
-  //     console.error(err)
-  //   }
-  // }
-  // SAU — thay bằng cái này
+
   const fetchDetections = async (url) => {
     try {
       const res = await fetch(url)
